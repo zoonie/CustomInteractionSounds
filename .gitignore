@@ -57,3 +57,10 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/bin/
+
+#eclipse
+.classpath
+.project
+.settings
+.metadata

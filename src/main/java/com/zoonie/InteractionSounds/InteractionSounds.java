@@ -1,11 +1,13 @@
 package com.zoonie.InteractionSounds;
 
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+import com.zoonie.InteractionSounds.EventHandlers.InteractionHandler;
 import com.zoonie.InteractionSounds.proxy.CommonProxy;
 
 @Mod(modid = InteractionSounds.MODID, name = InteractionSounds.MOD_NAME, version = InteractionSounds.VERSION)
@@ -21,7 +23,7 @@ public class InteractionSounds
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-
+    	MinecraftForge.EVENT_BUS.register(new InteractionHandler());
     }
 
     @EventHandler

@@ -23,7 +23,7 @@ public class InteractionSounds
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-    	MinecraftForge.EVENT_BUS.register(new InteractionHandler());
+    	proxy.init();
     }
 
     @EventHandler

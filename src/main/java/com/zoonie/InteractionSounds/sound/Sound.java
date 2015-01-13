@@ -5,7 +5,7 @@ import java.io.File;
 public class Sound
 {
     private File soundLocation;
-    private String soundName;
+	private String soundName;
     private String category;
     private String remoteCategory;
     private SoundState state;
@@ -83,6 +83,11 @@ public class Sound
     {
         return this.state == SoundState.SYNCED || this.state == SoundState.LOCAL_ONLY || this.state == SoundState.UPLOADING;
     }
+    
+    public boolean saved()
+    {
+    	return SoundHandler.getLocalSounds().contains(this);
+    }
 
     public void setState(SoundState state)
     {
@@ -97,4 +102,41 @@ public class Sound
         DOWNLOADING,
         UPLOADING
     }
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((category == null) ? 0 : category.hashCode());
+		result = prime * result
+				+ ((soundName == null) ? 0 : soundName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Sound other = (Sound) obj;
+		if (category == null)
+		{
+			if (other.category != null)
+				return false;
+		} else if (!category.equals(other.category))
+			return false;
+		if (soundName == null)
+		{
+			if (other.soundName != null)
+				return false;
+		} else if (!soundName.equals(other.soundName))
+			return false;
+		return true;
+	}
 }

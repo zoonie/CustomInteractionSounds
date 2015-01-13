@@ -1,36 +1,48 @@
 package com.zoonie.InteractionSounds.EventHandlers;
 
+import java.util.UUID;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SoundManager;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
+import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundHelper;
+import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 public class InteractionHandler 
 {
+	public static Interaction currentInteraction;
 	@SubscribeEvent
 	public void onClick(MouseEvent event)
 	{
-		if((event.button == 0 || event.button == 1) )
+		if((event.button == 0 || event.button == 1) && event.buttonstate )
 		{
 			Interaction interaction = createInteraction(event);
+			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 			if(ClientProxy.recordInteraction.isPressed())
 			{
-				//TODO - pass interaction to gui and perform these:
-				//ClientProxy.interactions.remove(interaction);
-				//interaction.setSound(soundgatheredfromgui);
-				//interaction.setDelay(delaygatheredfromgui);
-				//ClientProxy.interactions.add(interaction);
+				currentInteraction = interaction;
+				World world = Minecraft.getMinecraft().theWorld;
+				player.openGui(InteractionSounds.instance, 0, world, (int)player.posX, (int)player.posY, (int)player.posZ);
 			}
-			else if(ClientProxy.interactions.contains(interaction))
+			else if(ClientProxy.interactions != null && ClientProxy.interactions.contains(interaction))
 			{
-				//play assigned sound
+				int index = ClientProxy.interactions.indexOf(interaction);
+				Interaction inter  = ClientProxy.interactions.get(index);
+				if(System.currentTimeMillis() - inter.getTimeLastPlayed() > SoundHelper.getSoundLength(inter.getSound().getSoundLocation())*1000)
+				{
+					String id = UUID.randomUUID().toString();
+					SoundPlayer.playSound(inter.getSound().getSoundLocation(), id, (float)player.posX, (float)player.posY, (float)player.posZ, true);
+					inter.setTimeLastPlayed();
+				}
 			}
 		}
 	}

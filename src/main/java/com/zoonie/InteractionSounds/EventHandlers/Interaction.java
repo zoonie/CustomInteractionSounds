@@ -8,7 +8,7 @@ public class Interaction
 	private String item;
 	private String target;
 	private Sound sound;
-	private long timeFired;
+	private long timeLastPlayed;
 	private long delay;
 	
 	public Interaction(int mouseButton, String item, String target)
@@ -16,7 +16,7 @@ public class Interaction
 		this.mouseButton = mouseButton;
 		this.item = item;
 		this.target = target;
-		this.timeFired = System.currentTimeMillis();
+		this.timeLastPlayed = -1;
 	}
 	
 	public void setSound(Sound sound)
@@ -44,6 +44,16 @@ public class Interaction
 		return target;
 	}
 	
+	public long getTimeLastPlayed()
+	{
+		return timeLastPlayed;
+	}
+	
+	public void setTimeLastPlayed()
+	{
+		this.timeLastPlayed = System.currentTimeMillis();
+	}
+
 	public Sound getSound()
 	{
 		return sound;

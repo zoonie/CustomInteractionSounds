@@ -1,6 +1,8 @@
 package com.zoonie.InteractionSounds.proxy;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+
+import javax.swing.UIManager;
 
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
@@ -11,11 +13,12 @@ import org.lwjgl.input.Keyboard;
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.EventHandlers.Interaction;
 import com.zoonie.InteractionSounds.EventHandlers.InteractionHandler;
+import com.zoonie.InteractionSounds.sound.SoundEventHandler;
 
 public class ClientProxy extends CommonProxy
 {
 	public static KeyBinding recordInteraction;
-	public static HashSet<Interaction> interactions;
+	public static ArrayList<Interaction> interactions = new ArrayList<Interaction>();
 	
 	@Override
 	public void init()
@@ -25,4 +28,24 @@ public class ClientProxy extends CommonProxy
 		recordInteraction = new KeyBinding("Record Interaction", Keyboard.KEY_P, InteractionSounds.MOD_NAME);	  
 		ClientRegistry.registerKeyBinding(recordInteraction);
 	}
+	
+	@Override
+    public void UISetup()
+    {
+        try
+        {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+	
+	@Override
+    public void soundSetup()
+    {
+        super.soundSetup();
+
+        MinecraftForge.EVENT_BUS.register(new SoundEventHandler());
+    }
 }

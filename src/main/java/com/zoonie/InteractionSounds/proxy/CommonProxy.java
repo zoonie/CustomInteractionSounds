@@ -6,4 +6,14 @@ public class CommonProxy
 	{
 		
 	}
+
+	public void UISetup()
+	{
+		
+	}
+
+	public void soundSetup()
+	{
+		
+	}
 }

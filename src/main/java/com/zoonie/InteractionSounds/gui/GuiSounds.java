@@ -115,8 +115,11 @@ public class GuiSounds extends GuiScreen implements IListGui
             switch (button.id)
             {
                 case 0:
-                	interaction.setSound(selectedSound);
-                    ClientProxy.interactions.add(interaction);
+                	if(selectedSound != null)
+                	{
+                		interaction.setSound(selectedSound);
+                		ClientProxy.interactions.add(interaction);
+                	}
                     this.mc.displayGuiScreen(null);
                     this.mc.setIngameFocus();
                     break;

@@ -8,27 +8,32 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
-import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundHelper;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 public class InteractionHandler 
 {
 	public static Interaction currentInteraction;
+	private boolean reOpenGui = false;
+	
 	@SubscribeEvent
 	public void onClick(MouseEvent event)
 	{
+		reOpenGui = false;
 		if((event.button == 0 || event.button == 1) && event.buttonstate )
 		{
 			Interaction interaction = createInteraction(event);
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 			if(ClientProxy.recordInteraction.isPressed())
 			{
+				reOpenGui=true;
 				currentInteraction = interaction;
 				World world = Minecraft.getMinecraft().theWorld;
 				player.openGui(InteractionSounds.instance, 0, world, (int)player.posX, (int)player.posY, (int)player.posZ);
@@ -47,6 +52,26 @@ public class InteractionHandler
 		}
 	}
 	
+	@SubscribeEvent
+	public void guiScreen(GuiScreenEvent event)
+	{
+		if(event.gui!=null && reOpenGui && !event.gui.getClass().getSimpleName().equals("GuiSounds"))
+		{
+			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+			World world = Minecraft.getMinecraft().theWorld;
+			player.openGui(InteractionSounds.instance, 0, world, (int)player.posX, (int)player.posY, (int)player.posZ);	
+		}
+	}
+	
+	@SubscribeEvent
+	public void guiOpen(GuiOpenEvent event)
+	{
+		if(event.gui!=null && reOpenGui && !event.gui.getClass().getSimpleName().equals("GuiSounds"))
+		{
+			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+			player.closeScreen();
+		}
+	}
 	private Interaction createInteraction(MouseEvent event)
 	{
 		Minecraft mc = Minecraft.getMinecraft();

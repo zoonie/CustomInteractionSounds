@@ -25,7 +25,7 @@ public class ClientProxy extends CommonProxy
 	{
 		MinecraftForge.EVENT_BUS.register(new InteractionHandler());
 		
-		recordInteraction = new KeyBinding("Record Interaction", Keyboard.KEY_P, InteractionSounds.MOD_NAME);	  
+		recordInteraction = new KeyBinding("Record Interaction", Keyboard.KEY_R, InteractionSounds.MOD_NAME);	  
 		ClientRegistry.registerKeyBinding(recordInteraction);
 	}
 	

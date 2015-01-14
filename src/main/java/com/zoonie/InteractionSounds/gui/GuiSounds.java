@@ -36,8 +36,7 @@ public class GuiSounds extends GuiScreen implements IListGui
     private UUID currentlyPlayerSoundId;
     private long timeSoundFinishedPlaying;
     private Interaction interaction;
-    private Sound justUploaded;
-    private Boolean b = false;
+    private Boolean justUploaded = false;
 
     public GuiSounds(EntityPlayer player, Interaction interaction)
     {
@@ -163,11 +162,9 @@ public class GuiSounds extends GuiScreen implements IListGui
                     {
                         if (selectedSound.getState() == Sound.SoundState.LOCAL_ONLY)
                         {
-                            Sound sound = SoundHandler.setupSound(selectedSound.getSoundLocation());
-                            justUploaded = sound;
-                            b=true;
+                            selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
                             //NetworkHelper.clientSoundUpload(sound);
-                            selectSoundIndex(-1);
+                            selectSoundIndex(SoundHandler.getLocalSounds().indexOf(selectedSound));
                         }
                         else
                         {
@@ -224,15 +221,6 @@ public class GuiSounds extends GuiScreen implements IListGui
         if (selected >= 0 && selected < SoundHandler.getLocalSounds().size())
         {
             this.selectedSound = SoundHandler.getLocalSounds().get(selected);
-        }
-        else if(b)
-        {
-        	if(selectedSound!=null)
-        	{
-        		this.selected = SoundHandler.getLocalSounds().indexOf(selectedSound);
-        		selectedSound = justUploaded;
-        	}
-        	b=false;
         }
         onSelectedSoundChanged();
     }

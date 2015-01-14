@@ -9,16 +9,16 @@ import paulscode.sound.codecs.CodecWav;
 
 public class SoundEventHandler
 {
-    @SubscribeEvent
-    public void onSoundLoad(SoundSetupEvent event)
-    {
-        try
-        {
-            SoundSystemConfig.setCodec("wav", CodecWav.class);
-            SoundSystemConfig.setCodec("mp3", CodecJLayerMP3.class);
-        } catch (SoundSystemException e)
-        {
-            e.printStackTrace();
-        }
-    }
+	@SubscribeEvent
+	public void onSoundLoad(SoundSetupEvent event)
+	{
+		try
+		{
+			SoundSystemConfig.setCodec("wav", CodecWav.class);
+			SoundSystemConfig.setCodec("mp3", CodecJLayerMP3.class);
+		} catch(SoundSystemException e)
+		{
+			e.printStackTrace();
+		}
+	}
 }

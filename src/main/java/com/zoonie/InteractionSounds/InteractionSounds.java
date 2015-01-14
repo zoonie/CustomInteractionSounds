@@ -13,30 +13,30 @@ import com.zoonie.InteractionSounds.proxy.CommonProxy;
 import com.zoonie.InteractionSounds.sound.SoundHandler;
 
 @Mod(modid = InteractionSounds.MODID, name = InteractionSounds.MOD_NAME, version = InteractionSounds.VERSION)
-public class InteractionSounds 
+public class InteractionSounds
 {
 	public static final String MOD_NAME = "Interaction Sounds";
 	public static final String MODID = "interactionsounds";
-    public static final String VERSION = "1.0";
-    
-    @Instance(MODID)
-    public static InteractionSounds instance;
-    
-    @SidedProxy(clientSide = "com.zoonie.InteractionSounds.proxy.ClientProxy", serverSide = "com.zoonie.InteractionSounds.proxy.CommonProxy")
-    public static CommonProxy proxy;
-    
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
-    	proxy.init();
-    	proxy.UISetup();
-    	proxy.soundSetup();
-    	SoundHandler.findSounds();
-    }
+	public static final String VERSION = "1.0";
 
-    @EventHandler
-    public void init(FMLInitializationEvent event)
-    {
-    	NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
-    }
+	@Instance(MODID)
+	public static InteractionSounds instance;
+
+	@SidedProxy(clientSide = "com.zoonie.InteractionSounds.proxy.ClientProxy", serverSide = "com.zoonie.InteractionSounds.proxy.CommonProxy")
+	public static CommonProxy proxy;
+
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		proxy.init();
+		proxy.UISetup();
+		proxy.soundSetup();
+		SoundHandler.findSounds();
+	}
+
+	@EventHandler
+	public void init(FMLInitializationEvent event)
+	{
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+	}
 }

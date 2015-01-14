@@ -10,20 +10,19 @@ public class Interaction
 	private Sound sound;
 	private long timeLastPlayed;
 	private long delay;
-	
-	public Interaction(int mouseButton, String item, String target)
-	{
+
+	public Interaction(int mouseButton, String item, String target) {
 		this.mouseButton = mouseButton;
 		this.item = item;
 		this.target = target;
 		this.timeLastPlayed = -1;
 	}
-	
+
 	public void setSound(Sound sound)
 	{
 		this.sound = sound;
 	}
-	
+
 	public void setDelay(long delay)
 	{
 		this.delay = delay;
@@ -43,12 +42,12 @@ public class Interaction
 	{
 		return target;
 	}
-	
+
 	public long getTimeLastPlayed()
 	{
 		return timeLastPlayed;
 	}
-	
+
 	public void setTimeLastPlayed()
 	{
 		this.timeLastPlayed = System.currentTimeMillis();
@@ -73,26 +72,28 @@ public class Interaction
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (this == obj)
+		if(this == obj)
 			return true;
-		if (obj == null)
+		if(obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if(getClass() != obj.getClass())
 			return false;
 		Interaction other = (Interaction) obj;
-		if (item == null)
+		if(item == null)
 		{
-			if (other.item != null)
+			if(other.item != null)
 				return false;
-		} else if (!item.equals(other.item))
+		}
+		else if(!item.equals(other.item))
 			return false;
-		if (mouseButton != other.mouseButton)
+		if(mouseButton != other.mouseButton)
 			return false;
-		if (target == null)
+		if(target == null)
 		{
-			if (other.target != null)
+			if(other.target != null)
 				return false;
-		} else if (!target.equals(other.target))
+		}
+		else if(!target.equals(other.target))
 			return false;
 		return true;
 	}

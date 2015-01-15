@@ -12,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 
 import org.apache.commons.io.FileUtils;
@@ -32,7 +31,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 	private Sound selectedSound;
 	private JFileChooser fileChooser;
 	private EntityPlayer player;
-	private GuiButton uploadButton;
+	private GuiButton saveButton;
 	private GuiButton playButton;
 	private UUID currentlyPlayerSoundId;
 	private long timeSoundFinishedPlaying;
@@ -62,12 +61,12 @@ public class GuiSounds extends GuiScreen implements IListGui
 	{
 		super.initGui();
 		soundsList = new GuiLocalSoundsList(this, 150);
-		this.buttonList.add(new GuiButton(0, getWidth() / 2, getHeight() - 42, I18n.format("gui.done")));
+		this.buttonList.add(saveButton = new GuiButton(0, getWidth() / 2, getHeight() - 42, 98, 20, "Save"));
+		saveButton.enabled = false;
 		this.buttonList.add(new GuiButton(1, 10, getHeight() - 42, 150, 20, "Select File"));
-		this.buttonList.add(playButton = new GuiButton(2, getWidth() / 2, getHeight() - 102, "Play Sound"));
+		this.buttonList.add(playButton = new GuiButton(2, getWidth() / 2, getHeight() - 72, "Play"));
 		playButton.enabled = false;
-		this.buttonList.add(uploadButton = new GuiButton(3, getWidth() / 2, getHeight() - 72, "Save"));
-		uploadButton.enabled = false;
+		this.buttonList.add(new GuiButton(3, getWidth() / 2 + 103, getHeight() - 42, 98, 20, "Cancel"));
 	}
 
 	@Override
@@ -83,24 +82,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 
 		if(selectedSound != null)
 		{
-			this.getFontRenderer().drawString(selectedSound.getSoundName(),
-					getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(selectedSound.getSoundName()) / 2), 30, 0xFFFFFF);
-
-			String uploaded = selectedSound.saved() ? "Saved" : "Not saved";
-			this.getFontRenderer().drawString(uploaded, getWidth() / 2 + +100 - (this.getFontRenderer().getStringWidth(uploaded) / 2), 60,
-					selectedSound.saved() ? 0x00FF00 : 0xFF0000);
-
-			if(selectedSound.getCategory() != null)
-			{
-				this.getFontRenderer().drawString(selectedSound.getCategory(),
-						getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(selectedSound.getCategory()) / 2), 90, 0xFFFFFF);
-			}
-
-			if(selectedSound.getSoundLocation() != null)
-			{
-				String space = FileUtils.byteCountToDisplaySize(selectedSound.getSoundLocation().length());
-				this.getFontRenderer().drawString(space, getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(space) / 2), 120, 0xFFFFFF);
-			}
+			drawSongInfo();
 		}
 		if(playButton != null && playButton.displayString.equalsIgnoreCase("Stop Sound") && System.currentTimeMillis() > timeSoundFinishedPlaying)
 		{
@@ -119,8 +101,13 @@ public class GuiSounds extends GuiScreen implements IListGui
 				if(selectedSound != null)
 				{
 					interaction.setSound(selectedSound);
+					ClientProxy.interactions.remove(interaction);
 					ClientProxy.interactions.add(interaction);
 					InteractionSounds.config.writeAll();
+
+					selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
+					// NetworkHelper.clientSoundUpload(sound);
+					selectSoundIndex(SoundHandler.getLocalSounds().indexOf(selectedSound));
 				}
 				this.mc.displayGuiScreen(null);
 				this.mc.setIngameFocus();
@@ -162,22 +149,8 @@ public class GuiSounds extends GuiScreen implements IListGui
 				}
 				break;
 			case 3:
-				if(selectedSound != null)
-				{
-					if(selectedSound.getState() == Sound.SoundState.LOCAL_ONLY)
-					{
-						selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
-						// NetworkHelper.clientSoundUpload(sound);
-						selectSoundIndex(SoundHandler.getLocalSounds().indexOf(selectedSound));
-					}
-					else
-					{
-						// SoundsCool.network.sendToServer(new
-						// RemoveSoundPacket(selectedSound.getSoundName()));
-						SoundHandler.removeSound(selectedSound);
-						selectSoundIndex(-1);
-					}
-				}
+				this.mc.displayGuiScreen(null);
+				this.mc.setIngameFocus();
 				break;
 			}
 		}
@@ -187,23 +160,39 @@ public class GuiSounds extends GuiScreen implements IListGui
 	{
 		if(selectedSound != null)
 		{
-			if(selectedSound.hasRemote())
-			{
-				uploadButton.displayString = "Remove";
-				uploadButton.enabled = selectedSound.getRemoteCategory().equals(player.getDisplayName());
-			}
-			else
-			{
-				uploadButton.displayString = "Upload";
-				uploadButton.enabled = true;
-			}
+			saveButton.enabled = true;
 			playButton.enabled = true;
 		}
 		else
 		{
-			uploadButton.displayString = "Upload";
-			uploadButton.enabled = false;
+			saveButton.enabled = false;
 			playButton.enabled = false;
+		}
+	}
+
+	private void drawSongInfo()
+	{
+		this.drawString(this.getFontRenderer(), "Name:", (int) (getWidth() / 2.45), 30, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), selectedSound.getSoundName(),
+				getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(selectedSound.getSoundName()) / 2), 30, 0xFFFFFF);
+
+		this.drawString(this.getFontRenderer(), "Folder:", (int) (getWidth() / 2.45), 60, 0xFFFFFF);
+		if(selectedSound.getCategory() != null)
+		{
+			this.drawString(this.getFontRenderer(), selectedSound.getCategory(),
+					getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(selectedSound.getCategory()) / 2), 60, 0xFFFFFF);
+		}
+
+		this.drawString(this.getFontRenderer(), "Status:", (int) (getWidth() / 2.45), 90, 0xFFFFFF);
+		String uploaded = selectedSound.saved() ? "Saved" : "Not saved";
+		this.getFontRenderer().drawString(uploaded, getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(uploaded) / 2), 90,
+				selectedSound.saved() ? 0x00FF00 : 0xFF0000);
+
+		this.drawString(this.getFontRenderer(), "Size:", (int) (getWidth() / 2.45), 120, 0xFFFFFF);
+		if(selectedSound.getSoundLocation() != null)
+		{
+			String space = FileUtils.byteCountToDisplaySize(selectedSound.getSoundLocation().length());
+			this.drawString(this.getFontRenderer(), space, getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(space) / 2), 120, 0xFFFFFF);
 		}
 	}
 

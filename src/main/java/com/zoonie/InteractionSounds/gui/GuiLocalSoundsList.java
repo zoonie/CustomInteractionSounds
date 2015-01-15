@@ -53,8 +53,7 @@ public class GuiLocalSoundsList extends GuiScrollingList
 		{
 			this.parent.getFontRenderer().drawString(this.parent.getFontRenderer().trimStringToWidth(sound.getSoundName(), listWidth - 10), this.left + 3,
 					var3 + 2, 0xFFFFFF);
-			this.parent.getFontRenderer().drawString(
-					this.parent.getFontRenderer().trimStringToWidth(sound.hasRemote() ? "Uploaded" : "Not uploaded", listWidth - 10), this.left + 3, var3 + 12,
+			this.parent.getFontRenderer().drawString(this.parent.getFontRenderer().trimStringToWidth("Saved", listWidth - 10), this.left + 3, var3 + 12,
 					0xCCCCCC);
 		}
 	}

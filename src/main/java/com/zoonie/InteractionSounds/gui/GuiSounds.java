@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.apache.commons.io.FileUtils;
 
+import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.EventHandlers.Interaction;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
@@ -119,6 +120,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 				{
 					interaction.setSound(selectedSound);
 					ClientProxy.interactions.add(interaction);
+					InteractionSounds.config.writeAll();
 				}
 				this.mc.displayGuiScreen(null);
 				this.mc.setIngameFocus();

@@ -1,5 +1,8 @@
 package com.zoonie.InteractionSounds;
 
+import java.io.File;
+
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -8,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+import com.zoonie.InteractionSounds.configuration.ConfigurationManager;
 import com.zoonie.InteractionSounds.gui.GuiHandler;
 import com.zoonie.InteractionSounds.proxy.CommonProxy;
 import com.zoonie.InteractionSounds.sound.SoundHandler;
@@ -16,7 +20,7 @@ import com.zoonie.InteractionSounds.sound.SoundHandler;
 public class InteractionSounds
 {
 	public static final String MOD_NAME = "Interaction Sounds";
-	public static final String MODID = "interactionsounds";
+	public static final String MODID = "interactionSounds";
 	public static final String VERSION = "1.0";
 
 	@Instance(MODID)
@@ -25,13 +29,20 @@ public class InteractionSounds
 	@SidedProxy(clientSide = "com.zoonie.InteractionSounds.proxy.ClientProxy", serverSide = "com.zoonie.InteractionSounds.proxy.CommonProxy")
 	public static CommonProxy proxy;
 
+	public static ConfigurationManager config;
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		proxy.init();
+
 		proxy.UISetup();
+
 		proxy.soundSetup();
 		SoundHandler.findSounds();
+		Configuration co;
+
+		config = new ConfigurationManager(new File(event.getModConfigurationDirectory(), MODID + ".cfg"));
 	}
 
 	@EventHandler

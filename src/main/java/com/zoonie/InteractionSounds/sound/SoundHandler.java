@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -211,5 +210,15 @@ public class SoundHandler
 			e.printStackTrace();
 		}
 		return new Sound(newFile);
+	}
+
+	public static Sound getSoundByName(String name)
+	{
+		for(Sound sound : sounds)
+		{
+			if(sound.getSoundName().equals(name))
+				return sound;
+		}
+		return null;
 	}
 }

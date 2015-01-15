@@ -15,7 +15,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
-import com.zoonie.InteractionSounds.sound.SoundHelper;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 /**
@@ -71,12 +70,12 @@ public class InteractionHandler
 				// Note: Interaction hashcode + equals overridden
 				int index = ClientProxy.interactions.indexOf(interaction);
 				Interaction inter = ClientProxy.interactions.get(index);
-				if(System.currentTimeMillis() - inter.getTimeLastPlayed() > SoundHelper.getSoundLength(inter.getSound().getSoundLocation()) * 1000)
-				{
-					String id = UUID.randomUUID().toString();
-					SoundPlayer.playSound(inter.getSound().getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true);
-					inter.setTimeLastPlayed();
-				}
+				// if(System.currentTimeMillis() - inter.getTimeLastPlayed() >
+				// SoundHelper.getSoundLength(inter.getSound().getSoundLocation())
+				// * 1000)
+				String id = UUID.randomUUID().toString();
+				SoundPlayer.playSound(inter.getSound().getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true);
+				inter.setTimeLastPlayed();
 			}
 		}
 	}
@@ -132,9 +131,9 @@ public class InteractionHandler
 		Entity entity = mop.entityHit;
 
 		if(pos != null)
-			return new Interaction(event.button, item, mc.theWorld.getBlockState(pos).getBlock().getUnlocalizedName());
+			return new Interaction(event.button == 0 ? "left" : "right", item, mc.theWorld.getBlockState(pos).getBlock().getUnlocalizedName());
 		else if(entity != null)
-			return new Interaction(event.button, item, entity.getName());
+			return new Interaction(event.button == 0 ? "left" : "right", item, entity.getName());
 		else
 			return null;
 	}

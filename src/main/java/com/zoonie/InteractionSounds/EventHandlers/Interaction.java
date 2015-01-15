@@ -1,21 +1,27 @@
 package com.zoonie.InteractionSounds.EventHandlers;
 
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundHandler;
 
 public class Interaction
 {
-	private int mouseButton;
+	private String mouseButton;
 	private String item;
 	private String target;
 	private Sound sound;
 	private long timeLastPlayed;
 	private long delay;
 
-	public Interaction(int mouseButton, String item, String target) {
+	public Interaction(String mouseButton, String item, String target) {
+		this(mouseButton, item, target, null);
+	}
+
+	public Interaction(String mouseButton, String item, String target, String soundName) {
 		this.mouseButton = mouseButton;
 		this.item = item;
 		this.target = target;
 		this.timeLastPlayed = -1;
+		this.sound = SoundHandler.getSoundByName(soundName);
 	}
 
 	public void setSound(Sound sound)
@@ -28,7 +34,7 @@ public class Interaction
 		this.delay = delay;
 	}
 
-	public int getMouseButton()
+	public String getMouseButton()
 	{
 		return mouseButton;
 	}
@@ -64,7 +70,7 @@ public class Interaction
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((item == null) ? 0 : item.hashCode());
-		result = prime * result + mouseButton;
+		result = prime * result + ((mouseButton == null) ? 0 : mouseButton.hashCode());
 		result = prime * result + ((target == null) ? 0 : target.hashCode());
 		return result;
 	}
@@ -86,7 +92,12 @@ public class Interaction
 		}
 		else if(!item.equals(other.item))
 			return false;
-		if(mouseButton != other.mouseButton)
+		if(mouseButton == null)
+		{
+			if(other.mouseButton != null)
+				return false;
+		}
+		else if(!mouseButton.equals(other.mouseButton))
 			return false;
 		if(target == null)
 		{
@@ -97,4 +108,5 @@ public class Interaction
 			return false;
 		return true;
 	}
+
 }

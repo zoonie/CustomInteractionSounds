@@ -113,15 +113,12 @@ public class GuiSounds extends GuiScreen implements IListGui
 				this.mc.setIngameFocus();
 				break;
 			case 1:
-				if(Minecraft.getMinecraft().isFullScreen())
-				{
+				boolean fullscreen = Minecraft.getMinecraft().isFullScreen();
+				if(fullscreen)
 					Minecraft.getMinecraft().toggleFullscreen();
-				}
 				int fcReturn = fileChooser.showOpenDialog(null);
-				if(Minecraft.getMinecraft().gameSettings.fullScreen != Minecraft.getMinecraft().isFullScreen())
-				{
+				if(fullscreen)
 					Minecraft.getMinecraft().toggleFullscreen();
-				}
 				if(fcReturn == JFileChooser.APPROVE_OPTION)
 				{
 					selectSoundIndex(-1);

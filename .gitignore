@@ -59,8 +59,15 @@ $RECYCLE.BIN/
 *.lnk
 /bin/
 
-#eclipse
+# eclipse
 .classpath
 .project
 .settings
 .metadata
+
+# Build files
+Build.bat
+build.gradle
+/build/
+.gradle
+.settings

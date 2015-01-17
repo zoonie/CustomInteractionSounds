@@ -2,6 +2,8 @@ package com.zoonie.InteractionSounds.EventHandlers;
 
 import java.util.UUID;
 
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -15,6 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
+import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 /**
@@ -65,17 +68,16 @@ public class InteractionHandler
 				player.openGui(InteractionSounds.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 				event.setCanceled(true);
 			}
-			else if(ClientProxy.interactions != null && ClientProxy.interactions.contains(interaction))
+			else if(ClientProxy.mappings != null && ClientProxy.mappings.containsKey(interaction))
 			{
-				// Note: Interaction hashcode + equals overridden
-				int index = ClientProxy.interactions.indexOf(interaction);
-				Interaction inter = ClientProxy.interactions.get(index);
+				Sound sound = ClientProxy.mappings.get(interaction);
 				// if(System.currentTimeMillis() - inter.getTimeLastPlayed() >
 				// SoundHelper.getSoundLength(inter.getSound().getSoundLocation())
 				// * 1000)
 				String id = UUID.randomUUID().toString();
-				SoundPlayer.playSound(inter.getSound().getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true);
-				inter.setTimeLastPlayed();
+				SoundPlayer.playSound(sound.getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true);
+				sound.setTimeLastPlayed();
+				ClientProxy.mappings.put(interaction, sound);
 			}
 		}
 	}
@@ -129,12 +131,27 @@ public class InteractionHandler
 		MovingObjectPosition mop = mc.objectMouseOver;
 		BlockPos pos = mop.getBlockPos();
 		Entity entity = mop.entityHit;
-
 		if(pos != null)
-			return new Interaction(event.button == 0 ? "left" : "right", item, mc.theWorld.getBlockState(pos).getBlock().getUnlocalizedName());
+		{
+			IBlockState bs = mc.theWorld.getBlockState(pos);
+			return new Interaction(event.button == 0 ? "left" : "right", item, bs.getBlock().getUnlocalizedName());
+		}
 		else if(entity != null)
 			return new Interaction(event.button == 0 ? "left" : "right", item, entity.getName());
 		else
 			return null;
+	}
+
+	private String getBlockVariant(IBlockState bs)
+	{
+		for(int i = 0; i < bs.getPropertyNames().toArray().length; i++)
+		{
+			Object o = bs.getPropertyNames().toArray()[i];
+			Object o0 = bs.getProperties().get(o);
+			IProperty p = (IProperty) o;
+			if(p.getName().equals("variant"))
+				return bs.getValue(p).toString();
+		}
+		return null;
 	}
 }

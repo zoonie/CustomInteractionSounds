@@ -1,6 +1,6 @@
 package com.zoonie.InteractionSounds.proxy;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.UIManager;
 
@@ -13,12 +13,13 @@ import org.lwjgl.input.Keyboard;
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.EventHandlers.Interaction;
 import com.zoonie.InteractionSounds.EventHandlers.InteractionHandler;
+import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundEventHandler;
 
 public class ClientProxy extends CommonProxy
 {
 	public static KeyBinding recordInteraction;
-	public static ArrayList<Interaction> interactions = new ArrayList<Interaction>();
+	public static HashMap<Interaction, Sound> mappings = new HashMap<Interaction, Sound>();
 
 	@Override
 	public void init()

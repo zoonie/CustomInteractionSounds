@@ -100,9 +100,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 			case 0:
 				if(selectedSound != null)
 				{
-					interaction.setSound(selectedSound);
-					ClientProxy.interactions.remove(interaction);
-					ClientProxy.interactions.add(interaction);
+					ClientProxy.mappings.put(interaction, selectedSound);
 					InteractionSounds.config.writeAll();
 
 					selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());

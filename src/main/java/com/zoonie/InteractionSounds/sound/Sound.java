@@ -9,6 +9,8 @@ public class Sound
 	private String category;
 	private String remoteCategory;
 	private SoundState state;
+	private long timeLastPlayed = -1;
+	private long delay;
 
 	public Sound(File soundLocation) {
 		this.soundLocation = soundLocation;
@@ -52,6 +54,16 @@ public class Sound
 	public SoundState getState()
 	{
 		return state;
+	}
+
+	public void setTimeLastPlayed()
+	{
+		timeLastPlayed = System.currentTimeMillis();
+	}
+
+	public long getTimeLastPlayed()
+	{
+		return timeLastPlayed;
 	}
 
 	public void onSoundUploaded(String remoteCategory)

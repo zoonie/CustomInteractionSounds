@@ -1,37 +1,21 @@
 package com.zoonie.InteractionSounds.EventHandlers;
 
-import com.zoonie.InteractionSounds.sound.Sound;
-import com.zoonie.InteractionSounds.sound.SoundHandler;
-
 public class Interaction
 {
 	private String mouseButton;
 	private String item;
 	private String target;
-	private Sound sound;
-	private long timeLastPlayed;
-	private long delay;
+	private String variant;
 
 	public Interaction(String mouseButton, String item, String target) {
 		this(mouseButton, item, target, null);
 	}
 
-	public Interaction(String mouseButton, String item, String target, String soundName) {
+	public Interaction(String mouseButton, String item, String target, String variant) {
 		this.mouseButton = mouseButton;
 		this.item = item;
 		this.target = target;
-		this.timeLastPlayed = -1;
-		this.sound = SoundHandler.getSoundByName(soundName);
-	}
-
-	public void setSound(Sound sound)
-	{
-		this.sound = sound;
-	}
-
-	public void setDelay(long delay)
-	{
-		this.delay = delay;
+		this.variant = variant;
 	}
 
 	public String getMouseButton()
@@ -47,21 +31,6 @@ public class Interaction
 	public String getTarget()
 	{
 		return target;
-	}
-
-	public long getTimeLastPlayed()
-	{
-		return timeLastPlayed;
-	}
-
-	public void setTimeLastPlayed()
-	{
-		this.timeLastPlayed = System.currentTimeMillis();
-	}
-
-	public Sound getSound()
-	{
-		return sound;
 	}
 
 	@Override

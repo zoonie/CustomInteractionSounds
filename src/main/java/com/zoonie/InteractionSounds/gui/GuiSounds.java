@@ -88,6 +88,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 		{
 			playButton.displayString = "Play Sound";
 		}
+		drawInteractionInfo();
 	}
 
 	@Override
@@ -189,6 +190,12 @@ public class GuiSounds extends GuiScreen implements IListGui
 			String space = FileUtils.byteCountToDisplaySize(selectedSound.getSoundLocation().length());
 			this.drawString(this.getFontRenderer(), space, getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(space) / 2), 120, 0xFFFFFF);
 		}
+	}
+
+	private void drawInteractionInfo()
+	{
+		String interString = interaction.getMouseButton() + " clicked " + interaction.getTarget() + " using " + interaction.getItem();
+		this.drawString(this.getFontRenderer(), interString, (int) (getWidth() / 2.45), 150, 0xFFFFFF);
 	}
 
 	@Override

@@ -68,18 +68,47 @@ public class InteractionHandler
 				player.openGui(InteractionSounds.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 				event.setCanceled(true);
 			}
-			else if(ClientProxy.mappings != null && ClientProxy.mappings.containsKey(interaction))
+			else if(ClientProxy.mappings != null)
 			{
-				Sound sound = ClientProxy.mappings.get(interaction);
-				// if(System.currentTimeMillis() - inter.getTimeLastPlayed() >
-				// SoundHelper.getSoundLength(inter.getSound().getSoundLocation())
-				// * 1000)
-				String id = UUID.randomUUID().toString();
-				SoundPlayer.playSound(sound.getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true);
-				sound.setTimeLastPlayed();
-				ClientProxy.mappings.put(interaction, sound);
+				if(ClientProxy.mappings.containsKey(interaction))
+				{
+					playSound(interaction, player);
+				}
+				else if(event.button == 0)
+				{
+					Interaction leftAnyItem = new Interaction("left", "any", interaction.getTarget());
+					Interaction leftAnyTarget = new Interaction("left", interaction.getItem(), "any");
+					Interaction leftAny = new Interaction("left", "any", "any");
+					if(ClientProxy.mappings.containsKey(leftAnyItem))
+						playSound(leftAnyItem, player);
+					else if(ClientProxy.mappings.containsKey(leftAnyTarget))
+						playSound(leftAnyTarget, player);
+					else if(ClientProxy.mappings.containsKey(leftAny))
+						playSound(leftAny, player);
+				}
+				else if(event.button == 1)
+				{
+					Interaction rightAnyItem = new Interaction("right", "any", interaction.getTarget());
+					Interaction rightAnyTarget = new Interaction("right", interaction.getItem(), "any");
+					Interaction rightAny = new Interaction("right", "any", "any");
+					if(ClientProxy.mappings.containsKey(rightAnyItem))
+						playSound(rightAnyItem, player);
+					else if(ClientProxy.mappings.containsKey(rightAnyTarget))
+						playSound(rightAnyTarget, player);
+					else if(ClientProxy.mappings.containsKey(rightAny))
+						playSound(rightAny, player);
+				}
 			}
 		}
+	}
+
+	private void playSound(Interaction interaction, EntityPlayerSP player)
+	{
+		Sound sound = ClientProxy.mappings.get(interaction);
+		String id = UUID.randomUUID().toString();
+		SoundPlayer.playSound(sound.getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true);
+		sound.setTimeLastPlayed();
+		ClientProxy.mappings.put(interaction, sound);
 	}
 
 	/**
@@ -127,14 +156,14 @@ public class InteractionHandler
 		EntityPlayerSP player = mc.thePlayer;
 		String item = "Hand";
 		if(player.getCurrentEquippedItem() != null)
-			item = player.getCurrentEquippedItem().getUnlocalizedName();
+			item = player.getCurrentEquippedItem().getDisplayName();
 		MovingObjectPosition mop = mc.objectMouseOver;
 		BlockPos pos = mop.getBlockPos();
 		Entity entity = mop.entityHit;
 		if(pos != null)
 		{
 			IBlockState bs = mc.theWorld.getBlockState(pos);
-			return new Interaction(event.button == 0 ? "left" : "right", item, bs.getBlock().getUnlocalizedName());
+			return new Interaction(event.button == 0 ? "left" : "right", item, bs.getBlock().getLocalizedName());
 		}
 		else if(entity != null)
 			return new Interaction(event.button == 0 ? "left" : "right", item, entity.getName());

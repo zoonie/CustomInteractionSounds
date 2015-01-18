@@ -33,6 +33,16 @@ public class Interaction
 		return target;
 	}
 
+	public void setItem(String item)
+	{
+		this.item = item;
+	}
+
+	public void setTarget(String target)
+	{
+		this.target = target;
+	}
+
 	@Override
 	public int hashCode()
 	{

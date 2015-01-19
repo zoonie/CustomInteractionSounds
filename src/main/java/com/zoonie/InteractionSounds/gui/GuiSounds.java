@@ -210,11 +210,19 @@ public class GuiSounds extends GuiScreen implements IListGui
 	private void drawInteractionInfo()
 	{
 		String variant = variantChecked.isChecked() ? interaction.getVariant() : "";
-		String target = targetChecked.isChecked() ? "any target" : StatCollector.translateToLocal(interaction.getTarget() + variant + ".name");
+		String target = "";
+		if(targetChecked.isChecked())
+			target = "any target";
+		else if(StatCollector.canTranslate((interaction.getTarget() + variant + ".name")))
+			target = StatCollector.translateToLocal(interaction.getTarget() + variant + ".name");
+		else
+		{
+			String targ = interaction.getTarget().substring(interaction.getTarget().indexOf("."));
+			target = StatCollector.translateToLocal("item" + targ + ".name");
+		}
 		String item = itemChecked.isChecked() ? "any item" : StatCollector.translateToLocal(interaction.getItem() + ".name");
 		String interString = interaction.getMouseButton() + " clicked " + target + " using " + item;
 		this.drawString(this.getFontRenderer(), interString, (int) (getWidth() / 2.45), 110, 0xFFFFFF);
-
 	}
 
 	@Override

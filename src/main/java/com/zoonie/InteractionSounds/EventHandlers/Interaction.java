@@ -15,7 +15,7 @@ public class Interaction
 		this.mouseButton = mouseButton;
 		this.item = item;
 		this.target = target;
-		this.variant = variant;
+		this.variant = variant == null ? "" : variant;
 	}
 
 	public String getMouseButton()
@@ -33,6 +33,11 @@ public class Interaction
 		return target;
 	}
 
+	public String getVariant()
+	{
+		return variant;
+	}
+
 	public void setItem(String item)
 	{
 		this.item = item;
@@ -41,6 +46,11 @@ public class Interaction
 	public void setTarget(String target)
 	{
 		this.target = target;
+	}
+
+	public void useVariant()
+	{
+		target = target + variant;
 	}
 
 	@Override

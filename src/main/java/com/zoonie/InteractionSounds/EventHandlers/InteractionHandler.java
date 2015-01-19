@@ -1,5 +1,6 @@
 package com.zoonie.InteractionSounds.EventHandlers;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 import net.minecraft.block.properties.IProperty;
@@ -7,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -154,32 +156,85 @@ public class InteractionHandler
 	{
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = mc.thePlayer;
-		String item = "Hand";
+		String item = "hand";
 		if(player.getCurrentEquippedItem() != null)
-			item = player.getCurrentEquippedItem().getDisplayName();
+			item = player.getCurrentEquippedItem().getUnlocalizedName();
 		MovingObjectPosition mop = mc.objectMouseOver;
 		BlockPos pos = mop.getBlockPos();
 		Entity entity = mop.entityHit;
 		if(pos != null)
 		{
 			IBlockState bs = mc.theWorld.getBlockState(pos);
-			return new Interaction(event.button == 0 ? "left" : "right", item, bs.getBlock().getLocalizedName());
+			String name = bs.getBlock().getUnlocalizedName();
+			String variant = getBlockVariant(bs, pos);
+			return new Interaction(event.button == 0 ? "left" : "right", item, name, variant);
 		}
 		else if(entity != null)
-			return new Interaction(event.button == 0 ? "left" : "right", item, entity.getName());
+		{
+			return new Interaction(event.button == 0 ? "left" : "right", item, "entity." + EntityList.getEntityString(entity));
+		}
 		else
 			return null;
 	}
 
-	private String getBlockVariant(IBlockState bs)
+	/**
+	 * Method to get unlocalized name of relevant property that identifies the
+	 * variant of block. Note: This method will be replaced when alternative
+	 * approach discovered.
+	 * 
+	 * @param bs
+	 * @param pos
+	 * @return Unlocalized name for the relevant property of the block.
+	 */
+	private String getBlockVariant(IBlockState bs, BlockPos pos)
 	{
+		String variant = "";
 		for(int i = 0; i < bs.getPropertyNames().toArray().length; i++)
 		{
-			Object o = bs.getPropertyNames().toArray()[i];
-			Object o0 = bs.getProperties().get(o);
-			IProperty p = (IProperty) o;
+			IProperty p = (IProperty) bs.getPropertyNames().toArray()[i];
 			if(p.getName().equals("variant"))
-				return bs.getValue(p).toString();
+				return "." + getUnlocalized(bs, p);
+			else if(p.getName().equals("color"))
+				return "." + getUnlocalized(bs, p);
+			else if(p.getName().equals("type"))
+				return "." + getUnlocalized(bs, p);
+			else if(p.getName().equals("damage"))
+			{
+				if(Integer.parseInt(getUnlocalized(bs, p)) == 0)
+					return variant;
+				if(Integer.parseInt(getUnlocalized(bs, p)) == 1)
+					return "." + "slightlyDamaged";
+				if(Integer.parseInt(getUnlocalized(bs, p)) == 2)
+					return "." + "veryDamaged";
+			}
+			else if(p.getName().equals("wet"))
+				return "." + (((Boolean) (bs.getValue(p))) == true ? "wet" : "dry");
+		}
+		return variant;
+	}
+
+	/**
+	 * Horrible horribleness that might not be necessary. Reflection to get
+	 * unlocalized name of block property.
+	 * 
+	 * @param bs
+	 * @param p
+	 * @return Unlocalized string
+	 */
+	private String getUnlocalized(IBlockState bs, IProperty p)
+	{
+		try
+		{
+			return (String) bs.getValue(p).getClass().getMethod("getUnlocalizedName").invoke(bs.getValue(p));
+		} catch(IllegalAccessException e)
+		{
+			e.printStackTrace();
+		} catch(NoSuchMethodException e)
+		{
+			return bs.getValue(p).toString();
+		} catch(InvocationTargetException e)
+		{
+			e.printStackTrace();
 		}
 		return null;
 	}

@@ -13,6 +13,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 import org.apache.commons.io.FileUtils;
@@ -40,6 +41,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 	private Boolean justUploaded = false;
 	private GuiCheckBox itemChecked;
 	private GuiCheckBox targetChecked;
+	private GuiCheckBox variantChecked;
 
 	public GuiSounds(EntityPlayer player, Interaction interaction) {
 		this.player = player;
@@ -73,6 +75,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 
 		this.buttonList.add(itemChecked = new GuiCheckBox(4, (int) (getWidth() / 2.46), 140, " Any item in hand", false));
 		this.buttonList.add(targetChecked = new GuiCheckBox(5, (int) (getWidth() / 2.46), 155, " Any target block/entity", false));
+		this.buttonList.add(variantChecked = new GuiCheckBox(6, (int) (getWidth() / 2.46), 125, " Use variant", false));
 	}
 
 	@Override
@@ -111,6 +114,8 @@ public class GuiSounds extends GuiScreen implements IListGui
 						interaction.setItem("any");
 					if(targetChecked.isChecked())
 						interaction.setTarget("any");
+					if(variantChecked.isChecked())
+						interaction.useVariant();
 					ClientProxy.mappings.put(interaction, selectedSound);
 					InteractionSounds.config.writeAll();
 
@@ -204,8 +209,11 @@ public class GuiSounds extends GuiScreen implements IListGui
 
 	private void drawInteractionInfo()
 	{
-		String interString = interaction.getMouseButton() + " clicked " + interaction.getTarget() + " using " + interaction.getItem();
-		this.drawString(this.getFontRenderer(), interString, (int) (getWidth() / 2.45), 125, 0xFFFFFF);
+		String variant = variantChecked.isChecked() ? interaction.getVariant() : "";
+		String target = targetChecked.isChecked() ? "any target" : StatCollector.translateToLocal(interaction.getTarget() + variant + ".name");
+		String item = itemChecked.isChecked() ? "any item" : StatCollector.translateToLocal(interaction.getItem() + ".name");
+		String interString = interaction.getMouseButton() + " clicked " + target + " using " + item;
+		this.drawString(this.getFontRenderer(), interString, (int) (getWidth() / 2.45), 110, 0xFFFFFF);
 
 	}
 

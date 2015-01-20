@@ -21,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.handler.event.Interaction;
+import com.zoonie.InteractionSounds.helper.NetworkHelper;
 import com.zoonie.InteractionSounds.helper.SoundHelper;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
@@ -120,8 +121,8 @@ public class GuiSounds extends GuiScreen implements IListGui
 					InteractionSounds.proxy.getConfig().writeAll();
 
 					selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
-					// NetworkHelper.clientSoundUpload(sound);
-					selectSoundIndex(SoundHandler.getLocalSounds().indexOf(selectedSound));
+					NetworkHelper.clientSoundUpload(selectedSound);
+					// selectSoundIndex(SoundHandler.getLocalSounds().indexOf(selectedSound));
 				}
 				this.mc.displayGuiScreen(null);
 				this.mc.setIngameFocus();

@@ -75,31 +75,21 @@ public class InteractionHandler
 				if(ClientProxy.mappings.containsKey(interaction))
 				{
 					playSound(interaction, player);
+					return;
 				}
-				else if(event.button == 0)
-				{
-					Interaction leftAnyItem = new Interaction("left", "any", interaction.getTarget());
-					Interaction leftAnyTarget = new Interaction("left", interaction.getItem(), "any");
-					Interaction leftAny = new Interaction("left", "any", "any");
-					if(ClientProxy.mappings.containsKey(leftAnyItem))
-						playSound(leftAnyItem, player);
-					else if(ClientProxy.mappings.containsKey(leftAnyTarget))
-						playSound(leftAnyTarget, player);
-					else if(ClientProxy.mappings.containsKey(leftAny))
-						playSound(leftAny, player);
-				}
-				else if(event.button == 1)
-				{
-					Interaction rightAnyItem = new Interaction("right", "any", interaction.getTarget());
-					Interaction rightAnyTarget = new Interaction("right", interaction.getItem(), "any");
-					Interaction rightAny = new Interaction("right", "any", "any");
-					if(ClientProxy.mappings.containsKey(rightAnyItem))
-						playSound(rightAnyItem, player);
-					else if(ClientProxy.mappings.containsKey(rightAnyTarget))
-						playSound(rightAnyTarget, player);
-					else if(ClientProxy.mappings.containsKey(rightAny))
-						playSound(rightAny, player);
-				}
+
+				String click = event.button == 0 ? "left" : "right";
+
+				Interaction anyItem = new Interaction(click, "any", interaction.getTarget());
+				Interaction anyTarget = new Interaction(click, interaction.getItem(), "any");
+				Interaction any = new Interaction(click, "any", "any");
+
+				if(ClientProxy.mappings.containsKey(anyItem))
+					playSound(anyItem, player);
+				else if(ClientProxy.mappings.containsKey(anyTarget))
+					playSound(anyTarget, player);
+				else if(ClientProxy.mappings.containsKey(any))
+					playSound(any, player);
 			}
 		}
 	}
@@ -214,8 +204,7 @@ public class InteractionHandler
 	}
 
 	/**
-	 * Horrible horribleness that might not be necessary. Reflection to get
-	 * unlocalized name of block property.
+	 * Reflection to get unlocalized name of block property.
 	 * 
 	 * @param bs
 	 * @param p

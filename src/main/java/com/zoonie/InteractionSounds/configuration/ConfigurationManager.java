@@ -11,10 +11,10 @@ import java.util.Map;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-import com.zoonie.InteractionSounds.EventHandlers.Interaction;
+import com.zoonie.InteractionSounds.handler.SoundHandler;
+import com.zoonie.InteractionSounds.handler.event.Interaction;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
-import com.zoonie.InteractionSounds.sound.SoundHandler;
 
 public class ConfigurationManager
 {

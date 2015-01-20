@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.EventHandlers;
+package com.zoonie.InteractionSounds.handler.event;
 
 public class Interaction
 {

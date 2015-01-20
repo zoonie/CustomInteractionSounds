@@ -3,8 +3,8 @@ package com.zoonie.InteractionSounds.gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
+import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.sound.Sound;
-import com.zoonie.InteractionSounds.sound.SoundHandler;
 
 public class GuiLocalSoundsList extends GuiScrollingList
 {

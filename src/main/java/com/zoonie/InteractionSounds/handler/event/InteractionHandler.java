@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.EventHandlers;
+package com.zoonie.InteractionSounds.handler.event;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;

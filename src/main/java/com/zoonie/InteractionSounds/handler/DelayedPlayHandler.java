@@ -1,7 +1,9 @@
-package com.zoonie.InteractionSounds.sound;
+package com.zoonie.InteractionSounds.handler;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.zoonie.InteractionSounds.sound.SoundPlayInfo;
 
 public class DelayedPlayHandler
 {

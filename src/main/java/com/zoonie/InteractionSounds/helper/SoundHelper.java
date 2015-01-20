@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.sound;
+package com.zoonie.InteractionSounds.helper;
 
 import java.io.File;
 

@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.sound;
+package com.zoonie.InteractionSounds.handler.event;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import de.cuina.fireandfuel.CodecJLayerMP3;

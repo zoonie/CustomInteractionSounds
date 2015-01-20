@@ -1,6 +1,6 @@
 package com.zoonie.InteractionSounds.gui;
 
-import com.zoonie.InteractionSounds.EventHandlers.InteractionHandler;
+import com.zoonie.InteractionSounds.handler.event.InteractionHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

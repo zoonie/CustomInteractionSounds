@@ -12,12 +12,12 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import org.lwjgl.input.Keyboard;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
-import com.zoonie.InteractionSounds.EventHandlers.Interaction;
-import com.zoonie.InteractionSounds.EventHandlers.InteractionHandler;
 import com.zoonie.InteractionSounds.configuration.ConfigurationManager;
+import com.zoonie.InteractionSounds.handler.SoundHandler;
+import com.zoonie.InteractionSounds.handler.event.Interaction;
+import com.zoonie.InteractionSounds.handler.event.InteractionHandler;
+import com.zoonie.InteractionSounds.handler.event.SoundEventHandler;
 import com.zoonie.InteractionSounds.sound.Sound;
-import com.zoonie.InteractionSounds.sound.SoundEventHandler;
-import com.zoonie.InteractionSounds.sound.SoundHandler;
 
 public class ClientProxy extends CommonProxy
 {

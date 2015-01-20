@@ -19,11 +19,11 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 import org.apache.commons.io.FileUtils;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
-import com.zoonie.InteractionSounds.EventHandlers.Interaction;
+import com.zoonie.InteractionSounds.handler.SoundHandler;
+import com.zoonie.InteractionSounds.handler.event.Interaction;
+import com.zoonie.InteractionSounds.helper.SoundHelper;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
-import com.zoonie.InteractionSounds.sound.SoundHandler;
-import com.zoonie.InteractionSounds.sound.SoundHelper;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 public class GuiSounds extends GuiScreen implements IListGui

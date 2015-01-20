@@ -1,5 +1,6 @@
 package com.zoonie.InteractionSounds.proxy;
 
+import java.io.File;
 import java.util.HashMap;
 
 import javax.swing.UIManager;
@@ -13,13 +14,16 @@ import org.lwjgl.input.Keyboard;
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.EventHandlers.Interaction;
 import com.zoonie.InteractionSounds.EventHandlers.InteractionHandler;
+import com.zoonie.InteractionSounds.configuration.ConfigurationManager;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundEventHandler;
+import com.zoonie.InteractionSounds.sound.SoundHandler;
 
 public class ClientProxy extends CommonProxy
 {
 	public static KeyBinding recordInteraction;
 	public static HashMap<Interaction, Sound> mappings = new HashMap<Interaction, Sound>();
+	private static ConfigurationManager config;
 
 	@Override
 	public void init()
@@ -48,5 +52,19 @@ public class ClientProxy extends CommonProxy
 		super.soundSetup();
 
 		MinecraftForge.EVENT_BUS.register(new SoundEventHandler());
+
+		SoundHandler.getSounds();
+	}
+
+	@Override
+	public void configSetup(File file)
+	{
+		config = new ConfigurationManager(new File(file, InteractionSounds.MODID + ".cfg"));
+	}
+
+	@Override
+	public ConfigurationManager getConfig()
+	{
+		return config;
 	}
 }

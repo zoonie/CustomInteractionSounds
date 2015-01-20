@@ -117,7 +117,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 					if(variantChecked.isChecked())
 						interaction.useVariant();
 					ClientProxy.mappings.put(interaction, selectedSound);
-					InteractionSounds.config.writeAll();
+					InteractionSounds.proxy.getConfig().writeAll();
 
 					selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
 					// NetworkHelper.clientSoundUpload(sound);

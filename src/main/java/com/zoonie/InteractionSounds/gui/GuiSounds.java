@@ -114,8 +114,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 						interaction.setItem("any");
 					if(targetChecked.isChecked())
 						interaction.setTarget("any");
-					if(variantChecked.isChecked())
-						interaction.useVariant();
+					interaction.useVariant(variantChecked.isChecked());
 					ClientProxy.mappings.put(interaction, selectedSound);
 					InteractionSounds.proxy.getConfig().writeAll();
 

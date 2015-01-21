@@ -15,7 +15,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
@@ -73,39 +72,42 @@ public class InteractionHandler
 			}
 			else if(ClientProxy.mappings != null)
 			{
-				if(ClientProxy.mappings.containsKey(interaction))
-				{
-					playSound(interaction, player);
-					return;
-				}
-
 				String click = event.button == 0 ? "left" : "right";
-
-				Interaction anyItem = new Interaction(click, "any", interaction.getTarget());
-				Interaction anyTarget = new Interaction(click, interaction.getItem(), "any");
-				Interaction any = new Interaction(click, "any", "any");
-
-				if(ClientProxy.mappings.containsKey(anyItem))
-					playSound(anyItem, player);
-				else if(ClientProxy.mappings.containsKey(anyTarget))
-					playSound(anyTarget, player);
-				else if(ClientProxy.mappings.containsKey(any))
-					playSound(any, player);
+				if(lookUp(interaction, click, player, true))
+					return;
+				lookUp(interaction, click, player, false);
 			}
 		}
 	}
 
-	private void playSound(Interaction interaction, EntityPlayerSP player)
+	private Boolean lookUp(Interaction interaction, String click, EntityPlayerSP player, Boolean useVariant)
+	{
+		interaction.useVariant(useVariant);
+		if(ClientProxy.mappings.containsKey(interaction))
+			return playSound(interaction, player);
+		else
+		{
+			Interaction anyItem = new Interaction(click, "any", interaction.getTarget(), interaction.getVariant());
+			Interaction anyTarget = new Interaction(click, interaction.getItem(), "any", interaction.getVariant());
+			Interaction any = new Interaction(click, "any", "any", interaction.getVariant());
+
+			if(ClientProxy.mappings.containsKey(anyItem))
+				return playSound(anyItem, player);
+			else if(ClientProxy.mappings.containsKey(anyTarget))
+				return playSound(anyTarget, player);
+			else if(ClientProxy.mappings.containsKey(any))
+				return playSound(any, player);
+		}
+		return false;
+	}
+
+	private Boolean playSound(Interaction interaction, EntityPlayerSP player)
 	{
 		Sound sound = ClientProxy.mappings.get(interaction);
 		String id = UUID.randomUUID().toString();
-		//SoundPlayer.playSound(sound.getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true);
-		//sound.setTimeLastPlayed();
-		//ClientProxy.mappings.put(interaction, sound);
-
-		String lastSoundIdentifier = UUID.randomUUID().toString();
 		InteractionSounds.network.sendToServer(new ClientPlaySoundMessage(sound.getSoundName(), id, player.dimension, (int) player.posX, (int) player.posY,
 				(int) player.posZ));
+		return true;
 	}
 
 	/**

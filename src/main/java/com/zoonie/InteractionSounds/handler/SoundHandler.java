@@ -5,14 +5,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.io.Files;
+import com.zoonie.InteractionSounds.InteractionSounds;
+import com.zoonie.InteractionSounds.helper.NetworkHelper;
 import com.zoonie.InteractionSounds.helper.SoundHelper;
+import com.zoonie.InteractionSounds.network.packet.client.CheckPresencePacket;
+import com.zoonie.InteractionSounds.network.packet.server.SoundRemovedPacket;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
-import com.zoonie.InteractionSounds.sound.Sound.SoundState;
 
 public class SoundHandler
 {
@@ -91,11 +95,10 @@ public class SoundHandler
 				sound.getSoundLocation().deleteOnExit();
 			}
 			sounds.remove(sound);
-			/*
-			 * if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
-			 * NetworkHelper.sendMessageToAll(new
-			 * SoundRemovedPacket(sound.getSoundName())); }
-			 */
+			if(FMLCommonHandler.instance().getEffectiveSide().isServer())
+			{
+				NetworkHelper.sendMessageToAll(new SoundRemovedPacket(sound.getSoundName()));
+			}
 		}
 	}
 
@@ -173,9 +176,7 @@ public class SoundHandler
 		{
 			sound.setState(Sound.SoundState.DOWNLOADING);
 			DelayedPlayHandler.addDelayedPlay(soundName, identifier, x, y, z);
-			// SoundsCool.network.sendToServer(new
-			// CheckPresencePacket(soundName,
-			// Minecraft.getMinecraft().thePlayer));
+			InteractionSounds.network.sendToServer(new CheckPresencePacket(soundName, Minecraft.getMinecraft().thePlayer));
 		}
 	}
 

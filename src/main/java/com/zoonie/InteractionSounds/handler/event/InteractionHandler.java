@@ -15,12 +15,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
+import com.zoonie.InteractionSounds.network.packet.client.ClientPlaySoundMessage;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
-import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 /**
  * The InteractionHandler class deals with specific Forge events, mainly
@@ -98,9 +99,13 @@ public class InteractionHandler
 	{
 		Sound sound = ClientProxy.mappings.get(interaction);
 		String id = UUID.randomUUID().toString();
-		SoundPlayer.playSound(sound.getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true);
-		sound.setTimeLastPlayed();
-		ClientProxy.mappings.put(interaction, sound);
+		//SoundPlayer.playSound(sound.getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true);
+		//sound.setTimeLastPlayed();
+		//ClientProxy.mappings.put(interaction, sound);
+
+		String lastSoundIdentifier = UUID.randomUUID().toString();
+		InteractionSounds.network.sendToServer(new ClientPlaySoundMessage(sound.getSoundName(), id, player.dimension, (int) player.posX, (int) player.posY,
+				(int) player.posZ));
 	}
 
 	/**

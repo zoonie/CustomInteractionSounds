@@ -9,6 +9,7 @@ import com.zoonie.InteractionSounds.configuration.ConfigurationManager;
 import com.zoonie.InteractionSounds.network.packet.SoundChunkPacket;
 import com.zoonie.InteractionSounds.network.packet.SoundUploadedPacket;
 import com.zoonie.InteractionSounds.network.packet.client.CheckPresencePacket;
+import com.zoonie.InteractionSounds.network.packet.client.ClientPlaySoundMessage;
 import com.zoonie.InteractionSounds.network.packet.client.GetUploadedSoundsPacket;
 import com.zoonie.InteractionSounds.network.packet.client.RemoveSoundPacket;
 import com.zoonie.InteractionSounds.network.packet.server.ServerPlaySoundPacket;
@@ -27,6 +28,7 @@ public class CommonProxy
 		InteractionSounds.network.registerMessage(CheckPresencePacket.Handler.class, CheckPresencePacket.class, 0, Side.SERVER);
 		InteractionSounds.network.registerMessage(GetUploadedSoundsPacket.Handler.class, GetUploadedSoundsPacket.class, 1, Side.SERVER);
 		InteractionSounds.network.registerMessage(RemoveSoundPacket.Handler.class, RemoveSoundPacket.class, 2, Side.SERVER);
+		InteractionSounds.network.registerMessage(ClientPlaySoundMessage.Handler.class, ClientPlaySoundMessage.class, 3, Side.SERVER);
 
 		InteractionSounds.network.registerMessage(ServerPlaySoundPacket.Handler.class, ServerPlaySoundPacket.class, 6, Side.CLIENT);
 		InteractionSounds.network.registerMessage(SoundNotFoundPacket.Handler.class, SoundNotFoundPacket.class, 7, Side.CLIENT);

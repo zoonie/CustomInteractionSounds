@@ -58,7 +58,6 @@ public class GuiSounds extends GuiScreen implements IListGui
 			}
 		};
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Sound Files (.ogg, .wav, .mp3)", "ogg", "wav", "mp3"));
-		// NetworkHelper.syncPlayerSounds(player);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -137,7 +136,10 @@ public class GuiSounds extends GuiScreen implements IListGui
 				if(fcReturn == JFileChooser.APPROVE_OPTION)
 				{
 					selectSoundIndex(-1);
-					selectedSound = new Sound(fileChooser.getSelectedFile());
+					if(fileChooser.getSelectedFile().exists())
+						selectedSound = new Sound(fileChooser.getSelectedFile());
+					else
+						selectedSound = null;
 					onSelectedSoundChanged();
 				}
 				break;

@@ -34,19 +34,22 @@ public class GuiSounds extends GuiScreen implements IListGui
 	private Sound selectedSound;
 	private JFileChooser fileChooser;
 	private EntityPlayer player;
-	private GuiButton saveButton;
-	private GuiButton playButton;
+	private GuiButton saveButton, playButton;
 	private UUID currentlyPlayerSoundId;
 	private long timeSoundFinishedPlaying;
 	private Interaction interaction;
 	private Boolean justUploaded = false;
-	private GuiCheckBox itemChecked;
-	private GuiCheckBox targetChecked;
-	private GuiCheckBox variantChecked;
+	private GuiCheckBox itemChecked, targetChecked, variantChecked;
+	private String translatedItem, translatedTarget, translatedTargetVariant;
 
 	public GuiSounds(EntityPlayer player, Interaction interaction) {
 		this.player = player;
 		this.interaction = interaction;
+
+		translatedItem = StatCollector.translateToLocal(interaction.getItem() + ".name");
+		translatedTarget = getTranslatedTarget(interaction.getTarget(), "");
+		translatedTargetVariant = getTranslatedTarget(interaction.getTarget(), interaction.getVariant());
+
 		fileChooser = new JFileChooser(Minecraft.getMinecraft().mcDataDir) {
 			@Override
 			protected JDialog createDialog(Component parent) throws HeadlessException
@@ -211,20 +214,10 @@ public class GuiSounds extends GuiScreen implements IListGui
 
 	private void drawInteractionInfo()
 	{
-		String variant = variantChecked.isChecked() ? interaction.getVariant() : "";
-		String target = "";
-		if(targetChecked.isChecked())
-			target = "any target";
-		else if(StatCollector.canTranslate((interaction.getTarget() + variant + ".name")))
-			target = StatCollector.translateToLocal(interaction.getTarget() + variant + ".name");
-		else if(interaction.getTarget().indexOf(".") != -1)
-		{
-			String targ = interaction.getTarget().substring(interaction.getTarget().indexOf("."));
-			target = StatCollector.translateToLocal("item" + targ + ".name");
-		}
-		else
-			target = interaction.getTarget();
-		String item = itemChecked.isChecked() ? "any item" : StatCollector.translateToLocal(interaction.getItem() + ".name");
+		String item = itemChecked.isChecked() ? "any item" : translatedItem;
+		String preTarget = variantChecked.isChecked() ? translatedTargetVariant : translatedTarget;
+		String target = targetChecked.isChecked() ? "any target" : preTarget;
+
 		String interString = interaction.getMouseButton() + " clicked " + target + " using " + item;
 		this.drawString(this.getFontRenderer(), interString, (int) (getWidth() / 2.45), 110, 0xFFFFFF);
 	}
@@ -289,5 +282,22 @@ public class GuiSounds extends GuiScreen implements IListGui
 		{
 			SoundPlayer.stopSound(currentlyPlayerSoundId.toString());
 		}
+	}
+
+	private String getTranslatedTarget(String target, String variant)
+	{
+		if(target.equals("tile.stone") && variant.equals(""))
+			return StatCollector.translateToLocal(target + ".stone.name");
+		else if(StatCollector.canTranslate((target + variant + ".name")))
+			return StatCollector.translateToLocal(target + variant + ".name");
+		else if(StatCollector.canTranslate(target))
+			return StatCollector.translateToLocal(target);
+		else if(target.indexOf(".") != -1)
+		{
+			String targ = target.substring(target.indexOf("."));
+			return StatCollector.translateToLocal("item" + targ + ".name");
+		}
+		else
+			return target;
 	}
 }

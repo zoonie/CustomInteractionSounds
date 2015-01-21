@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
@@ -40,6 +41,7 @@ public class InteractionHandler
 {
 	public static Interaction currentInteraction;
 	private boolean reopenGui = false;
+	private boolean buttonState = false;
 
 	/**
 	 * Called when user clicks with mouse. If the record interaction key has
@@ -55,11 +57,11 @@ public class InteractionHandler
 	public void onClick(MouseEvent event)
 	{
 		reopenGui = false;
-
 		// Left or right click and mouse click down.
 		if((event.button == 0 || event.button == 1) && event.buttonstate)
 		{
-			Interaction interaction = createInteraction(event);
+			buttonState = true;
+			Interaction interaction = createInteraction(event.button);
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 
 			if(ClientProxy.recordInteraction.isPressed())
@@ -71,13 +73,31 @@ public class InteractionHandler
 				player.openGui(InteractionSounds.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 				event.setCanceled(true);
 			}
-			else if(ClientProxy.mappings != null)
-			{
-				String click = event.button == 0 ? "left" : "right";
-				if(lookUp(interaction, click, player, true))
-					return;
-				lookUp(interaction, click, player, false);
-			}
+			else
+				processClick(interaction, event.button, player);
+		}
+		else if((event.button == 0 || event.button == 1))
+			buttonState = false;
+	}
+
+	private void processClick(Interaction interaction, int button, EntityPlayerSP player)
+	{
+		if(ClientProxy.mappings != null)
+		{
+			String click = button == 0 ? "left" : "right";
+			if(lookUp(interaction, click, player, true))
+				return;
+			lookUp(interaction, click, player, false);
+		}
+	}
+
+	@SubscribeEvent
+	public void onBreak(BreakEvent event)
+	{
+		if(buttonState)
+		{
+			Interaction interaction = createInteraction(0);
+			processClick(interaction, 0, Minecraft.getMinecraft().thePlayer);
 		}
 	}
 
@@ -150,7 +170,7 @@ public class InteractionHandler
 	 * @return - Returns an Interaction object with data on mouse button, item
 	 *         in use and block/entity that the player is looking at.
 	 */
-	private Interaction createInteraction(MouseEvent event)
+	private Interaction createInteraction(int button)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = mc.thePlayer;
@@ -165,14 +185,14 @@ public class InteractionHandler
 			IBlockState bs = mc.theWorld.getBlockState(pos);
 			String name = bs.getBlock().getUnlocalizedName();
 			String variant = getBlockVariant(bs, pos);
-			return new Interaction(event.button == 0 ? "left" : "right", item, name, variant);
+			return new Interaction(button == 0 ? "left" : "right", item, name, variant);
 		}
 		else if(entity != null)
 		{
 			if(EntityList.getEntityString(entity) == null || entity.hasCustomName())
-				return new Interaction(event.button == 0 ? "left" : "right", item, entity.getName());
+				return new Interaction(button == 0 ? "left" : "right", item, entity.getName());
 			else
-				return new Interaction(event.button == 0 ? "left" : "right", item, "entity." + EntityList.getEntityString(entity));
+				return new Interaction(button == 0 ? "left" : "right", item, "entity." + EntityList.getEntityString(entity));
 		}
 		else
 			return null;

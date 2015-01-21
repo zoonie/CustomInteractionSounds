@@ -7,9 +7,9 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 import com.zoonie.InteractionSounds.gui.GuiHandler;
+import com.zoonie.InteractionSounds.handler.ChannelHandler;
 import com.zoonie.InteractionSounds.proxy.CommonProxy;
 
 @Mod(modid = InteractionSounds.MODID, name = InteractionSounds.MOD_NAME, version = InteractionSounds.VERSION)
@@ -25,8 +25,6 @@ public class InteractionSounds
 	@SidedProxy(clientSide = "com.zoonie.InteractionSounds.proxy.ClientProxy", serverSide = "com.zoonie.InteractionSounds.proxy.CommonProxy")
 	public static CommonProxy proxy;
 
-	public static SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
-
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -38,7 +36,7 @@ public class InteractionSounds
 
 		proxy.configSetup(event.getModConfigurationDirectory());
 
-		proxy.registerMessages();
+		ChannelHandler.init();
 	}
 
 	@EventHandler

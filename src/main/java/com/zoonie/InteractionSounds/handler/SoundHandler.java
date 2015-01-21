@@ -10,7 +10,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.io.Files;
-import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.helper.NetworkHelper;
 import com.zoonie.InteractionSounds.helper.SoundHelper;
 import com.zoonie.InteractionSounds.network.packet.client.CheckPresencePacket;
@@ -176,7 +175,7 @@ public class SoundHandler
 		{
 			sound.setState(Sound.SoundState.DOWNLOADING);
 			DelayedPlayHandler.addDelayedPlay(soundName, identifier, x, y, z);
-			InteractionSounds.network.sendToServer(new CheckPresencePacket(soundName, Minecraft.getMinecraft().thePlayer));
+			ChannelHandler.network.sendToServer(new CheckPresencePacket(soundName, Minecraft.getMinecraft().thePlayer));
 		}
 	}
 

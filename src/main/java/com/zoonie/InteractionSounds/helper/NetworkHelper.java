@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
-import com.zoonie.InteractionSounds.InteractionSounds;
+import com.zoonie.InteractionSounds.handler.ChannelHandler;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.network.packet.SoundChunkPacket;
 import com.zoonie.InteractionSounds.network.packet.SoundUploadedPacket;
@@ -32,7 +32,7 @@ public class NetworkHelper
 
 	public static void sendMessageToPlayer(IMessage message, EntityPlayerMP player)
 	{
-		InteractionSounds.network.sendTo(message, player);
+		ChannelHandler.network.sendTo(message, player);
 	}
 
 	public static void sendMessageToAll(IMessage message)
@@ -41,7 +41,7 @@ public class NetworkHelper
 		Iterator playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList.iterator();
 		while(playerList.hasNext())
 		{
-			InteractionSounds.network.sendTo(message, (EntityPlayerMP) playerList.next());
+			ChannelHandler.network.sendTo(message, (EntityPlayerMP) playerList.next());
 		}
 	}
 
@@ -60,7 +60,7 @@ public class NetworkHelper
 
 				if(d4 * d4 + d5 * d5 + d6 * d6 < tp.range * tp.range)
 				{
-					InteractionSounds.network.sendTo(message, player);
+					ChannelHandler.network.sendTo(message, player);
 				}
 			}
 		}
@@ -68,7 +68,7 @@ public class NetworkHelper
 
 	public static void syncPlayerSounds(EntityPlayer player)
 	{
-		InteractionSounds.network.sendToServer(new GetUploadedSoundsPacket(player));
+		ChannelHandler.network.sendToServer(new GetUploadedSoundsPacket(player));
 	}
 
 	public static void syncAllPlayerSounds()
@@ -89,9 +89,9 @@ public class NetworkHelper
 		for(int i = 0; i < soundBytes.length; i += PARTITION_SIZE)
 		{
 			byte[] bytes = ArrayUtils.subarray(soundBytes, i, i + Math.min(PARTITION_SIZE, soundBytes.length - i));
-			InteractionSounds.network.sendTo(new SoundChunkPacket(sound.getSoundName(), bytes), player);
+			ChannelHandler.network.sendTo(new SoundChunkPacket(sound.getSoundName(), bytes), player);
 		}
-		InteractionSounds.network.sendTo(new SoundUploadedPacket(sound.getSoundName(), MinecraftServer.getServer().getMOTD()), player);
+		ChannelHandler.network.sendTo(new SoundUploadedPacket(sound.getSoundName(), MinecraftServer.getServer().getMOTD()), player);
 	}
 
 	private static void uploadSound(Sound sound, String category)
@@ -100,9 +100,9 @@ public class NetworkHelper
 		for(int i = 0; i < soundBytes.length; i += PARTITION_SIZE)
 		{
 			byte[] bytes = ArrayUtils.subarray(soundBytes, i, i + Math.min(PARTITION_SIZE, soundBytes.length - i));
-			InteractionSounds.network.sendToServer(new SoundChunkPacket(sound.getSoundName(), bytes));
+			ChannelHandler.network.sendToServer(new SoundChunkPacket(sound.getSoundName(), bytes));
 		}
-		InteractionSounds.network.sendToServer(new SoundUploadedPacket(sound.getSoundName(), category));
+		ChannelHandler.network.sendToServer(new SoundUploadedPacket(sound.getSoundName(), category));
 	}
 
 	public static byte[] convertFileToByteArr(File file)

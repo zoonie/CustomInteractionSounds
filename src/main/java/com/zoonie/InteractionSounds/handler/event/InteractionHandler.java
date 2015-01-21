@@ -18,6 +18,7 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
+import com.zoonie.InteractionSounds.handler.ChannelHandler;
 import com.zoonie.InteractionSounds.network.packet.client.ClientPlaySoundMessage;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
@@ -105,7 +106,7 @@ public class InteractionHandler
 	{
 		Sound sound = ClientProxy.mappings.get(interaction);
 		String id = UUID.randomUUID().toString();
-		InteractionSounds.network.sendToServer(new ClientPlaySoundMessage(sound.getSoundName(), id, player.dimension, (int) player.posX, (int) player.posY,
+		ChannelHandler.network.sendToServer(new ClientPlaySoundMessage(sound.getSoundName(), id, player.dimension, (int) player.posX, (int) player.posY,
 				(int) player.posZ));
 		return true;
 	}

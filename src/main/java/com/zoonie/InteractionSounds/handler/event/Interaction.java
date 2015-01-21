@@ -55,7 +55,7 @@ public class Interaction
 		if(use)
 			variant = tempVariant;
 		else
-			variant = "null";
+			variant = "";
 	}
 
 	@Override

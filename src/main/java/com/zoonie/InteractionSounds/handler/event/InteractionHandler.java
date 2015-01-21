@@ -169,7 +169,10 @@ public class InteractionHandler
 		}
 		else if(entity != null)
 		{
-			return new Interaction(event.button == 0 ? "left" : "right", item, "entity." + EntityList.getEntityString(entity));
+			if(EntityList.getEntityString(entity) == null || entity.hasCustomName())
+				return new Interaction(event.button == 0 ? "left" : "right", item, entity.getName());
+			else
+				return new Interaction(event.button == 0 ? "left" : "right", item, "entity." + EntityList.getEntityString(entity));
 		}
 		else
 			return null;

@@ -1,1 +1,22 @@
 hand.name=Hand
+tile.air.name=Air
+InteractionSounds.left=Left
+InteractionSounds.right=Right
+InteractionSounds.sound.name=Name:
+InteractionSounds.sound.folder=Folder:
+InteractionSounds.sound.status=Status:
+InteractionSounds.sound.size=Size:
+InteractionSounds.sound.status.saved=Saved
+InteractionSounds.sound.status.notSaved=Not Saved
+InteractionSounds.sound.play=Play Sound
+InteractionSounds.sound.stop=Stop Sound
+InteractionSounds.interaction.save=Save
+InteractionSounds.interaction.cancel=Cancel
+InteractionSounds.sound.selectFile=Select File
+InteractionSounds.interaction.mouse=Mouse:
+InteractionSounds.interaction.target=Target:
+InteractionSounds.interaction.item=Item:
+InteractionSounds.interaction.any=Any
+InteractionSounds.interaction.general=General
+InteractionSounds.soundFiles=Sound Files
+

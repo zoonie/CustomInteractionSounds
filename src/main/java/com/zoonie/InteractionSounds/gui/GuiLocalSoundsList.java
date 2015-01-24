@@ -11,7 +11,7 @@ public class GuiLocalSoundsList extends GuiScrollingList
 	private IListGui parent;
 
 	public GuiLocalSoundsList(IListGui parent, int listWidth) {
-		super(parent.getMinecraftInstance(), listWidth, parent.getHeight() + 50, 10, parent.getHeight() - 44, 10, 18);
+		super(parent.getMinecraftInstance(), listWidth, parent.getHeight() + 65, 10, parent.getHeight() - 30, 10, 18);
 		this.parent = parent;
 	}
 
@@ -49,7 +49,7 @@ public class GuiLocalSoundsList extends GuiScrollingList
 	protected void drawSlot(int listIndex, int var2, int var3, int var4, Tessellator var5)
 	{
 		Sound sound = SoundHandler.getLocalSounds().get(listIndex);
-		if(sound != null && var3 + 18 < (parent.getHeight() - 35) && var3 > 7)
+		if(sound != null && var3 + 18 < (parent.getHeight() - 21) && var3 > 7)
 		{
 			this.parent.getFontRenderer().drawString(this.parent.getFontRenderer().trimStringToWidth(sound.getSoundName(), listWidth - 10), this.left + 3,
 					var3 + 2, 0xFFFFFF);

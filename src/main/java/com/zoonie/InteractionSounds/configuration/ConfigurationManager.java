@@ -48,12 +48,11 @@ public class ConfigurationManager
 				String value = line.substring(i + 1);
 
 				String[] values = value.split("\\|");
-				if(values.length != 5)
+				if(values.length != 4)
 					throw new IOException("config error: " + " on line " + lineNo + " of " + config.getName() + ". Length = " + values.length
 							+ " when it should equal 4.");
-				Interaction interaction = new Interaction(values[0].trim(), values[1].trim(), values[2].trim(), values[3].trim().equals("none") ? ""
-						: values[3].trim());
-				Sound sound = SoundHandler.getSoundByName(values[4].trim());
+				Interaction interaction = new Interaction(values[0].trim(), values[1].trim(), values[2].trim());
+				Sound sound = SoundHandler.getSoundByName(values[3].trim());
 				ClientProxy.mappings.put(interaction, sound);
 			}
 			br.close();
@@ -90,7 +89,6 @@ public class ConfigurationManager
 				bw.write(interaction.getMouseButton() + " | ");
 				bw.write(interaction.getItem() + " | ");
 				bw.write(interaction.getTarget() + " | ");
-				bw.write((interaction.getVariant().equals("") ? "none" : interaction.getVariant()) + " | ");
 				bw.write(sound.getSoundName());
 				bw.write("\n");
 			}

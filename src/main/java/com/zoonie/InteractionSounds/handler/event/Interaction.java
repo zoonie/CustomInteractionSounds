@@ -5,19 +5,17 @@ public class Interaction
 	private String mouseButton;
 	private String item;
 	private String target;
-	private String tempVariant;
-	private String variant;
+	private String generalTargetName;
 
 	public Interaction(String mouseButton, String item, String target) {
 		this(mouseButton, item, target, null);
 	}
 
-	public Interaction(String mouseButton, String item, String target, String variant) {
+	public Interaction(String mouseButton, String item, String target, String generalTargetName) {
 		this.mouseButton = mouseButton;
 		this.item = item;
 		this.target = target;
-		this.variant = variant == null ? "" : variant;
-		tempVariant = variant;
+		this.generalTargetName = generalTargetName;
 	}
 
 	public String getMouseButton()
@@ -35,9 +33,9 @@ public class Interaction
 		return target;
 	}
 
-	public String getVariant()
+	public String getGeneralTargetName()
 	{
-		return variant;
+		return generalTargetName;
 	}
 
 	public void setItem(String item)
@@ -50,12 +48,9 @@ public class Interaction
 		this.target = target;
 	}
 
-	public void useVariant(Boolean use)
+	public void useGeneralTargetName()
 	{
-		if(use)
-			variant = tempVariant;
-		else
-			variant = "";
+		target = generalTargetName;
 	}
 
 	@Override
@@ -66,7 +61,6 @@ public class Interaction
 		result = prime * result + ((item == null) ? 0 : item.hashCode());
 		result = prime * result + ((mouseButton == null) ? 0 : mouseButton.hashCode());
 		result = prime * result + ((target == null) ? 0 : target.hashCode());
-		result = prime * result + ((variant == null) ? 0 : variant.hashCode());
 		return result;
 	}
 
@@ -100,13 +94,6 @@ public class Interaction
 				return false;
 		}
 		else if(!target.equals(other.target))
-			return false;
-		if(variant == null)
-		{
-			if(other.variant != null)
-				return false;
-		}
-		else if(!variant.equals(other.variant))
 			return false;
 		return true;
 	}

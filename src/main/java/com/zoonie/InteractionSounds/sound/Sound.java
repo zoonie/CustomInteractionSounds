@@ -13,6 +13,7 @@ public class Sound
 	private SoundState state;
 	private long timeLastPlayed = -1;
 	private long delay;
+	private float volume;
 
 	public Sound(File soundLocation) {
 		this.soundLocation = soundLocation;
@@ -66,6 +67,16 @@ public class Sound
 	public long getTimeLastPlayed()
 	{
 		return timeLastPlayed;
+	}
+
+	public float getVolume()
+	{
+		return volume;
+	}
+
+	public void setVolume(float volume)
+	{
+		this.volume = volume;
 	}
 
 	public void onSoundUploaded(String remoteCategory)

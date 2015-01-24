@@ -164,17 +164,17 @@ public class SoundHandler
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void playSound(String soundName, String identifier, int x, int y, int z)
+	public static void playSound(String soundName, String identifier, int x, int y, int z, float volume)
 	{
 		Sound sound = SoundHandler.getSound(soundName);
 		if(sound.hasLocal())
 		{
-			SoundPlayer.playSound(sound.getSoundLocation(), identifier, x, y, z, true);
+			SoundPlayer.playSound(sound.getSoundLocation(), identifier, x, y, z, true, volume);
 		}
 		else if(sound.getState() != Sound.SoundState.DOWNLOADING)
 		{
 			sound.setState(Sound.SoundState.DOWNLOADING);
-			DelayedPlayHandler.addDelayedPlay(soundName, identifier, x, y, z);
+			DelayedPlayHandler.addDelayedPlay(soundName, identifier, x, y, z, volume);
 			ChannelHandler.network.sendToServer(new CheckPresencePacket(soundName, Minecraft.getMinecraft().thePlayer));
 		}
 	}

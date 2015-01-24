@@ -22,7 +22,7 @@ public class SoundPlayer
 		soundSystem = ObfuscationReflectionHelper.getPrivateValue(SoundManager.class, soundManager, "sndSystem", "field_148620_e", "e");
 	}
 
-	public static void playSound(File sound, String identifier, float x, float y, float z, boolean fading)
+	public static void playSound(File sound, String identifier, float x, float y, float z, boolean fading, float volume)
 	{
 		if(soundSystem == null)
 		{
@@ -31,6 +31,7 @@ public class SoundPlayer
 		try
 		{
 			soundSystem.newStreamingSource(false, identifier, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
+			soundSystem.setVolume(identifier, volume);
 			soundSystem.play(identifier);
 		} catch(MalformedURLException e)
 		{

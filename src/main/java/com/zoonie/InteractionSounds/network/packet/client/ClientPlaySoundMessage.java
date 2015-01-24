@@ -14,17 +14,19 @@ public class ClientPlaySoundMessage implements IMessage
 	String soundName, identifier;
 	int dimensionId;
 	int x, y, z;
+	float volume;
 
 	public ClientPlaySoundMessage() {
 	}
 
-	public ClientPlaySoundMessage(String name, String identifier, int dimensionId, int x, int y, int z) {
+	public ClientPlaySoundMessage(String name, String identifier, int dimensionId, int x, int y, int z, float volume) {
 		this.soundName = name;
 		this.identifier = identifier;
 		this.dimensionId = dimensionId;
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.volume = volume;
 	}
 
 	@Override
@@ -50,10 +52,11 @@ public class ClientPlaySoundMessage implements IMessage
 		x = bytes.readInt();
 		y = bytes.readInt();
 		z = bytes.readInt();
+		volume = bytes.readFloat();
 
 		TargetPoint tp = new TargetPoint(dimensionId, x, y, z, 16);
 		NetworkHelper.syncAllPlayerSounds();
-		NetworkHelper.sendMessageToAllAround(new ServerPlaySoundPacket(soundName, identifier, x, y, z), tp);
+		NetworkHelper.sendMessageToAllAround(new ServerPlaySoundPacket(soundName, identifier, x, y, z, volume), tp);
 	}
 
 	@Override
@@ -73,6 +76,7 @@ public class ClientPlaySoundMessage implements IMessage
 		bytes.writeInt(x);
 		bytes.writeInt(y);
 		bytes.writeInt(z);
+		bytes.writeFloat(volume);
 	}
 
 	public static class Handler implements IMessageHandler<ClientPlaySoundMessage, IMessage>

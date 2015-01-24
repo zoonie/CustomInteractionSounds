@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
+import net.minecraftforge.fml.client.config.GuiSlider;
 
 import org.apache.commons.io.FileUtils;
 
@@ -41,8 +42,10 @@ public class GuiSounds extends GuiScreen implements IListGui
 	private Interaction interaction;
 	private Boolean justUploaded = false;
 	private GuiCheckBox itemChecked, targetChecked, generalTargetChecked;
+	private GuiSlider slider;
 
-	public GuiSounds(EntityPlayer player, Interaction interaction) {
+	public GuiSounds(EntityPlayer player, Interaction interaction)
+	{
 		this.player = player;
 		this.interaction = interaction;
 
@@ -75,6 +78,8 @@ public class GuiSounds extends GuiScreen implements IListGui
 		this.buttonList.add(itemChecked = new GuiCheckBox(4, getWidth() - 80, getHeight() - 70, " " + translate("interaction.any"), false));
 		this.buttonList.add(targetChecked = new GuiCheckBox(5, getWidth() - 80, getHeight() - 95, " " + translate("interaction.any"), false));
 		this.buttonList.add(generalTargetChecked = new GuiCheckBox(6, getWidth() - 80, getHeight() - 85, " " + translate("interaction.general"), false));
+
+		this.buttonList.add(slider = new GuiSlider(7, (int) (getWidth() / 1.6), 90, 70, 20, translate("sound.volume"), "", 0, 1, 1, true, true));
 	}
 
 	@Override
@@ -87,16 +92,19 @@ public class GuiSounds extends GuiScreen implements IListGui
 		{
 		}
 		super.drawScreen(p_571_1_, p_571_2_, p_571_3_);
-
 		if(selectedSound != null)
 		{
 			drawSongInfo();
+			slider.visible = true;
 		}
+		else
+			slider.visible = false;
 		if(playButton != null && playButton.displayString.equalsIgnoreCase(translate("sound.stop")) && System.currentTimeMillis() > timeSoundFinishedPlaying)
 		{
 			playButton.displayString = translate("sound.play");
 		}
 		drawInteractionInfo();
+		slider.dragging = false; //temporary
 	}
 
 	@Override
@@ -115,6 +123,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 						interaction.setTarget("any");
 					if(generalTargetChecked.isChecked())
 						interaction.useGeneralTargetName();
+					selectedSound.setVolume((float) slider.getValue());
 					ClientProxy.mappings.put(interaction, selectedSound);
 					InteractionSounds.proxy.getConfig().writeAll();
 
@@ -149,7 +158,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 						currentlyPlayerSoundId = UUID.randomUUID();
 						timeSoundFinishedPlaying = (long) (SoundHelper.getSoundLength(selectedSound.getSoundLocation()) * 1000) + System.currentTimeMillis();
 						SoundPlayer.playSound(selectedSound.getSoundLocation(), currentlyPlayerSoundId.toString(), (float) player.posX, (float) player.posY,
-								(float) player.posZ, false);
+								(float) player.posZ, false, (float) slider.getValue());
 						playButton.displayString = translate("sound.stop");
 					}
 					else

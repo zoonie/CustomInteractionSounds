@@ -20,7 +20,8 @@ public class ConfigurationManager
 {
 	private File config;
 
-	public ConfigurationManager(File config) {
+	public ConfigurationManager(File config)
+	{
 		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
 		{
 			this.config = config;
@@ -48,11 +49,12 @@ public class ConfigurationManager
 				String value = line.substring(i + 1);
 
 				String[] values = value.split("\\|");
-				if(values.length != 4)
+				if(values.length != 5)
 					throw new IOException("config error: " + " on line " + lineNo + " of " + config.getName() + ". Length = " + values.length
-							+ " when it should equal 4.");
+							+ " when it should equal 5.");
 				Interaction interaction = new Interaction(values[0].trim(), values[1].trim(), values[2].trim());
 				Sound sound = SoundHandler.getSoundByName(values[3].trim());
+				sound.setVolume((float) Float.parseFloat(values[4].trim()));
 				ClientProxy.mappings.put(interaction, sound);
 			}
 			br.close();
@@ -89,7 +91,8 @@ public class ConfigurationManager
 				bw.write(interaction.getMouseButton() + " | ");
 				bw.write(interaction.getItem() + " | ");
 				bw.write(interaction.getTarget() + " | ");
-				bw.write(sound.getSoundName());
+				bw.write(sound.getSoundName() + " | ");
+				bw.write(Float.toString(sound.getVolume()));
 				bw.write("\n");
 			}
 			bw.close();

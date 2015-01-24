@@ -9,9 +9,9 @@ public class DelayedPlayHandler
 {
 	private static Map<String, SoundPlayInfo> map = new HashMap<String, SoundPlayInfo>();
 
-	public static void addDelayedPlay(String soundName, String identifier, int x, int y, int z)
+	public static void addDelayedPlay(String soundName, String identifier, int x, int y, int z, float volume)
 	{
-		map.put(soundName, new SoundPlayInfo(identifier, x, y, z));
+		map.put(soundName, new SoundPlayInfo(identifier, x, y, z, volume));
 	}
 
 	public static void onSoundReceived(String soundName)
@@ -19,7 +19,7 @@ public class DelayedPlayHandler
 		SoundPlayInfo info = map.get(soundName);
 		if(info != null)
 		{
-			SoundHandler.playSound(soundName, info.identifier, info.x, info.y, info.z);
+			SoundHandler.playSound(soundName, info.identifier, info.x, info.y, info.z, info.volume);
 			map.remove(soundName);
 		}
 	}

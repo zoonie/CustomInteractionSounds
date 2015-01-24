@@ -10,6 +10,7 @@ InteractionSounds.sound.status.saved=Saved
 InteractionSounds.sound.status.notSaved=Not Saved
 InteractionSounds.sound.play=Play Sound
 InteractionSounds.sound.stop=Stop Sound
+InteractionSounds.sound.volume=Volume:
 InteractionSounds.interaction.save=Save
 InteractionSounds.interaction.cancel=Cancel
 InteractionSounds.sound.selectFile=Select File

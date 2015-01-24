@@ -11,16 +11,20 @@ public class ServerPlaySoundPacket implements IMessage
 {
 	String soundName, identifier;
 	int x, y, z;
+	float volume;
 
-	public ServerPlaySoundPacket() {
+	public ServerPlaySoundPacket()
+	{
 	}
 
-	public ServerPlaySoundPacket(String soundName, String identifier, int x, int y, int z) {
+	public ServerPlaySoundPacket(String soundName, String identifier, int x, int y, int z, float volume)
+	{
 		this.soundName = soundName;
 		this.identifier = identifier;
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.volume = volume;
 	}
 
 	@Override
@@ -43,7 +47,8 @@ public class ServerPlaySoundPacket implements IMessage
 		x = bytes.readInt();
 		y = bytes.readInt();
 		z = bytes.readInt();
-		SoundHandler.playSound(soundName, identifier, x, y, z);
+		volume = bytes.readFloat();
+		SoundHandler.playSound(soundName, identifier, x, y, z, volume);
 	}
 
 	@Override
@@ -62,6 +67,7 @@ public class ServerPlaySoundPacket implements IMessage
 		bytes.writeInt(x);
 		bytes.writeInt(y);
 		bytes.writeInt(z);
+		bytes.writeFloat(volume);
 	}
 
 	public static class Handler implements IMessageHandler<ServerPlaySoundPacket, IMessage>

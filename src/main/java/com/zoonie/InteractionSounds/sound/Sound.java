@@ -15,7 +15,8 @@ public class Sound
 	private long delay;
 	private float volume;
 
-	public Sound(File soundLocation) {
+	public Sound(File soundLocation)
+	{
 		this.soundLocation = soundLocation;
 		String path = soundLocation.getAbsolutePath();
 		path = path.substring(0, path.lastIndexOf(File.separator));
@@ -27,7 +28,8 @@ public class Sound
 		this.state = SoundState.LOCAL_ONLY;
 	}
 
-	public Sound(String soundName, String category) {
+	public Sound(String soundName, String category)
+	{
 		this.soundLocation = null;
 		this.soundName = soundName;
 		this.remoteCategory = category;
@@ -127,7 +129,7 @@ public class Sound
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((category == null) ? 0 : category.hashCode());
+		result = prime * result + ((soundLocation == null) ? 0 : (int) soundLocation.length());
 		result = prime * result + ((soundName == null) ? 0 : soundName.hashCode());
 		return result;
 	}
@@ -142,12 +144,12 @@ public class Sound
 		if(getClass() != obj.getClass())
 			return false;
 		Sound other = (Sound) obj;
-		if(category == null)
+		if(soundLocation == null)
 		{
-			if(other.category != null)
+			if(other.soundLocation != null)
 				return false;
 		}
-		else if(!category.equals(other.category))
+		else if(soundLocation.length() != other.soundLocation.length())
 			return false;
 		if(soundName == null)
 		{

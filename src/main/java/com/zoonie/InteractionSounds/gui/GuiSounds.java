@@ -127,8 +127,11 @@ public class GuiSounds extends GuiScreen implements IListGui
 					ClientProxy.mappings.put(interaction, selectedSound);
 					InteractionSounds.proxy.getConfig().writeAll();
 
-					selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
-					NetworkHelper.clientSoundUpload(selectedSound);
+					if(!SoundHandler.getSounds().contains(selectedSound))
+					{
+						selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
+						NetworkHelper.clientSoundUpload(selectedSound);
+					}
 				}
 				this.mc.displayGuiScreen(null);
 				this.mc.setIngameFocus();

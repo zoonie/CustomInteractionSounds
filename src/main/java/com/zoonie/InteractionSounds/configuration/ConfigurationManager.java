@@ -50,11 +50,15 @@ public class ConfigurationManager
 
 				String[] values = value.split("\\|");
 				if(values.length != 5)
-					throw new IOException("config error: " + " on line " + lineNo + " of " + config.getName() + ". Length = " + values.length
+					throw new IOException("Config error: on line " + lineNo + " of " + config.getName() + ". Length = " + values.length
 							+ " when it should equal 5.");
 				Interaction interaction = new Interaction(values[0].trim(), values[1].trim(), values[2].trim());
 				Sound sound = SoundHandler.getSoundByName(values[3].trim());
-				sound.setVolume((float) Float.parseFloat(values[4].trim()));
+				if(sound != null)
+					sound.setVolume((float) Float.parseFloat(values[4].trim()));
+				else
+					throw new IOException("Config error: on line " + lineNo + " of " + config.getName() + ".  Check that sound file: \"" + values[3].trim()
+							+ "\" exists within sounds folder of your Minecraft installation folder.");
 				ClientProxy.mappings.put(interaction, sound);
 			}
 			br.close();

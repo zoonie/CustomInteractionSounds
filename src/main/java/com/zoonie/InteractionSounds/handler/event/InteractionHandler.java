@@ -118,8 +118,8 @@ public class InteractionHandler
 	{
 		Sound sound = ClientProxy.mappings.get(interaction);
 		String id = UUID.randomUUID().toString();
-		ChannelHandler.network.sendToServer(new ClientPlaySoundMessage(sound.getSoundName(), id, player.dimension, (int) player.posX, (int) player.posY,
-				(int) player.posZ, (float) sound.getVolume()));
+		ChannelHandler.network.sendToServer(new ClientPlaySoundMessage(sound.getSoundName(), sound.getCategory(), id, player.dimension, (int) player.posX,
+				(int) player.posY, (int) player.posZ, (float) sound.getVolume()));
 		return true;
 	}
 

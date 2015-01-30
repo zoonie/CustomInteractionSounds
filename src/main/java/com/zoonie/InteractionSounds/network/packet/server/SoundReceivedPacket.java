@@ -12,10 +12,12 @@ public class SoundReceivedPacket implements IMessage
 {
 	String soundName, category;
 
-	public SoundReceivedPacket() {
+	public SoundReceivedPacket()
+	{
 	}
 
-	public SoundReceivedPacket(Sound sound) {
+	public SoundReceivedPacket(Sound sound)
+	{
 		this.soundName = sound.getSoundName();
 		this.category = sound.getCategory();
 	}

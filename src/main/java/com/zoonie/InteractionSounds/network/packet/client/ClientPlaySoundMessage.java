@@ -11,16 +11,19 @@ import com.zoonie.InteractionSounds.network.packet.server.ServerPlaySoundPacket;
 
 public class ClientPlaySoundMessage implements IMessage
 {
-	String soundName, identifier;
+	String soundName, category, identifier;
 	int dimensionId;
 	int x, y, z;
 	float volume;
 
-	public ClientPlaySoundMessage() {
+	public ClientPlaySoundMessage()
+	{
 	}
 
-	public ClientPlaySoundMessage(String name, String identifier, int dimensionId, int x, int y, int z, float volume) {
+	public ClientPlaySoundMessage(String name, String category, String identifier, int dimensionId, int x, int y, int z, float volume)
+	{
 		this.soundName = name;
+		this.category = category;
 		this.identifier = identifier;
 		this.dimensionId = dimensionId;
 		this.x = x;
@@ -48,6 +51,14 @@ public class ClientPlaySoundMessage implements IMessage
 		}
 		identifier = String.valueOf(idChars);
 
+		int catLength = bytes.readInt();
+		char[] catChars = new char[catLength];
+		for(int i = 0; i < catLength; i++)
+		{
+			catChars[i] = bytes.readChar();
+		}
+		category = String.valueOf(catChars);
+
 		dimensionId = bytes.readInt();
 		x = bytes.readInt();
 		y = bytes.readInt();
@@ -55,8 +66,7 @@ public class ClientPlaySoundMessage implements IMessage
 		volume = bytes.readFloat();
 
 		TargetPoint tp = new TargetPoint(dimensionId, x, y, z, 16);
-		NetworkHelper.syncAllPlayerSounds();
-		NetworkHelper.sendMessageToAllAround(new ServerPlaySoundPacket(soundName, identifier, x, y, z, volume), tp);
+		NetworkHelper.sendMessageToAllAround(new ServerPlaySoundPacket(soundName, category, identifier, x, y, z, volume), tp);
 	}
 
 	@Override
@@ -69,6 +79,11 @@ public class ClientPlaySoundMessage implements IMessage
 		}
 		bytes.writeInt(identifier.length());
 		for(char c : identifier.toCharArray())
+		{
+			bytes.writeChar(c);
+		}
+		bytes.writeInt(category.length());
+		for(char c : category.toCharArray())
 		{
 			bytes.writeChar(c);
 		}

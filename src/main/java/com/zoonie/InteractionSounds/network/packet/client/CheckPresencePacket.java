@@ -1,14 +1,13 @@
 package com.zoonie.InteractionSounds.network.packet.client;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import com.zoonie.InteractionSounds.handler.ChannelHandler;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.helper.NetworkHelper;
 import com.zoonie.InteractionSounds.network.packet.server.SoundNotFoundPacket;
@@ -17,45 +16,36 @@ import com.zoonie.InteractionSounds.sound.Sound;
 public class CheckPresencePacket implements IMessage
 {
 	String fileName;
-	int entityID;
-	int worldID;
+	String category;
 
-	public CheckPresencePacket() {
+	public CheckPresencePacket()
+	{
 	}
 
-	public CheckPresencePacket(String soundName, EntityPlayer player) {
+	public CheckPresencePacket(String soundName, String category)
+	{
 		this.fileName = soundName;
-		this.entityID = player.getEntityId();
-		this.worldID = player.getEntityWorld().provider.getDimensionId();
+		this.category = category;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf bytes)
 	{
 		int fileLength = bytes.readInt();
-		char[] fileCars = new char[fileLength];
+		char[] fileChars = new char[fileLength];
 		for(int i = 0; i < fileLength; i++)
 		{
-			fileCars[i] = bytes.readChar();
+			fileChars[i] = bytes.readChar();
 		}
-		fileName = String.valueOf(fileCars);
-		entityID = bytes.readInt();
-		worldID = bytes.readInt();
+		fileName = String.valueOf(fileChars);
 
-		Entity entity = DimensionManager.getWorld(worldID).getEntityByID(entityID);
-		if(entity != null && entity instanceof EntityPlayer)
+		int catLength = bytes.readInt();
+		char[] catChars = new char[catLength];
+		for(int i = 0; i < catLength; i++)
 		{
-			Sound sound = SoundHandler.getSound(fileName);
-
-			if(sound != null)
-			{
-				NetworkHelper.serverSoundUpload(sound, (EntityPlayerMP) entity);
-			}
-			else
-			{
-				NetworkHelper.sendMessageToPlayer(new SoundNotFoundPacket(fileName), (EntityPlayerMP) entity);
-			}
+			catChars[i] = bytes.readChar();
 		}
+		category = String.valueOf(catChars);
 	}
 
 	@Override
@@ -66,15 +56,51 @@ public class CheckPresencePacket implements IMessage
 		{
 			bytes.writeChar(c);
 		}
-		bytes.writeInt(entityID);
-		bytes.writeInt(worldID);
+		bytes.writeInt(category.length());
+		for(char c : category.toCharArray())
+		{
+			bytes.writeChar(c);
+		}
 	}
 
-	public static class Handler implements IMessageHandler<CheckPresencePacket, IMessage>
+	public static class ServerHandler implements IMessageHandler<CheckPresencePacket, IMessage>
 	{
 		@Override
 		public IMessage onMessage(CheckPresencePacket message, MessageContext ctx)
 		{
+			EntityPlayer player = ctx.getServerHandler().playerEntity;
+			if(player != null && player instanceof EntityPlayer)
+			{
+				Sound sound = SoundHandler.getSound(message.fileName, message.category);
+
+				if(sound != null)
+				{
+					NetworkHelper.serverSoundUpload(sound, (EntityPlayerMP) player);
+				}
+				else
+				{
+					NetworkHelper.sendMessageToPlayer(new SoundNotFoundPacket(message.fileName, message.category), (EntityPlayerMP) player);
+				}
+			}
+			return null;
+		}
+	}
+
+	public static class ClientHandler implements IMessageHandler<CheckPresencePacket, IMessage>
+	{
+		@Override
+		public IMessage onMessage(CheckPresencePacket message, MessageContext ctx)
+		{
+			Sound sound = SoundHandler.getSound(message.fileName, message.category);
+
+			if(sound != null)
+			{
+				NetworkHelper.clientSoundUpload(sound);
+			}
+			else
+			{
+				ChannelHandler.network.sendToServer(new SoundNotFoundPacket(message.fileName, message.category));
+			}
 			return null;
 		}
 	}

@@ -104,7 +104,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 			playButton.displayString = translate("sound.play");
 		}
 		drawInteractionInfo();
-		slider.dragging = false; //temporary
+		slider.dragging = false; // temporary
 	}
 
 	@Override
@@ -123,15 +123,14 @@ public class GuiSounds extends GuiScreen implements IListGui
 						interaction.setTarget("any");
 					if(generalTargetChecked.isChecked())
 						interaction.useGeneralTargetName();
+					InteractionSounds.proxy.getConfig().writeAll();
+					if(!SoundHandler.getLocalSounds().contains(selectedSound))
+						selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
+
 					selectedSound.setVolume((float) slider.getValue());
 					ClientProxy.mappings.put(interaction, selectedSound);
-					InteractionSounds.proxy.getConfig().writeAll();
+					NetworkHelper.clientSoundUpload(selectedSound);
 
-					if(!SoundHandler.getSounds().contains(selectedSound))
-					{
-						selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
-						NetworkHelper.clientSoundUpload(selectedSound);
-					}
 				}
 				this.mc.displayGuiScreen(null);
 				this.mc.setIngameFocus();

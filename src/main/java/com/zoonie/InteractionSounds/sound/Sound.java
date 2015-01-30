@@ -9,7 +9,6 @@ public class Sound
 	private File soundLocation;
 	private String soundName;
 	private String category;
-	private String remoteCategory;
 	private SoundState state;
 	private long timeLastPlayed = -1;
 	private long delay;
@@ -32,7 +31,7 @@ public class Sound
 	{
 		this.soundLocation = null;
 		this.soundName = soundName;
-		this.remoteCategory = category;
+		this.category = category;
 		this.state = SoundState.REMOTE_ONLY;
 	}
 
@@ -41,9 +40,9 @@ public class Sound
 		return category;
 	}
 
-	public String getRemoteCategory()
+	public void setCategory(String category)
 	{
-		return remoteCategory;
+		this.category = category;
 	}
 
 	public String getSoundName()
@@ -81,9 +80,8 @@ public class Sound
 		this.volume = volume;
 	}
 
-	public void onSoundUploaded(String remoteCategory)
+	public void onSoundUploaded()
 	{
-		this.remoteCategory = remoteCategory;
 		this.state = SoundState.SYNCED;
 	}
 
@@ -129,7 +127,7 @@ public class Sound
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((soundLocation == null) ? 0 : (int) soundLocation.length());
+		result = prime * result + ((category == null) ? 0 : category.hashCode());
 		result = prime * result + ((soundName == null) ? 0 : soundName.hashCode());
 		return result;
 	}
@@ -144,12 +142,12 @@ public class Sound
 		if(getClass() != obj.getClass())
 			return false;
 		Sound other = (Sound) obj;
-		if(soundLocation == null)
+		if(category == null)
 		{
-			if(other.soundLocation != null)
+			if(other.category != null)
 				return false;
 		}
-		else if(soundLocation.length() != other.soundLocation.length())
+		else if(category != other.category)
 			return false;
 		if(soundName == null)
 		{

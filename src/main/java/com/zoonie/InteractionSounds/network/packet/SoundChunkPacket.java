@@ -9,28 +9,38 @@ import com.zoonie.InteractionSounds.handler.NetworkHandler;
 
 public class SoundChunkPacket implements IMessage
 {
-	String soundName;
+	String soundName, category;
 	byte[] soundChunk;
 
-	public SoundChunkPacket() {
+	public SoundChunkPacket()
+	{
 	}
 
-	public SoundChunkPacket(String soundName, byte[] soundChunk) {
+	public SoundChunkPacket(String soundName, String category, byte[] soundChunk)
+	{
 		this.soundName = soundName;
+		this.category = category;
 		this.soundChunk = soundChunk;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf bytes)
 	{
-
 		int fileLength = bytes.readInt();
-		char[] fileCars = new char[fileLength];
+		char[] fileChars = new char[fileLength];
 		for(int i = 0; i < fileLength; i++)
 		{
-			fileCars[i] = bytes.readChar();
+			fileChars[i] = bytes.readChar();
 		}
-		soundName = String.valueOf(fileCars);
+		soundName = String.valueOf(fileChars);
+
+		int catLength = bytes.readInt();
+		char[] catChars = new char[catLength];
+		for(int i = 0; i < catLength; i++)
+		{
+			catChars[i] = bytes.readChar();
+		}
+		category = String.valueOf(catChars);
 
 		int soundByteLength = bytes.readInt();
 		byte[] soundByteArr = new byte[soundByteLength];
@@ -38,7 +48,7 @@ public class SoundChunkPacket implements IMessage
 		{
 			soundByteArr[i] = bytes.readByte();
 		}
-		NetworkHandler.addSoundChunk(soundName, soundByteArr);
+		NetworkHandler.addSoundChunk(soundName, category, soundByteArr);
 	}
 
 	@Override
@@ -46,6 +56,11 @@ public class SoundChunkPacket implements IMessage
 	{
 		bytes.writeInt(soundName.length());
 		for(char c : soundName.toCharArray())
+		{
+			bytes.writeChar(c);
+		}
+		bytes.writeInt(category.length());
+		for(char c : category.toCharArray())
 		{
 			bytes.writeChar(c);
 		}

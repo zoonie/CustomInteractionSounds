@@ -62,11 +62,11 @@ public class SoundHandler
 		return remoteSounds;
 	}
 
-	public static Sound getSound(String fileName)
+	public static Sound getSound(String fileName, String category)
 	{
 		for(Sound sound : getSounds())
 		{
-			if(sound.getSoundName().equals(fileName))
+			if(sound.getSoundName().equals(fileName) && sound.getCategory().equals(category))
 			{
 				return sound;
 			}
@@ -121,12 +121,12 @@ public class SoundHandler
 
 	public static void addRemoteSound(String soundName, String remoteCategory)
 	{
-		Sound sound = getSound(soundName);
+		Sound sound = getSound(soundName, remoteCategory);
 		if(sound != null)
 		{
 			if(sound.hasLocal())
 			{
-				sound.onSoundUploaded(remoteCategory);
+				sound.onSoundUploaded();
 			}
 		}
 		else
@@ -135,9 +135,9 @@ public class SoundHandler
 		}
 	}
 
-	public static void addLocalSound(String soundName, File soundFile)
+	public static void addLocalSound(String soundName, String category, File soundFile)
 	{
-		Sound sound = getSound(soundName);
+		Sound sound = getSound(soundName, category);
 		if(sound != null)
 		{
 			if(sound.getState() != Sound.SoundState.SYNCED)
@@ -164,38 +164,34 @@ public class SoundHandler
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void playSound(String soundName, String identifier, int x, int y, int z, float volume)
+	public static void playSound(String soundName, String category, String identifier, int x, int y, int z, float volume)
 	{
-		Sound sound = SoundHandler.getSound(soundName);
-		if(sound.hasLocal())
+
+		Sound sound = SoundHandler.getSound(soundName, category);
+		if(sound != null)
 		{
-			SoundPlayer.playSound(sound.getSoundLocation(), identifier, x, y, z, true, volume);
-		}
-		else if(sound.getState() != Sound.SoundState.DOWNLOADING)
-		{
-			sound.setState(Sound.SoundState.DOWNLOADING);
-			DelayedPlayHandler.addDelayedPlay(soundName, identifier, x, y, z, volume);
-			ChannelHandler.network.sendToServer(new CheckPresencePacket(soundName, Minecraft.getMinecraft().thePlayer));
+			if(sound.hasLocal())
+			{
+				SoundPlayer.playSound(sound.getSoundLocation(), identifier, x, y, z, true, volume);
+			}
+			else if(sound.getState() != Sound.SoundState.DOWNLOADING)
+			{
+				sound.setState(Sound.SoundState.DOWNLOADING);
+				DelayedPlayHandler.addDelayedPlay(soundName, category, identifier, x, y, z, volume);
+				ChannelHandler.network.sendToServer(new CheckPresencePacket(soundName, category));
+			}
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static Sound setupSound(File file)
 	{
-		File category;
-		if(Minecraft.getMinecraft().getCurrentServerData() != null)
-		{
-			// TODO: make this not return null, dammit MC!
-			category = new File("sounds" + File.separator + Minecraft.getMinecraft().getCurrentServerData().serverMOTD);
-		}
-		else
-		{
-			category = new File("sounds" + File.separator + Minecraft.getMinecraft().thePlayer.getDisplayNameString());
-		}
+		File category = new File("sounds" + File.separator + "Interaction Sounds" + File.separator + Minecraft.getMinecraft().thePlayer.getDisplayNameString());
 		if(!category.exists())
 		{
-			category.mkdir();
+			category.mkdirs();
 		}
+
 		File newFile = new File(category.getAbsolutePath() + File.separator + file.getName());
 		try
 		{
@@ -207,7 +203,7 @@ public class SoundHandler
 			}
 			else
 			{
-				return new Sound(file);
+				Sound sound = new Sound(file);
 			}
 		} catch(IOException e)
 		{

@@ -5,17 +5,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import com.zoonie.InteractionSounds.handler.SoundHandler;
-import com.zoonie.InteractionSounds.sound.Sound;
-
 public class RemoveSoundPacket implements IMessage
 {
 	String soundName;
 
-	public RemoveSoundPacket() {
+	public RemoveSoundPacket()
+	{
 	}
 
-	public RemoveSoundPacket(String soundName) {
+	public RemoveSoundPacket(String soundName)
+	{
 		this.soundName = soundName;
 	}
 
@@ -30,8 +29,10 @@ public class RemoveSoundPacket implements IMessage
 		}
 		soundName = String.valueOf(fileCars);
 
-		Sound sound = SoundHandler.getSound(soundName);
-		SoundHandler.removeSound(sound);
+		/*
+		 * Sound sound = SoundHandler.getSound(soundName);
+		 * SoundHandler.removeSound(sound);
+		 */
 
 	}
 

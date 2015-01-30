@@ -58,7 +58,9 @@ public class ServerPlaySoundPacket implements IMessage
 		x = bytes.readInt();
 		y = bytes.readInt();
 		z = bytes.readInt();
+
 		volume = bytes.readFloat();
+
 		SoundHandler.playSound(soundName, category, identifier, x, y, z, volume);
 	}
 

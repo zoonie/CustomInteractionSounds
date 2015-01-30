@@ -12,7 +12,6 @@ import com.zoonie.InteractionSounds.network.packet.client.ClientPlaySoundMessage
 import com.zoonie.InteractionSounds.network.packet.client.RemoveSoundPacket;
 import com.zoonie.InteractionSounds.network.packet.server.ServerPlaySoundPacket;
 import com.zoonie.InteractionSounds.network.packet.server.SoundNotFoundPacket;
-import com.zoonie.InteractionSounds.network.packet.server.SoundReceivedPacket;
 import com.zoonie.InteractionSounds.network.packet.server.SoundRemovedPacket;
 import com.zoonie.InteractionSounds.network.packet.server.StopSoundPacket;
 
@@ -29,7 +28,6 @@ public class ChannelHandler
 
 		network.registerMessage(ServerPlaySoundPacket.Handler.class, ServerPlaySoundPacket.class, 6, Side.CLIENT);
 		network.registerMessage(SoundNotFoundPacket.Handler.class, SoundNotFoundPacket.class, 7, Side.CLIENT);
-		network.registerMessage(SoundReceivedPacket.Handler.class, SoundReceivedPacket.class, 8, Side.CLIENT);
 		network.registerMessage(SoundRemovedPacket.Handler.class, SoundRemovedPacket.class, 9, Side.CLIENT);
 		network.registerMessage(StopSoundPacket.Handler.class, StopSoundPacket.class, 10, Side.CLIENT);
 

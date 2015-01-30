@@ -109,7 +109,7 @@ public class Sound
 
 	public boolean saved()
 	{
-		return SoundHandler.getLocalSounds().contains(this);
+		return SoundHandler.getSounds().containsKey(soundName + category);
 	}
 
 	public void setState(SoundState state)

@@ -69,19 +69,17 @@ public class CheckPresencePacket implements IMessage
 		public IMessage onMessage(CheckPresencePacket message, MessageContext ctx)
 		{
 			EntityPlayer player = ctx.getServerHandler().playerEntity;
-			if(player != null && player instanceof EntityPlayer)
-			{
-				Sound sound = SoundHandler.getSound(message.fileName, message.category);
+			Sound sound = SoundHandler.getSound(message.fileName, message.category);
 
-				if(sound != null)
-				{
-					NetworkHelper.serverSoundUpload(sound, (EntityPlayerMP) player);
-				}
-				else
-				{
-					NetworkHelper.sendMessageToPlayer(new SoundNotFoundPacket(message.fileName, message.category), (EntityPlayerMP) player);
-				}
+			if(sound != null)
+			{
+				NetworkHelper.serverSoundUpload(sound, (EntityPlayerMP) player);
 			}
+			else
+			{
+				NetworkHelper.sendMessageToPlayer(new SoundNotFoundPacket(message.fileName, message.category), (EntityPlayerMP) player);
+			}
+
 			return null;
 		}
 	}

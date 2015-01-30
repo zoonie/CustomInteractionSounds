@@ -4,9 +4,6 @@ import io.netty.buffer.ByteBuf;
 
 import java.io.File;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -16,7 +13,6 @@ import com.zoonie.InteractionSounds.handler.DelayedPlayHandler;
 import com.zoonie.InteractionSounds.handler.NetworkHandler;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.helper.NetworkHelper;
-import com.zoonie.InteractionSounds.network.packet.server.SoundReceivedPacket;
 
 public class SoundUploadedPacket implements IMessage
 {
@@ -43,8 +39,6 @@ public class SoundUploadedPacket implements IMessage
 			catCars[i] = bytes.readChar();
 		}
 		category = String.valueOf(catCars);
-		if(FMLCommonHandler.instance().getEffectiveSide().isClient() && (category.equalsIgnoreCase("null") || category.isEmpty()))
-			category = Minecraft.getMinecraft().getCurrentServerData().serverIP;
 
 		int fileLength = bytes.readInt();
 		char[] fileCars = new char[fileLength];
@@ -53,20 +47,12 @@ public class SoundUploadedPacket implements IMessage
 			fileCars[i] = bytes.readChar();
 		}
 		soundName = String.valueOf(fileCars);
+
 		File soundFile = NetworkHelper.createFileFromByteArr(NetworkHandler.soundUploaded(soundName, category), category, soundName);
-		SoundHandler.addLocalSound(soundName, category, soundFile);
+		SoundHandler.addSound(soundName, category, soundFile);
+
 		if(FMLCommonHandler.instance().getSide().isClient())
-		{
 			DelayedPlayHandler.onSoundReceived(soundName, category);
-		}
-		else
-		{
-			EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(category);
-			if(player != null)
-			{
-				NetworkHelper.sendMessageToPlayer(new SoundReceivedPacket(SoundHandler.getSound(soundName, category)), player);
-			}
-		}
 	}
 
 	@Override

@@ -4,6 +4,8 @@ import static com.zoonie.InteractionSounds.helper.LanguageHelper.translate;
 
 import java.awt.Component;
 import java.awt.HeadlessException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.swing.JDialog;
@@ -43,6 +45,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 	private Boolean justUploaded = false;
 	private GuiCheckBox itemChecked, targetChecked, generalTargetChecked;
 	private GuiSlider slider;
+	public static List<Sound> sounds;
 
 	public GuiSounds(EntityPlayer player, Interaction interaction)
 	{
@@ -80,6 +83,8 @@ public class GuiSounds extends GuiScreen implements IListGui
 		this.buttonList.add(generalTargetChecked = new GuiCheckBox(6, getWidth() - 80, getHeight() - 85, " " + translate("interaction.general"), false));
 
 		this.buttonList.add(slider = new GuiSlider(7, (int) (getWidth() / 1.6), 90, 70, 20, translate("sound.volume"), "", 0, 1, 1, true, true));
+
+		sounds = new ArrayList<Sound>(SoundHandler.getSounds().values());
 	}
 
 	@Override
@@ -124,7 +129,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 					if(generalTargetChecked.isChecked())
 						interaction.useGeneralTargetName();
 					InteractionSounds.proxy.getConfig().writeAll();
-					if(!SoundHandler.getLocalSounds().contains(selectedSound))
+					if(!SoundHandler.getSounds().containsKey(selectedSound.getSoundName() + selectedSound.getCategory()))
 						selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
 
 					selectedSound.setVolume((float) slider.getValue());
@@ -251,9 +256,9 @@ public class GuiSounds extends GuiScreen implements IListGui
 	public void selectSoundIndex(int selected)
 	{
 		this.selected = selected;
-		if(selected >= 0 && selected < SoundHandler.getLocalSounds().size())
+		if(selected >= 0 && selected < SoundHandler.getSounds().size())
 		{
-			this.selectedSound = SoundHandler.getLocalSounds().get(selected);
+			this.selectedSound = sounds.get(selected);
 		}
 		onSelectedSoundChanged();
 	}

@@ -3,14 +3,14 @@ package com.zoonie.InteractionSounds.gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
-import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.sound.Sound;
 
 public class GuiLocalSoundsList extends GuiScrollingList
 {
 	private IListGui parent;
 
-	public GuiLocalSoundsList(IListGui parent, int listWidth) {
+	public GuiLocalSoundsList(IListGui parent, int listWidth)
+	{
 		super(parent.getMinecraftInstance(), listWidth, parent.getHeight() + 65, 10, parent.getHeight() - 30, 10, 18);
 		this.parent = parent;
 	}
@@ -18,7 +18,7 @@ public class GuiLocalSoundsList extends GuiScrollingList
 	@Override
 	protected int getSize()
 	{
-		return SoundHandler.getLocalSounds().size();
+		return GuiSounds.sounds.size();
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class GuiLocalSoundsList extends GuiScrollingList
 	@Override
 	protected void drawSlot(int listIndex, int var2, int var3, int var4, Tessellator var5)
 	{
-		Sound sound = SoundHandler.getLocalSounds().get(listIndex);
+		Sound sound = GuiSounds.sounds.get(listIndex);
 		if(sound != null && var3 + 18 < (parent.getHeight() - 21) && var3 > 7)
 		{
 			this.parent.getFontRenderer().drawString(this.parent.getFontRenderer().trimStringToWidth(sound.getSoundName(), listWidth - 10), this.left + 3,

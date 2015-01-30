@@ -49,13 +49,13 @@ public class ConfigurationManager
 				String value = line.substring(i + 1);
 
 				String[] values = value.split("\\|");
-				if(values.length != 5)
+				if(values.length != 6)
 					throw new IOException("Config error: on line " + lineNo + " of " + config.getName() + ". Length = " + values.length
-							+ " when it should equal 5.");
+							+ " when it should equal 6.");
 				Interaction interaction = new Interaction(values[0].trim(), values[1].trim(), values[2].trim());
-				Sound sound = SoundHandler.getSoundByName(values[3].trim());
+				Sound sound = SoundHandler.getSounds().get(values[3].trim() + values[4].trim());
 				if(sound != null)
-					sound.setVolume((float) Float.parseFloat(values[4].trim()));
+					sound.setVolume((float) Float.parseFloat(values[5].trim()));
 				else
 					throw new IOException("Config error: on line " + lineNo + " of " + config.getName() + ".  Check that sound file: \"" + values[3].trim()
 							+ "\" exists within sounds folder of your Minecraft installation folder.");
@@ -96,6 +96,7 @@ public class ConfigurationManager
 				bw.write(interaction.getItem() + " | ");
 				bw.write(interaction.getTarget() + " | ");
 				bw.write(sound.getSoundName() + " | ");
+				bw.write(sound.getCategory() + " | ");
 				bw.write(Float.toString(sound.getVolume()));
 				bw.write("\n");
 			}

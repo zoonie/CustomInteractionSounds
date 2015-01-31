@@ -70,7 +70,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 	public void initGui()
 	{
 		super.initGui();
-		soundsList = new GuiLocalSoundsList(this, 140);
+		soundsList = new GuiLocalSoundsList(this, mc, 140, getHeight() + 65, 10, getHeight() - 30, 10, 18);
 		this.buttonList.add(saveButton = new GuiButton(0, getWidth() / 2, getHeight() - 25, 98, 20, translate("interaction.save")));
 		saveButton.enabled = false;
 		this.buttonList.add(new GuiButton(1, 10, getHeight() - 25, 140, 20, translate("sound.selectFile")));
@@ -82,7 +82,8 @@ public class GuiSounds extends GuiScreen implements IListGui
 		this.buttonList.add(targetChecked = new GuiCheckBox(5, getWidth() - 80, getHeight() - 95, " " + translate("interaction.any"), false));
 		this.buttonList.add(generalTargetChecked = new GuiCheckBox(6, getWidth() - 80, getHeight() - 85, " " + translate("interaction.general"), false));
 
-		this.buttonList.add(slider = new GuiSlider(7, (int) (getWidth() / 1.6), 90, 70, 20, translate("sound.volume"), "", 0, 1, 1, true, true));
+		this.buttonList.add(slider = new GuiSlider(7, (int) getWidth() / 2 + 100 - 35, 95, 70, 20, translate("sound.volume"), "", 0, 1, 1, true, true));
+		slider.visible = false;
 
 		sounds = new ArrayList<Sound>(SoundHandler.getSounds().values());
 	}
@@ -90,13 +91,9 @@ public class GuiSounds extends GuiScreen implements IListGui
 	@Override
 	public void drawScreen(int p_571_1_, int p_571_2_, float p_571_3_)
 	{
-		try
-		{
-			this.soundsList.drawScreen(p_571_1_, p_571_2_, p_571_3_);
-		} catch(Exception ignored)
-		{
-		}
+		this.soundsList.drawScreen(p_571_1_, p_571_2_, p_571_3_);
 		super.drawScreen(p_571_1_, p_571_2_, p_571_3_);
+
 		if(selectedSound != null)
 		{
 			drawSongInfo();
@@ -104,12 +101,13 @@ public class GuiSounds extends GuiScreen implements IListGui
 		}
 		else
 			slider.visible = false;
+
 		if(playButton != null && playButton.displayString.equalsIgnoreCase(translate("sound.stop")) && System.currentTimeMillis() > timeSoundFinishedPlaying)
 		{
 			playButton.displayString = translate("sound.play");
 		}
+
 		drawInteractionInfo();
-		slider.dragging = false; // temporary
 	}
 
 	@Override

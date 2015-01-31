@@ -43,4 +43,9 @@ public class SoundPlayer
 	{
 		soundSystem.stop(identifier);
 	}
+
+	public static void adjustVolume(String identifier, float volume)
+	{
+		soundSystem.setVolume(identifier, volume);
+	}
 }

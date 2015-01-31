@@ -220,6 +220,9 @@ public class GuiSounds extends GuiScreen implements IListGui
 			String space = FileUtils.byteCountToDisplaySize(selectedSound.getSoundLocation().length());
 			this.drawString(this.getFontRenderer(), space, getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(space) / 2), 75, 0xFFFFFF);
 		}
+
+		if(timeSoundFinishedPlaying > 0)
+			SoundPlayer.adjustVolume(currentlyPlayerSoundId.toString(), (float) slider.getValue());
 	}
 
 	private void drawInteractionInfo()

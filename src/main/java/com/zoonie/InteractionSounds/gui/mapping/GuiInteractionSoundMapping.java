@@ -72,7 +72,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	public void initGui()
 	{
 		super.initGui();
-		soundsList = new GuiScrollableSoundsList(this, mc, 140, getHeight() + 65, 30, getHeight() - 30, 10, 18);
+		soundsList = new GuiScrollableSoundsList(this, mc, 140, 0, 30, getHeight() - 25, 10, 18);
 		this.buttonList.add(saveButton = new GuiButton(0, getWidth() / 2, getHeight() - 25, 98, 20, translate("interaction.save")));
 		saveButton.enabled = false;
 		this.buttonList.add(new GuiButton(1, 10, getHeight() - 25, 140, 20, translate("sound.selectFile")));
@@ -84,7 +84,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		this.buttonList.add(targetChecked = new GuiCheckBox(5, (int) (getWidth() / 1.2), getHeight() - 95, " " + translate("interaction.any"), false));
 		this.buttonList.add(generalTargetChecked = new GuiCheckBox(6, (int) (getWidth() / 1.2), getHeight() - 85, " " + translate("interaction.general"), false));
 
-		this.buttonList.add(slider = new GuiSlider(7, (int) getWidth() / 2 + 100 - 35, 95, 70, 20, translate("sound.volume"), "", 0, 1, 1, true, true));
+		this.buttonList.add(slider = new GuiSlider(7, (int) getWidth() / 2 + 100 - 50, 95, 100, 20, "", "%", 0, 100, 100, false, true));
 		slider.visible = false;
 
 		this.buttonList.add(listButton = new GuiButton(8, 10, 10, 140, 20, translate("sound.playerList")));
@@ -134,7 +134,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 					if(!SoundHandler.getSounds().containsKey(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory())))
 						selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
 
-					selectedSound.setVolume((float) slider.getValue());
+					selectedSound.setVolume((float) slider.getValue() / 100);
 					ClientProxy.mappings.put(interaction, selectedSound);
 					NetworkHelper.clientSoundUpload(selectedSound);
 
@@ -167,7 +167,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 						currentlyPlayerSoundId = UUID.randomUUID();
 						timeSoundFinishedPlaying = (long) (SoundHelper.getSoundLength(selectedSound.getSoundLocation()) * 1000) + System.currentTimeMillis();
 						SoundPlayer.playSound(selectedSound.getSoundLocation(), currentlyPlayerSoundId.toString(), (float) player.posX, (float) player.posY, (float) player.posZ, false,
-								(float) slider.getValue());
+								(float) slider.getValue() / 100);
 						playButton.displayString = translate("sound.stop");
 					}
 					else
@@ -234,8 +234,10 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 			this.drawString(this.getFontRenderer(), space, getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(space) / 2), 75, 0xFFFFFF);
 		}
 
+		this.drawString(this.getFontRenderer(), translate("sound.volume"), (int) (getWidth() / 2.45), 100, 0xFFFFFF);
+
 		if(timeSoundFinishedPlaying > 0)
-			SoundPlayer.adjustVolume(currentlyPlayerSoundId.toString(), (float) slider.getValue());
+			SoundPlayer.adjustVolume(currentlyPlayerSoundId.toString(), (float) slider.getValue() / 100);
 	}
 
 	private void drawInteractionInfo()

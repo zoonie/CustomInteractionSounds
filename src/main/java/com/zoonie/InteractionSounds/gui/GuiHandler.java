@@ -1,5 +1,6 @@
 package com.zoonie.InteractionSounds.gui;
 
+import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.InteractionSounds.handler.event.InteractionHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +27,7 @@ public class GuiHandler implements IGuiHandler
 		switch(ID)
 		{
 		case 0:
-			return new GuiSounds(player, InteractionHandler.currentInteraction);
+			return new GuiInteractionSoundMapping(player, InteractionHandler.currentInteraction);
 		default:
 			return null;
 		}

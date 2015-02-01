@@ -20,6 +20,7 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
+import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.InteractionSounds.handler.ChannelHandler;
 import com.zoonie.InteractionSounds.network.packet.client.ClientPlaySoundMessage;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
@@ -118,8 +119,8 @@ public class InteractionHandler
 	{
 		Sound sound = ClientProxy.mappings.get(interaction);
 		String id = UUID.randomUUID().toString();
-		ChannelHandler.network.sendToServer(new ClientPlaySoundMessage(sound.getSoundName(), sound.getCategory(), id, player.dimension, (int) player.posX,
-				(int) player.posY, (int) player.posZ, (float) sound.getVolume()));
+		ChannelHandler.network.sendToServer(new ClientPlaySoundMessage(sound.getSoundName(), sound.getCategory(), id, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ,
+				(float) sound.getVolume()));
 		return true;
 	}
 
@@ -142,7 +143,7 @@ public class InteractionHandler
 	@SubscribeEvent
 	public void guiScreen(GuiScreenEvent event)
 	{
-		if(event.gui != null && reopenGui && !event.gui.getClass().getSimpleName().equals("GuiSounds"))
+		if(event.gui != null && reopenGui && !event.gui.getClass().equals(GuiInteractionSoundMapping.class))
 		{
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 			World world = Minecraft.getMinecraft().theWorld;
@@ -158,7 +159,7 @@ public class InteractionHandler
 	@SubscribeEvent
 	public void guiOpen(GuiOpenEvent event)
 	{
-		if(event.gui != null && reopenGui && !event.gui.getClass().getSimpleName().equals("GuiSounds"))
+		if(event.gui != null && reopenGui && !event.gui.getClass().equals(GuiInteractionSoundMapping.class))
 		{
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 			player.closeScreen();

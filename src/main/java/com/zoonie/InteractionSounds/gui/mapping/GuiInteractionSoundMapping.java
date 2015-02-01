@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.gui;
+package com.zoonie.InteractionSounds.gui.mapping;
 
 import static com.zoonie.InteractionSounds.helper.LanguageHelper.translate;
 
@@ -23,6 +23,7 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 import org.apache.commons.io.FileUtils;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
+import com.zoonie.InteractionSounds.gui.IListGui;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.handler.event.Interaction;
 import com.zoonie.InteractionSounds.helper.NetworkHelper;
@@ -32,9 +33,9 @@ import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
-public class GuiSounds extends GuiScreen implements IListGui
+public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 {
-	private GuiLocalSoundsList soundsList;
+	private GuiScrollableSoundsList soundsList;
 	private int selected = -1;
 	private Sound selectedSound;
 	private JFileChooser fileChooser;
@@ -48,7 +49,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 	private GuiSlider slider;
 	protected static List<Sound> sounds;
 
-	public GuiSounds(EntityPlayer player, Interaction interaction)
+	public GuiInteractionSoundMapping(EntityPlayer player, Interaction interaction)
 	{
 		this.player = player;
 		this.interaction = interaction;
@@ -71,7 +72,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 	public void initGui()
 	{
 		super.initGui();
-		soundsList = new GuiLocalSoundsList(this, mc, 140, getHeight() + 65, 30, getHeight() - 30, 10, 18);
+		soundsList = new GuiScrollableSoundsList(this, mc, 140, getHeight() + 65, 30, getHeight() - 30, 10, 18);
 		this.buttonList.add(saveButton = new GuiButton(0, getWidth() / 2, getHeight() - 25, 98, 20, translate("interaction.save")));
 		saveButton.enabled = false;
 		this.buttonList.add(new GuiButton(1, 10, getHeight() - 25, 140, 20, translate("sound.selectFile")));

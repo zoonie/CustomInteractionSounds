@@ -13,6 +13,7 @@ import com.zoonie.InteractionSounds.handler.DelayedPlayHandler;
 import com.zoonie.InteractionSounds.handler.NetworkHandler;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.helper.NetworkHelper;
+import com.zoonie.InteractionSounds.sound.SoundInfo;
 
 public class SoundUploadedPacket implements IMessage
 {
@@ -49,7 +50,7 @@ public class SoundUploadedPacket implements IMessage
 		soundName = String.valueOf(fileCars);
 
 		File soundFile = NetworkHelper.createFileFromByteArr(NetworkHandler.soundUploaded(soundName, category), category, soundName);
-		SoundHandler.addSound(soundName, category, soundFile);
+		SoundHandler.addSound(new SoundInfo(soundName, category), soundFile);
 
 		if(FMLCommonHandler.instance().getSide().isClient())
 			DelayedPlayHandler.onSoundReceived(soundName, category);

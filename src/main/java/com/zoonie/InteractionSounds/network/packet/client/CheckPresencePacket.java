@@ -12,6 +12,7 @@ import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.helper.NetworkHelper;
 import com.zoonie.InteractionSounds.network.packet.server.SoundNotFoundPacket;
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundInfo;
 
 public class CheckPresencePacket implements IMessage
 {
@@ -69,7 +70,7 @@ public class CheckPresencePacket implements IMessage
 		public IMessage onMessage(CheckPresencePacket message, MessageContext ctx)
 		{
 			EntityPlayer player = ctx.getServerHandler().playerEntity;
-			Sound sound = SoundHandler.getSound(message.fileName, message.category);
+			Sound sound = SoundHandler.getSound(new SoundInfo(message.fileName, message.category));
 
 			if(sound != null)
 			{
@@ -89,7 +90,7 @@ public class CheckPresencePacket implements IMessage
 		@Override
 		public IMessage onMessage(CheckPresencePacket message, MessageContext ctx)
 		{
-			Sound sound = SoundHandler.getSound(message.fileName, message.category);
+			Sound sound = SoundHandler.getSound(new SoundInfo(message.fileName, message.category));
 
 			if(sound != null)
 			{

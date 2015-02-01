@@ -40,12 +40,12 @@ public class SoundHandler
 		return sounds;
 	}
 
-	public static Sound getSound(String fileName, String category)
+	public static Sound getSound(SoundInfo soundInfo)
 	{
 		if(sounds == null)
 			findSounds();
 
-		return sounds.get(fileName + category);
+		return sounds.get(soundInfo);
 	}
 
 	public static ArrayList<Sound> getPlayerSounds()
@@ -111,9 +111,9 @@ public class SoundHandler
 		}
 	}
 
-	public static void addSound(String soundName, String category, File soundFile)
+	public static void addSound(SoundInfo soundInfo, File soundFile)
 	{
-		Sound sound = getSound(soundName, category);
+		Sound sound = getSound(soundInfo);
 		if(sound != null)
 		{
 			if(sound.getState() != Sound.SoundState.SYNCED)
@@ -123,14 +123,14 @@ public class SoundHandler
 		}
 		else
 		{
-			sounds.put(new SoundInfo(soundName, category), new Sound(soundFile));
+			sounds.put(soundInfo, new Sound(soundFile));
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void playSound(String soundName, String category, String identifier, int x, int y, int z, float volume)
 	{
-		Sound sound = SoundHandler.getSound(soundName, category);
+		Sound sound = SoundHandler.getSound(new SoundInfo(soundName, category));
 		if(sound != null)
 		{
 			if(sound.hasLocal())

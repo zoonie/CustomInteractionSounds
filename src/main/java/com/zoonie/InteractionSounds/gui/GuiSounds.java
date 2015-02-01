@@ -29,6 +29,7 @@ import com.zoonie.InteractionSounds.helper.NetworkHelper;
 import com.zoonie.InteractionSounds.helper.SoundHelper;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundInfo;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 public class GuiSounds extends GuiScreen implements IListGui
@@ -129,7 +130,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 					if(generalTargetChecked.isChecked())
 						interaction.useGeneralTargetName();
 					InteractionSounds.proxy.getConfig().writeAll();
-					if(!SoundHandler.getSounds().containsKey(selectedSound.getSoundName() + selectedSound.getCategory()))
+					if(!SoundHandler.getSounds().containsKey(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory())))
 						selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
 
 					selectedSound.setVolume((float) slider.getValue());

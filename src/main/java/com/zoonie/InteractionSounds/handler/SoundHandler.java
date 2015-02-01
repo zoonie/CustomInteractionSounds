@@ -2,6 +2,7 @@ package com.zoonie.InteractionSounds.handler;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import net.minecraft.client.Minecraft;
@@ -14,12 +15,13 @@ import com.zoonie.InteractionSounds.helper.NetworkHelper;
 import com.zoonie.InteractionSounds.network.packet.client.CheckPresencePacket;
 import com.zoonie.InteractionSounds.network.packet.server.SoundRemovedPacket;
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundInfo;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 public class SoundHandler
 {
 	private static File soundsFolder;
-	private static LinkedHashMap<String, Sound> sounds;
+	private static LinkedHashMap<SoundInfo, Sound> sounds;
 
 	public static File getSoundsFolder()
 	{
@@ -30,22 +32,37 @@ public class SoundHandler
 		return soundsFolder;
 	}
 
-	public static LinkedHashMap<String, Sound> getSounds()
+	public static LinkedHashMap<SoundInfo, Sound> getSounds()
 	{
 		if(sounds == null)
-		{
 			findSounds();
-		}
+
 		return sounds;
 	}
 
 	public static Sound getSound(String fileName, String category)
 	{
 		if(sounds == null)
-		{
 			findSounds();
-		}
+
 		return sounds.get(fileName + category);
+	}
+
+	public static ArrayList<Sound> getPlayerSounds()
+	{
+		if(sounds == null)
+			findSounds();
+
+		String player = Minecraft.getMinecraft().thePlayer.getDisplayNameString();
+		ArrayList<Sound> soundsList = new ArrayList<Sound>();
+
+		for(SoundInfo soundInfo : sounds.keySet())
+		{
+			if(soundInfo.category.equals(player))
+				soundsList.add(sounds.get(soundInfo));
+		}
+
+		return soundsList;
 	}
 
 	public static void findSounds()
@@ -55,7 +72,7 @@ public class SoundHandler
 		{
 			soundsFolder.mkdir();
 		}
-		sounds = new LinkedHashMap<String, Sound>();
+		sounds = new LinkedHashMap<SoundInfo, Sound>();
 		addSoundsFromDir(soundsFolder);
 	}
 
@@ -84,7 +101,7 @@ public class SoundHandler
 				if(file.getName().endsWith(".ogg") || file.getName().endsWith(".wav") || file.getName().endsWith(".mp3"))
 				{
 					Sound sound = new Sound(file);
-					sounds.put(sound.getSoundName() + sound.getCategory(), sound);
+					sounds.put(new SoundInfo(sound.getSoundName(), sound.getCategory()), sound);
 				}
 			}
 			else if(file.isDirectory())
@@ -106,7 +123,7 @@ public class SoundHandler
 		}
 		else
 		{
-			sounds.put(soundName + category, new Sound(soundFile));
+			sounds.put(new SoundInfo(soundName, category), new Sound(soundFile));
 		}
 	}
 
@@ -121,7 +138,7 @@ public class SoundHandler
 		}
 		else
 		{
-			sounds.put(soundName + category, new Sound(soundName, category));
+			sounds.put(new SoundInfo(soundName, category), new Sound(soundName, category));
 			DelayedPlayHandler.addDelayedPlay(soundName, category, identifier, x, y, z, volume);
 			ChannelHandler.network.sendToServer(new CheckPresencePacket(soundName, category));
 		}

@@ -38,14 +38,14 @@ public class GuiSounds extends GuiScreen implements IListGui
 	private Sound selectedSound;
 	private JFileChooser fileChooser;
 	private EntityPlayer player;
-	private GuiButton saveButton, playButton;
+	private GuiButton saveButton, playButton, listButton;
 	private UUID currentlyPlayerSoundId;
 	private long timeSoundFinishedPlaying;
 	private Interaction interaction;
 	private Boolean justUploaded = false;
 	private GuiCheckBox itemChecked, targetChecked, generalTargetChecked;
 	private GuiSlider slider;
-	public static List<Sound> sounds;
+	protected static List<Sound> sounds;
 
 	public GuiSounds(EntityPlayer player, Interaction interaction)
 	{
@@ -70,7 +70,7 @@ public class GuiSounds extends GuiScreen implements IListGui
 	public void initGui()
 	{
 		super.initGui();
-		soundsList = new GuiLocalSoundsList(this, mc, 140, getHeight() + 65, 10, getHeight() - 30, 10, 18);
+		soundsList = new GuiLocalSoundsList(this, mc, 140, getHeight() + 65, 30, getHeight() - 30, 10, 18);
 		this.buttonList.add(saveButton = new GuiButton(0, getWidth() / 2, getHeight() - 25, 98, 20, translate("interaction.save")));
 		saveButton.enabled = false;
 		this.buttonList.add(new GuiButton(1, 10, getHeight() - 25, 140, 20, translate("sound.selectFile")));
@@ -85,7 +85,9 @@ public class GuiSounds extends GuiScreen implements IListGui
 		this.buttonList.add(slider = new GuiSlider(7, (int) getWidth() / 2 + 100 - 35, 95, 70, 20, translate("sound.volume"), "", 0, 1, 1, true, true));
 		slider.visible = false;
 
-		sounds = new ArrayList<Sound>(SoundHandler.getSounds().values());
+		this.buttonList.add(listButton = new GuiButton(8, 10, 10, 140, 20, translate("sound.playerList")));
+
+		sounds = SoundHandler.getPlayerSounds();
 	}
 
 	@Override
@@ -177,6 +179,18 @@ public class GuiSounds extends GuiScreen implements IListGui
 			case 3:
 				this.mc.displayGuiScreen(null);
 				this.mc.setIngameFocus();
+				break;
+			case 8:
+				if(!listButton.displayString.equals(translate("sound.playerList")))
+				{
+					sounds = SoundHandler.getPlayerSounds();
+					listButton.displayString = translate("sound.playerList");
+				}
+				else
+				{
+					sounds = new ArrayList<Sound>(SoundHandler.getSounds().values());
+					listButton.displayString = translate("sound.list");
+				}
 				break;
 			}
 		}

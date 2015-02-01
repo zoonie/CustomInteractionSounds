@@ -475,7 +475,7 @@ public class GuiLocalSoundsList
 	protected void drawSlot(int listIndex, int var2, int var3, int var4, Tessellator var5)
 	{
 		Sound sound = GuiSounds.sounds.get(listIndex);
-		if(sound != null && var3 + 18 < (parent.getHeight() - 21) && var3 > 7)
+		if(sound != null && var3 + 18 < (parent.getHeight() - 21) && var3 > 27)
 		{
 			this.parent.getFontRenderer().drawString(this.parent.getFontRenderer().trimStringToWidth(sound.getSoundName(), listWidth - 10), this.left + 3,
 					var3 + 2, 0xFFFFFF);

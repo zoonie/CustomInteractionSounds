@@ -78,9 +78,9 @@ public class GuiSounds extends GuiScreen implements IListGui
 		playButton.enabled = false;
 		this.buttonList.add(new GuiButton(3, getWidth() / 2 + 103, getHeight() - 25, 98, 20, translate("interaction.cancel")));
 
-		this.buttonList.add(itemChecked = new GuiCheckBox(4, getWidth() - 80, getHeight() - 70, " " + translate("interaction.any"), false));
-		this.buttonList.add(targetChecked = new GuiCheckBox(5, getWidth() - 80, getHeight() - 95, " " + translate("interaction.any"), false));
-		this.buttonList.add(generalTargetChecked = new GuiCheckBox(6, getWidth() - 80, getHeight() - 85, " " + translate("interaction.general"), false));
+		this.buttonList.add(itemChecked = new GuiCheckBox(4, (int) (getWidth() / 1.2), getHeight() - 70, " " + translate("interaction.any"), false));
+		this.buttonList.add(targetChecked = new GuiCheckBox(5, (int) (getWidth() / 1.2), getHeight() - 95, " " + translate("interaction.any"), false));
+		this.buttonList.add(generalTargetChecked = new GuiCheckBox(6, (int) (getWidth() / 1.2), getHeight() - 85, " " + translate("interaction.general"), false));
 
 		this.buttonList.add(slider = new GuiSlider(7, (int) getWidth() / 2 + 100 - 35, 95, 70, 20, translate("sound.volume"), "", 0, 1, 1, true, true));
 		slider.visible = false;
@@ -164,8 +164,8 @@ public class GuiSounds extends GuiScreen implements IListGui
 					{
 						currentlyPlayerSoundId = UUID.randomUUID();
 						timeSoundFinishedPlaying = (long) (SoundHelper.getSoundLength(selectedSound.getSoundLocation()) * 1000) + System.currentTimeMillis();
-						SoundPlayer.playSound(selectedSound.getSoundLocation(), currentlyPlayerSoundId.toString(), (float) player.posX, (float) player.posY,
-								(float) player.posZ, false, (float) slider.getValue());
+						SoundPlayer.playSound(selectedSound.getSoundLocation(), currentlyPlayerSoundId.toString(), (float) player.posX, (float) player.posY, (float) player.posZ, false,
+								(float) slider.getValue());
 						playButton.displayString = translate("sound.stop");
 					}
 					else
@@ -213,20 +213,17 @@ public class GuiSounds extends GuiScreen implements IListGui
 	private void drawSongInfo()
 	{
 		this.drawString(this.getFontRenderer(), translate("sound.name"), (int) (getWidth() / 2.45), 15, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), selectedSound.getSoundName(),
-				getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(selectedSound.getSoundName()) / 2), 15, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), selectedSound.getSoundName(), getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(selectedSound.getSoundName()) / 2), 15, 0xFFFFFF);
 
 		this.drawString(this.getFontRenderer(), translate("sound.folder"), (int) (getWidth() / 2.45), 35, 0xFFFFFF);
 		if(selectedSound.getCategory() != null)
 		{
-			this.drawString(this.getFontRenderer(), selectedSound.getCategory(),
-					getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(selectedSound.getCategory()) / 2), 35, 0xFFFFFF);
+			this.drawString(this.getFontRenderer(), selectedSound.getCategory(), getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(selectedSound.getCategory()) / 2), 35, 0xFFFFFF);
 		}
 
 		this.drawString(this.getFontRenderer(), translate("sound.status"), (int) (getWidth() / 2.45), 55, 0xFFFFFF);
 		String uploaded = selectedSound.saved() ? translate("sound.status.saved") : translate("sound.status.notSaved");
-		this.getFontRenderer().drawString(uploaded, getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(uploaded) / 2), 55,
-				selectedSound.saved() ? 0x00FF00 : 0xFF0000);
+		this.getFontRenderer().drawString(uploaded, getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(uploaded) / 2), 55, selectedSound.saved() ? 0x00FF00 : 0xFF0000);
 
 		this.drawString(this.getFontRenderer(), translate("sound.size"), (int) (getWidth() / 2.45), 75, 0xFFFFFF);
 		if(selectedSound.getSoundLocation() != null)

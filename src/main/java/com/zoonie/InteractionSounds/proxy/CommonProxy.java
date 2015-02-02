@@ -8,7 +8,7 @@ public class CommonProxy
 {
 	private static ConfigurationManager config;
 
-	public void init()
+	public void preInit()
 	{
 
 	}

@@ -151,7 +151,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 					Minecraft.getMinecraft().toggleFullscreen();
 				if(fcReturn == JFileChooser.APPROVE_OPTION)
 				{
-					selectSoundIndex(-1);
+					selectIndex(-1);
 					if(fileChooser.getSelectedFile().exists())
 						selectedSound = new Sound(fileChooser.getSelectedFile());
 					else
@@ -269,7 +269,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	}
 
 	@Override
-	public void selectSoundIndex(int selected)
+	public void selectIndex(int selected)
 	{
 		this.selected = selected;
 		if(selected >= 0 && selected < SoundHandler.getSounds().size())
@@ -280,7 +280,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	}
 
 	@Override
-	public boolean soundIndexSelected(int var1)
+	public boolean indexSelected(int var1)
 	{
 		return var1 == selected;
 	}

@@ -26,13 +26,13 @@ public class GuiScrollableSoundsList extends GuiScrollableList
 	@Override
 	protected void elementClicked(int var1, boolean var2)
 	{
-		this.parent.selectSoundIndex(var1);
+		this.parent.selectIndex(var1);
 	}
 
 	@Override
 	protected boolean isSelected(int var1)
 	{
-		return this.parent.soundIndexSelected(var1);
+		return this.parent.indexSelected(var1);
 	}
 
 	@Override

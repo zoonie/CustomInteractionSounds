@@ -9,9 +9,9 @@ public interface IListGui
 
 	public FontRenderer getFontRenderer();
 
-	public void selectSoundIndex(int selected);
+	public void selectIndex(int selected);
 
-	public boolean soundIndexSelected(int var1);
+	public boolean indexSelected(int var1);
 
 	public int getWidth();
 

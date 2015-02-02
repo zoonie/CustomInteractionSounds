@@ -1,13 +1,12 @@
 package com.zoonie.InteractionSounds.gui;
 
-import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
-import com.zoonie.InteractionSounds.handler.event.InteractionHandler;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+
+import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
+import com.zoonie.InteractionSounds.gui.viewing.GuiListContainer;
+import com.zoonie.InteractionSounds.handler.event.InteractionHandler;
 
 public class GuiHandler implements IGuiHandler
 {
@@ -28,6 +27,8 @@ public class GuiHandler implements IGuiHandler
 		{
 		case 0:
 			return new GuiInteractionSoundMapping(player, InteractionHandler.currentInteraction);
+		case 1:
+			return new GuiListContainer(player);
 		default:
 			return null;
 		}

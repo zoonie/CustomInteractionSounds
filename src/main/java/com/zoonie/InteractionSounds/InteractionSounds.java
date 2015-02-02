@@ -28,7 +28,7 @@ public class InteractionSounds
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		proxy.init();
+		proxy.preInit();
 
 		proxy.UISetup();
 

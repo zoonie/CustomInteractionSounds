@@ -66,7 +66,7 @@ public class InteractionHandler
 			Interaction interaction = createInteraction(event.button);
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 
-			if(ClientProxy.recordInteraction.isPressed())
+			if(KeyBindings.recordInteraction.isPressed())
 			{
 				reopenGui = true;
 				currentInteraction = interaction;

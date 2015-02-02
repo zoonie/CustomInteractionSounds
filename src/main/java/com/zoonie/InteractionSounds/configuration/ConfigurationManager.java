@@ -15,6 +15,7 @@ import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.handler.event.Interaction;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundInfo;
 
 public class ConfigurationManager
 {
@@ -50,10 +51,9 @@ public class ConfigurationManager
 
 				String[] values = value.split("\\|");
 				if(values.length != 6)
-					throw new IOException("Config error: on line " + lineNo + " of " + config.getName() + ". Length = " + values.length
-							+ " when it should equal 6.");
+					throw new IOException("Config error: on line " + lineNo + " of " + config.getName() + ". Length = " + values.length + " when it should equal 6.");
 				Interaction interaction = new Interaction(values[0].trim(), values[1].trim(), values[2].trim());
-				Sound sound = SoundHandler.getSounds().get(values[3].trim() + values[4].trim());
+				Sound sound = SoundHandler.getSounds().get(new SoundInfo(values[3].trim(), values[4].trim()));
 				if(sound != null)
 					sound.setVolume((float) Float.parseFloat(values[5].trim()));
 				else

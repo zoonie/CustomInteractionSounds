@@ -3,10 +3,12 @@ package com.zoonie.InteractionSounds.gui.viewing;
 import static com.zoonie.InteractionSounds.helper.LanguageHelper.translate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -32,7 +34,9 @@ public class GuiListContainer extends GuiScreen implements IListGui
 	public void initGui()
 	{
 		super.initGui();
-		mappingList = new GuiMappingList(this, mc, getWidth() - 20, 0, 25, getHeight() - 25, 10, 20);
+		mappingList = new GuiMappingList(this, mc, getWidth() - 20, 0, 15, getHeight() - 25, 10, 20);
+		this.buttonList.add(new GuiButton(0, (int) (getWidth() / 2) - 155, getHeight() - 23, 140, 20, translate("interaction.delete")));
+		this.buttonList.add(new GuiButton(1, (int) (getWidth() / 2) + 15, getHeight() - 23, 140, 20, translate("interaction.cancel")));
 	}
 
 	@Override
@@ -41,10 +45,33 @@ public class GuiListContainer extends GuiScreen implements IListGui
 		this.mappingList.drawScreen(p_571_1_, p_571_2_, p_571_3_);
 		super.drawScreen(p_571_1_, p_571_2_, p_571_3_);
 
-		getFontRenderer().drawString(translate("interaction.mouse"), 13, 15, 0xFFFFFF);
-		getFontRenderer().drawString(translate("interaction.target"), (int) (getWidth() * 0.12), 15, 0xFFFFFF);
-		getFontRenderer().drawString(translate("interaction.item"), (int) (getWidth() * 0.4), 15, 0xFFFFFF);
-		getFontRenderer().drawString(translate("sound.soundName"), (int) (getWidth() * 0.68), 15, 0xFFFFFF);
+		getFontRenderer().drawString(translate("interaction.mouse"), 13, 5, 0xFFFFFF);
+		getFontRenderer().drawString(translate("interaction.target"), (int) (getWidth() * 0.12), 5, 0xFFFFFF);
+		getFontRenderer().drawString(translate("interaction.item"), (int) (getWidth() * 0.4), 5, 0xFFFFFF);
+		getFontRenderer().drawString(translate("sound.soundName"), (int) (getWidth() * 0.68), 5, 0xFFFFFF);
+	}
+
+	@Override
+	protected void actionPerformed(GuiButton button)
+	{
+		if(button.enabled)
+		{
+			switch(button.id)
+			{
+			case 0:
+				mappingsList.remove(selected);
+				ClientProxy.mappings = new HashMap<Interaction, Sound>();
+				for(Entry<Interaction, Sound> entry : mappingsList)
+				{
+					ClientProxy.mappings.put(entry.getKey(), entry.getValue());
+				}
+				break;
+			case 1:
+				this.mc.displayGuiScreen(null);
+				this.mc.setIngameFocus();
+				break;
+			}
+		}
 	}
 
 	@Override

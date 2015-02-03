@@ -19,6 +19,7 @@ InteractionSounds.interaction.target=Target
 InteractionSounds.interaction.item=Item
 InteractionSounds.interaction.any=Any
 InteractionSounds.interaction.general=General
+InteractionSounds.interaction.delete=Delete
 InteractionSounds.soundFiles=Sound Files
 InteractionSounds.sound.list=All Sounds
 InteractionSounds.sound.playerList=Your Sounds

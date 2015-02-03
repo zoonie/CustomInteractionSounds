@@ -4,14 +4,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 
 public class KeyInputHandler
 {
 	@SubscribeEvent
-	public void onKeyPress(InputEvent.KeyInputEvent event)
+	public void onKeyPress(KeyInputEvent event)
 	{
 		if(KeyBindings.listSavedInteractions.isPressed())
 		{

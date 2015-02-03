@@ -26,25 +26,25 @@ public class GuiScrollableSoundsList extends GuiScrollableList
 	@Override
 	protected void elementClicked(int var1, boolean var2)
 	{
-		this.parent.selectIndex(var1);
+		parent.selectIndex(var1);
 	}
 
 	@Override
 	protected boolean isSelected(int var1)
 	{
-		return this.parent.indexSelected(var1);
+		return parent.indexSelected(var1);
 	}
 
 	@Override
 	protected void drawBackground()
 	{
-		this.parent.drawBackground();
+		parent.drawBackground();
 	}
 
 	@Override
 	protected int getContentHeight()
 	{
-		return (this.getSize()) * 18 + 1;
+		return (getSize()) * super.slotHeight + 1;
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class GuiScrollableSoundsList extends GuiScrollableList
 		Sound sound = GuiInteractionSoundMapping.sounds.get(listIndex);
 		if(sound != null)
 		{
-			this.parent.getFontRenderer().drawString(this.parent.getFontRenderer().trimStringToWidth(sound.getSoundName(), listWidth - 10), this.left + 3, var3 + 2, 0xFFFFFF);
+			parent.getFontRenderer().drawString(parent.getFontRenderer().trimStringToWidth(sound.getSoundName(), listWidth - 10), this.left + 3, var3 + 2, 0xFFFFFF);
 		}
 	}
 }

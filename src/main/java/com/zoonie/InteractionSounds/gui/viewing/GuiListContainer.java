@@ -1,5 +1,7 @@
 package com.zoonie.InteractionSounds.gui.viewing;
 
+import static com.zoonie.InteractionSounds.helper.LanguageHelper.translate;
+
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
@@ -30,7 +32,7 @@ public class GuiListContainer extends GuiScreen implements IListGui
 	public void initGui()
 	{
 		super.initGui();
-		mappingList = new GuiMappingList(this, mc, getWidth() - 20, 0, 10, getHeight() - 10, 10, 25);
+		mappingList = new GuiMappingList(this, mc, getWidth() - 20, 0, 25, getHeight() - 25, 10, 20);
 	}
 
 	@Override
@@ -38,6 +40,11 @@ public class GuiListContainer extends GuiScreen implements IListGui
 	{
 		this.mappingList.drawScreen(p_571_1_, p_571_2_, p_571_3_);
 		super.drawScreen(p_571_1_, p_571_2_, p_571_3_);
+
+		getFontRenderer().drawString(translate("interaction.mouse"), 13, 15, 0xFFFFFF);
+		getFontRenderer().drawString(translate("interaction.target"), (int) (getWidth() * 0.12), 15, 0xFFFFFF);
+		getFontRenderer().drawString(translate("interaction.item"), (int) (getWidth() * 0.4), 15, 0xFFFFFF);
+		getFontRenderer().drawString(translate("sound.soundName"), (int) (getWidth() * 0.68), 15, 0xFFFFFF);
 	}
 
 	@Override

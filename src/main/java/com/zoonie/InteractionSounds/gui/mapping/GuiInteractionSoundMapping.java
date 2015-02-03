@@ -67,7 +67,6 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		fileChooser.setFileFilter(new FileNameExtensionFilter(translate("soundFiles") + " (.ogg, .wav, .mp3)", "ogg", "wav", "mp3"));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{
@@ -84,7 +83,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		this.buttonList.add(targetChecked = new GuiCheckBox(5, (int) (getWidth() / 1.2), getHeight() - 95, " " + translate("interaction.any"), false));
 		this.buttonList.add(generalTargetChecked = new GuiCheckBox(6, (int) (getWidth() / 1.2), getHeight() - 85, " " + translate("interaction.general"), false));
 
-		this.buttonList.add(slider = new GuiSlider(7, (int) getWidth() / 2 + 100 - 50, 95, 100, 20, "", "%", 0, 100, 100, false, true));
+		this.buttonList.add(slider = new GuiSlider(7, (int) (getWidth() / 1.95), 75, 100, 20, "", "%", 0, 100, 100, false, true));
 		slider.visible = false;
 
 		this.buttonList.add(listButton = new GuiButton(8, 10, 10, 140, 20, translate("sound.playerList")));
@@ -100,7 +99,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 
 		if(selectedSound != null)
 		{
-			drawSongInfo();
+			drawSoundInfo();
 			slider.visible = true;
 		}
 		else
@@ -212,29 +211,25 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		}
 	}
 
-	private void drawSongInfo()
+	private void drawSoundInfo()
 	{
-		this.drawString(this.getFontRenderer(), translate("sound.name"), (int) (getWidth() / 2.45), 15, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), selectedSound.getSoundName(), getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(selectedSound.getSoundName()) / 2), 15, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("sound.name") + ":", (int) (getWidth() / 2.45), 15, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), selectedSound.getSoundName(), (int) (getWidth() / 1.95), 15, 0xFFFFFF);
 
-		this.drawString(this.getFontRenderer(), translate("sound.folder"), (int) (getWidth() / 2.45), 35, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("sound.folder") + ":", (int) (getWidth() / 2.45), 35, 0xFFFFFF);
 		if(selectedSound.getCategory() != null)
 		{
-			this.drawString(this.getFontRenderer(), selectedSound.getCategory(), getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(selectedSound.getCategory()) / 2), 35, 0xFFFFFF);
+			this.drawString(this.getFontRenderer(), selectedSound.getCategory(), (int) (getWidth() / 1.95), 35, 0xFFFFFF);
 		}
 
-		this.drawString(this.getFontRenderer(), translate("sound.status"), (int) (getWidth() / 2.45), 55, 0xFFFFFF);
-		String uploaded = selectedSound.saved() ? translate("sound.status.saved") : translate("sound.status.notSaved");
-		this.getFontRenderer().drawString(uploaded, getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(uploaded) / 2), 55, selectedSound.saved() ? 0x00FF00 : 0xFF0000);
-
-		this.drawString(this.getFontRenderer(), translate("sound.size"), (int) (getWidth() / 2.45), 75, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("sound.size") + ":", (int) (getWidth() / 2.45), 55, 0xFFFFFF);
 		if(selectedSound.getSoundLocation() != null)
 		{
 			String space = FileUtils.byteCountToDisplaySize(selectedSound.getSoundLocation().length());
-			this.drawString(this.getFontRenderer(), space, getWidth() / 2 + 100 - (this.getFontRenderer().getStringWidth(space) / 2), 75, 0xFFFFFF);
+			this.drawString(this.getFontRenderer(), space, (int) (getWidth() / 1.95), 55, 0xFFFFFF);
 		}
 
-		this.drawString(this.getFontRenderer(), translate("sound.volume"), (int) (getWidth() / 2.45), 100, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("sound.volume") + ":", (int) (getWidth() / 2.45), 80, 0xFFFFFF);
 
 		if(timeSoundFinishedPlaying > 0)
 			SoundPlayer.adjustVolume(currentlyPlayerSoundId.toString(), (float) slider.getValue() / 100);
@@ -246,14 +241,14 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		String preTarget = generalTargetChecked.isChecked() ? translate(interaction.getGeneralTargetName()) : translate(interaction.getTarget());
 		String target = targetChecked.isChecked() ? translate("interaction.any") : preTarget;
 
-		this.drawString(this.getFontRenderer(), translate("interaction.mouse"), (int) (getWidth() / 2.45), getHeight() - 110, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), translate(interaction.getMouseButton()), (int) (getWidth() / 1.9), getHeight() - 110, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("interaction.mouse") + ":", (int) (getWidth() / 2.45), getHeight() - 110, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate(interaction.getMouseButton()), (int) (getWidth() / 1.95), getHeight() - 110, 0xFFFFFF);
 
-		this.drawString(this.getFontRenderer(), translate("interaction.target"), (int) (getWidth() / 2.45), getHeight() - 90, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), target, (int) (getWidth() / 1.9), getHeight() - 90, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("interaction.target") + ":", (int) (getWidth() / 2.45), getHeight() - 90, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), target, (int) (getWidth() / 1.95), getHeight() - 90, 0xFFFFFF);
 
-		this.drawString(this.getFontRenderer(), translate("interaction.item"), (int) (getWidth() / 2.45), getHeight() - 70, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), item, (int) (getWidth() / 1.9), getHeight() - 70, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("interaction.item") + ":", (int) (getWidth() / 2.45), getHeight() - 70, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), item, (int) (getWidth() / 1.95), getHeight() - 70, 0xFFFFFF);
 	}
 
 	@Override
@@ -301,12 +296,6 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	public void drawBackground()
 	{
 		drawDefaultBackground();
-	}
-
-	@Override
-	public boolean doesGuiPauseGame()
-	{
-		return false;
 	}
 
 	@Override

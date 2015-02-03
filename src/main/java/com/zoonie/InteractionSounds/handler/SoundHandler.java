@@ -11,7 +11,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.io.Files;
-import com.zoonie.InteractionSounds.helper.NetworkHelper;
 import com.zoonie.InteractionSounds.network.packet.client.CheckPresencePacket;
 import com.zoonie.InteractionSounds.network.packet.server.SoundRemovedPacket;
 import com.zoonie.InteractionSounds.sound.Sound;
@@ -87,7 +86,7 @@ public class SoundHandler
 			sounds.remove(sound.getSoundName() + sound.getCategory());
 			if(FMLCommonHandler.instance().getEffectiveSide().isServer())
 			{
-				NetworkHelper.sendMessageToAll(new SoundRemovedPacket(sound.getSoundName()));
+				ChannelHandler.network.sendToAll(new SoundRemovedPacket(sound.getSoundName()));
 			}
 		}
 	}

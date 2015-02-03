@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import com.zoonie.InteractionSounds.helper.NetworkHelper;
+import com.zoonie.InteractionSounds.handler.ChannelHandler;
 import com.zoonie.InteractionSounds.network.packet.server.ServerPlaySoundPacket;
 
 public class ClientPlaySoundMessage implements IMessage
@@ -66,7 +66,7 @@ public class ClientPlaySoundMessage implements IMessage
 		volume = bytes.readFloat();
 
 		TargetPoint tp = new TargetPoint(dimensionId, x, y, z, 16);
-		NetworkHelper.sendMessageToAllAround(new ServerPlaySoundPacket(soundName, category, identifier, x, y, z, volume), tp);
+		ChannelHandler.network.sendToAllAround(new ServerPlaySoundPacket(soundName, category, identifier, x, y, z, volume), tp);
 	}
 
 	@Override

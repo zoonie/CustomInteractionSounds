@@ -2,13 +2,8 @@ package com.zoonie.InteractionSounds.helper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,37 +25,6 @@ public class NetworkHelper
 	public static void sendMessageToPlayer(IMessage message, EntityPlayerMP player)
 	{
 		ChannelHandler.network.sendTo(message, player);
-	}
-
-	public static void sendMessageToAll(IMessage message)
-	{
-		// Forge sendToAll causing client disconnect in MP.
-		Iterator playerList = MinecraftServer.getServer().getConfigurationManager().playerEntityList.iterator();
-		while(playerList.hasNext())
-		{
-			ChannelHandler.network.sendTo(message, (EntityPlayerMP) playerList.next());
-		}
-	}
-
-	public static void sendMessageToAllAround(IMessage message, TargetPoint tp)
-	{
-		// Forge sendToAllAround causing client disconnect in MP.
-		// Temporary method by techstack on minecraft forge forum.
-
-		for(EntityPlayerMP player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList)
-		{
-			if(player.dimension == tp.dimension)
-			{
-				double d4 = tp.x - player.posX;
-				double d5 = tp.y - player.posY;
-				double d6 = tp.z - player.posZ;
-
-				if(d4 * d4 + d5 * d5 + d6 * d6 < tp.range * tp.range)
-				{
-					ChannelHandler.network.sendTo(message, player);
-				}
-			}
-		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -111,8 +75,7 @@ public class NetworkHelper
 	{
 		if(byteFile != null && byteFile.length > 0 && !category.isEmpty() && !fileName.isEmpty())
 		{
-			File file = new File(SoundHandler.getSoundsFolder().getAbsolutePath() + File.separator + InteractionSounds.MOD_NAME + File.separator + category
-					+ File.separator + fileName);
+			File file = new File(SoundHandler.getSoundsFolder().getAbsolutePath() + File.separator + InteractionSounds.MOD_NAME + File.separator + category + File.separator + fileName);
 			try
 			{
 				FileUtils.writeByteArrayToFile(file, byteFile);

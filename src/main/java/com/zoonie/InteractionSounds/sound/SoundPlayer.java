@@ -17,8 +17,8 @@ public class SoundPlayer
 
 	private static void init()
 	{
-		SoundManager soundManager = ObfuscationReflectionHelper.getPrivateValue(net.minecraft.client.audio.SoundHandler.class, Minecraft.getMinecraft()
-				.getSoundHandler(), "sndManager", "field_147694_f", "V");
+		SoundManager soundManager = ObfuscationReflectionHelper.getPrivateValue(net.minecraft.client.audio.SoundHandler.class, Minecraft.getMinecraft().getSoundHandler(), "sndManager",
+				"field_147694_f", "V");
 		soundSystem = ObfuscationReflectionHelper.getPrivateValue(SoundManager.class, soundManager, "sndSystem", "field_148620_e", "e");
 	}
 
@@ -30,7 +30,7 @@ public class SoundPlayer
 		}
 		try
 		{
-			soundSystem.newStreamingSource(false, identifier, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
+			soundSystem.newSource(false, identifier, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
 			soundSystem.setVolume(identifier, volume);
 			soundSystem.play(identifier);
 		} catch(MalformedURLException e)

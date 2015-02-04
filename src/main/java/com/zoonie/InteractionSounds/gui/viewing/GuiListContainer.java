@@ -10,6 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.entity.player.EntityPlayer;
 
 import com.zoonie.InteractionSounds.gui.IListGui;
@@ -17,7 +19,7 @@ import com.zoonie.InteractionSounds.handler.event.Interaction;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
 
-public class GuiListContainer extends GuiScreen implements IListGui
+public class GuiListContainer extends GuiScreen implements IListGui, GuiYesNoCallback
 {
 	private EntityPlayer player;
 	private int selected = -1;
@@ -59,12 +61,8 @@ public class GuiListContainer extends GuiScreen implements IListGui
 			switch(button.id)
 			{
 			case 0:
-				mappingsList.remove(selected);
-				ClientProxy.mappings = new HashMap<Interaction, Sound>();
-				for(Entry<Interaction, Sound> entry : mappingsList)
-				{
-					ClientProxy.mappings.put(entry.getKey(), entry.getValue());
-				}
+				if(selected >= 0)
+					mc.displayGuiScreen(new GuiYesNo(this, null, "Confirm Deletion?", selected));
 				break;
 			case 1:
 				this.mc.displayGuiScreen(null);
@@ -114,5 +112,19 @@ public class GuiListContainer extends GuiScreen implements IListGui
 	public void drawBackground()
 	{
 		drawDefaultBackground();
+	}
+
+	public void confirmClicked(boolean result, int id)
+	{
+		if(result)
+		{
+			mappingsList.remove(selected);
+			ClientProxy.mappings = new HashMap<Interaction, Sound>();
+			for(Entry<Interaction, Sound> entry : mappingsList)
+			{
+				ClientProxy.mappings.put(entry.getKey(), entry.getValue());
+			}
+		}
+		mc.displayGuiScreen(this);
 	}
 }

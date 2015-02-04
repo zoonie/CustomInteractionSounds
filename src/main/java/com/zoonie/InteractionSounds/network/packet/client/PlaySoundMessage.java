@@ -1,26 +1,27 @@
 package com.zoonie.InteractionSounds.network.packet.client;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.zoonie.InteractionSounds.handler.ChannelHandler;
-import com.zoonie.InteractionSounds.network.packet.server.ServerPlaySoundPacket;
+import com.zoonie.InteractionSounds.handler.SoundHandler;
 
-public class ClientPlaySoundMessage implements IMessage
+public class PlaySoundMessage implements IMessage
 {
-	String soundName, category, identifier;
+	String soundName, category, identifier, caller;
 	int dimensionId;
 	int x, y, z;
 	float volume;
 
-	public ClientPlaySoundMessage()
+	public PlaySoundMessage()
 	{
 	}
 
-	public ClientPlaySoundMessage(String name, String category, String identifier, int dimensionId, int x, int y, int z, float volume)
+	public PlaySoundMessage(String name, String category, String identifier, int dimensionId, int x, int y, int z, float volume, String caller)
 	{
 		this.soundName = name;
 		this.category = category;
@@ -30,6 +31,7 @@ public class ClientPlaySoundMessage implements IMessage
 		this.y = y;
 		this.z = z;
 		this.volume = volume;
+		this.caller = caller;
 	}
 
 	@Override
@@ -65,8 +67,13 @@ public class ClientPlaySoundMessage implements IMessage
 		z = bytes.readInt();
 		volume = bytes.readFloat();
 
-		TargetPoint tp = new TargetPoint(dimensionId, x, y, z, 16);
-		ChannelHandler.network.sendToAllAround(new ServerPlaySoundPacket(soundName, category, identifier, x, y, z, volume), tp);
+		int callerLength = bytes.readInt();
+		char[] callerChars = new char[callerLength];
+		for(int i = 0; i < callerLength; i++)
+		{
+			callerChars[i] = bytes.readChar();
+		}
+		caller = String.valueOf(callerChars);
 	}
 
 	@Override
@@ -77,28 +84,51 @@ public class ClientPlaySoundMessage implements IMessage
 		{
 			bytes.writeChar(c);
 		}
+
 		bytes.writeInt(identifier.length());
 		for(char c : identifier.toCharArray())
 		{
 			bytes.writeChar(c);
 		}
+
 		bytes.writeInt(category.length());
 		for(char c : category.toCharArray())
 		{
 			bytes.writeChar(c);
 		}
+
 		bytes.writeInt(dimensionId);
 		bytes.writeInt(x);
 		bytes.writeInt(y);
 		bytes.writeInt(z);
 		bytes.writeFloat(volume);
+
+		bytes.writeInt(caller.length());
+		for(char c : caller.toCharArray())
+		{
+			bytes.writeChar(c);
+		}
 	}
 
-	public static class Handler implements IMessageHandler<ClientPlaySoundMessage, IMessage>
+	public static class ClientSideHandler implements IMessageHandler<PlaySoundMessage, IMessage>
 	{
 		@Override
-		public IMessage onMessage(ClientPlaySoundMessage message, MessageContext ctx)
+		public IMessage onMessage(PlaySoundMessage message, MessageContext ctx)
 		{
+			if(!Minecraft.getMinecraft().thePlayer.getDisplayNameString().equals(message.caller))
+				SoundHandler.playSound(message.soundName, message.category, message.identifier, message.x, message.y, message.z, message.volume);
+			return null;
+		}
+	}
+
+	public static class ServerSideHandler implements IMessageHandler<PlaySoundMessage, IMessage>
+	{
+		@Override
+		public IMessage onMessage(PlaySoundMessage message, MessageContext ctx)
+		{
+			TargetPoint tp = new TargetPoint(message.dimensionId, message.x, message.y, message.z, 16);
+			ChannelHandler.network.sendToAllAround(new PlaySoundMessage(message.soundName, message.category, message.identifier, message.dimensionId, message.x, message.y, message.z, message.volume,
+					message.caller), tp);
 			return null;
 		}
 	}

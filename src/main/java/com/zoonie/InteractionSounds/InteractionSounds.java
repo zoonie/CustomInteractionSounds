@@ -12,7 +12,7 @@ import com.zoonie.InteractionSounds.gui.GuiHandler;
 import com.zoonie.InteractionSounds.handler.ChannelHandler;
 import com.zoonie.InteractionSounds.proxy.CommonProxy;
 
-@Mod(modid = InteractionSounds.MODID, name = InteractionSounds.MOD_NAME, version = InteractionSounds.VERSION)
+@Mod(modid = InteractionSounds.MODID, name = InteractionSounds.MOD_NAME, version = InteractionSounds.VERSION, acceptableRemoteVersions = "*")
 public class InteractionSounds
 {
 	public static final String MOD_NAME = "Interaction Sounds";

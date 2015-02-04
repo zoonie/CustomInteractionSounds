@@ -22,9 +22,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.InteractionSounds.handler.ChannelHandler;
-import com.zoonie.InteractionSounds.network.packet.client.ClientPlaySoundMessage;
+import com.zoonie.InteractionSounds.network.packet.client.PlaySoundMessage;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 /**
  * The InteractionHandler class deals with specific Forge events, mainly
@@ -119,8 +120,11 @@ public class InteractionHandler
 	{
 		Sound sound = ClientProxy.mappings.get(interaction);
 		String id = UUID.randomUUID().toString();
-		ChannelHandler.network.sendToServer(new ClientPlaySoundMessage(sound.getSoundName(), sound.getCategory(), id, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ,
-				(float) sound.getVolume()));
+
+		SoundPlayer.playSound(sound.getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
+
+		ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), id, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ,
+				(float) sound.getVolume(), player.getDisplayNameString()));
 		return true;
 	}
 

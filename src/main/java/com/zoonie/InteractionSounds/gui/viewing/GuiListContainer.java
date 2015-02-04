@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.entity.player.EntityPlayer;
 
+import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.gui.IListGui;
 import com.zoonie.InteractionSounds.handler.event.Interaction;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
@@ -124,6 +125,8 @@ public class GuiListContainer extends GuiScreen implements IListGui, GuiYesNoCal
 			{
 				ClientProxy.mappings.put(entry.getKey(), entry.getValue());
 			}
+			InteractionSounds.proxy.getConfig().writeAll();
+			selected = -1;
 		}
 		mc.displayGuiScreen(this);
 	}

@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,7 +32,10 @@ public class SoundPlayer
 		try
 		{
 			soundSystem.newSource(false, identifier, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
+
+			volume *= Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS);
 			soundSystem.setVolume(identifier, volume);
+
 			soundSystem.play(identifier);
 		} catch(MalformedURLException e)
 		{

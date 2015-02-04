@@ -1,7 +1,5 @@
 package com.zoonie.InteractionSounds.gui;
 
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -47,22 +45,6 @@ public abstract class GuiScrollableList
 		this.right = width + this.left;
 	}
 
-	public void func_27258_a(boolean p_27258_1_)
-	{
-		this.field_25123_p = p_27258_1_;
-	}
-
-	protected void func_27259_a(boolean p_27259_1_, int p_27259_2_)
-	{
-		this.field_27262_q = p_27259_1_;
-		this.field_27261_r = p_27259_2_;
-
-		if(!p_27259_1_)
-		{
-			this.field_27261_r = 0;
-		}
-	}
-
 	protected abstract int getSize();
 
 	protected abstract void elementClicked(int index, boolean doubleClick);
@@ -78,41 +60,13 @@ public abstract class GuiScrollableList
 
 	protected abstract void drawSlot(int var1, int var2, int var3, int var4, Tessellator var5);
 
-	protected void func_27260_a(int p_27260_1_, int p_27260_2_, Tessellator p_27260_3_)
-	{
-	}
-
-	protected void func_27255_a(int p_27255_1_, int p_27255_2_)
-	{
-	}
-
-	protected void func_27257_b(int p_27257_1_, int p_27257_2_)
-	{
-	}
-
-	public int func_27256_c(int p_27256_1_, int p_27256_2_)
-
-	{
-		int var3 = this.left + 1;
-		int var4 = this.left + this.listWidth - 7;
-		int var5 = p_27256_2_ - this.top - this.field_27261_r + (int) this.scrollDistance - 4;
-		int var6 = var5 / this.slotHeight;
-		return p_27256_1_ >= var3 && p_27256_1_ <= var4 && var6 >= 0 && var5 >= 0 && var6 < this.getSize() ? var6 : -1;
-	}
-
-	public void registerScrollButtons(@SuppressWarnings("rawtypes") List p_22240_1_, int p_22240_2_, int p_22240_3_)
-	{
-		this.scrollUpActionId = p_22240_2_;
-		this.scrollDownActionId = p_22240_3_;
-	}
-
 	private void applyScrollLimits()
 	{
 		int var1 = this.getContentHeight() - (this.bottom - this.top - 4);
 
 		if(var1 < 0)
 		{
-			var1 /= 2;
+			var1 = 0;
 		}
 
 		if(this.scrollDistance < 0.0F)
@@ -180,7 +134,6 @@ public abstract class GuiScrollableList
 					}
 					else if(mouseX >= boxLeft && mouseX <= boxRight && var10 < 0)
 					{
-						this.func_27255_a(mouseX - boxLeft, mouseY - this.top + (int) this.scrollDistance - 4);
 						var7 = false;
 					}
 
@@ -279,19 +232,14 @@ public abstract class GuiScrollableList
 			worldr.addVertexWithUV((double) this.left, (double) this.top, 0.0D, (double) ((float) this.left / var17), (double) ((float) (this.top + (int) this.scrollDistance) / var17));
 			tess.draw();
 		}
-		//        boxRight = this.listWidth / 2 - 92 - 16;
-		var10 = this.top + 4 - (int) this.scrollDistance;
 
-		if(this.field_27262_q)
-		{
-			this.func_27260_a(boxRight, var10, tess);
-		}
+		var10 = this.top + 4 - (int) this.scrollDistance;
 
 		int var14;
 
 		for(var11 = 0; var11 < listLength; ++var11)
 		{
-			var19 = var10 + var11 * this.slotHeight + this.field_27261_r;
+			var19 = var10 + var11 * this.slotHeight;
 			var13 = this.slotHeight - 4;
 
 			if(var19 <= this.bottom && var19 + var13 >= this.top)
@@ -395,7 +343,6 @@ public abstract class GuiScrollableList
 			tess.draw();
 		}
 
-		this.func_27257_b(mouseX, mouseY);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glShadeModel(GL11.GL_FLAT);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);

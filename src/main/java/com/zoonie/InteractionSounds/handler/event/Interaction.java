@@ -8,7 +8,7 @@ public class Interaction
 	private String generalTargetName;
 
 	public Interaction(String mouseButton, String item, String target) {
-		this(mouseButton, item, target, null);
+		this(mouseButton, item, target, target);
 	}
 
 	public Interaction(String mouseButton, String item, String target, String generalTargetName) {

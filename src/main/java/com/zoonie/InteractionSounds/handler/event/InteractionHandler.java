@@ -225,15 +225,16 @@ public class InteractionHandler
 		}
 		else if(entity != null)
 		{
+			String generalCategory = entity.getClass().getSuperclass().getSimpleName();
 			if(EntityList.getEntityString(entity) == null || entity.hasCustomName())
 			{
-				Interaction in = new Interaction(button == 0 ? "left" : "right", item, entity.getName());
+				Interaction in = new Interaction(button == 0 ? "left" : "right", item, entity.getName(), generalCategory);
 				in.setIsEntity(true);
 				return in;
 			}
 			else
 			{
-				Interaction in = new Interaction(button == 0 ? "left" : "right", item, "entity." + EntityList.getEntityString(entity));
+				Interaction in = new Interaction(button == 0 ? "left" : "right", item, "entity." + EntityList.getEntityString(entity), generalCategory);
 				in.setIsEntity(true);
 				return in;
 			}

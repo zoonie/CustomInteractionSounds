@@ -1,16 +1,20 @@
 package com.zoonie.InteractionSounds.configuration;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.handler.event.Interaction;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
@@ -32,52 +36,34 @@ public class ConfigurationManager
 
 	private void read()
 	{
-		BufferedReader br = null;
+		Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
 		try
 		{
 			if(!config.exists())
 			{
 				config.createNewFile();
 			}
-			br = new BufferedReader(new FileReader(config));
-			String line;
-			int lineNo = 0;
-			while((line = br.readLine()) != null)
+			BufferedReader br = new BufferedReader(new FileReader(config));
+			Type type = new TypeToken<HashMap<Interaction, Sound>>() {
+			}.getType();
+			HashMap<Interaction, Sound> mappings = gson.fromJson(br, type);
+
+			if(mappings != null)
 			{
-				lineNo++;
-
-				int i = line.indexOf('=');
-				String value = line.substring(i + 1);
-
-				String[] values = value.split("\\|");
-				if(values.length != 7)
-					throw new IOException("Config error: on line " + lineNo + " of " + config.getName() + ". Length = " + values.length + " when it should equal 7.");
-				Interaction interaction = new Interaction(values[0].trim(), values[1].trim(), values[2].trim());
-				interaction.setIsEntity(Boolean.getBoolean(values[6]));
-				Sound sound = SoundHandler.getSounds().get(new SoundInfo(values[3].trim(), values[4].trim()));
-				if(sound != null)
-					sound.setVolume((float) Float.parseFloat(values[5].trim()));
-				else
-					throw new IOException("Config error: on line " + lineNo + " of " + config.getName() + ".  Check that sound file: \"" + values[3].trim()
-							+ "\" exists within sounds folder of your Minecraft installation folder.");
-				ClientProxy.mappings.put(interaction, sound);
+				for(Entry<Interaction, Sound> entry : mappings.entrySet())
+				{
+					Sound soundInfo = entry.getValue();
+					Sound sound = new Sound(SoundHandler.getSound(new SoundInfo(soundInfo.getSoundName(), soundInfo.getCategory())));
+					sound.setVolume(soundInfo.getVolume());
+					ClientProxy.mappings.put(entry.getKey(), sound);
+				}
 			}
+
 			br.close();
 		}
 		catch(IOException e)
 		{
 			System.err.println(e.getMessage());
-		}
-		finally
-		{
-			try
-			{
-				br.close();
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -89,24 +75,14 @@ public class ConfigurationManager
 			{
 				config.createNewFile();
 			}
-			FileWriter fw = new FileWriter(config.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			for(Map.Entry<Interaction, Sound> entry : ClientProxy.mappings.entrySet())
-			{
-				Interaction interaction = entry.getKey();
-				Sound sound = entry.getValue();
-				bw.write("mapping= ");
-				bw.write(interaction.getMouseButton() + " | ");
-				bw.write(interaction.getItem() + " | ");
-				bw.write(interaction.getTarget() + " | ");
-				bw.write(sound.getSoundName() + " | ");
-				bw.write(sound.getCategory() + " | ");
-				bw.write(Float.toString(sound.getVolume()) + " | ");
-				bw.write(String.valueOf(interaction.isEntity()));
-				bw.write("\n");
-			}
-			bw.close();
-			fw.close();
+
+			Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+
+			String json = gson.toJson(ClientProxy.mappings);
+
+			FileWriter writer = new FileWriter(config.getAbsoluteFile());
+			writer.write(json);
+			writer.close();
 		}
 		catch(IOException e)
 		{

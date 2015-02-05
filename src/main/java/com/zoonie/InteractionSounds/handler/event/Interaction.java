@@ -1,11 +1,12 @@
 package com.zoonie.InteractionSounds.handler.event;
 
+import com.google.gson.annotations.Expose;
+
 public class Interaction
 {
-	private String mouseButton;
-	private String item;
-	private String target;
-	private String generalTargetName;
+	@Expose
+	private String mouseButton, item, target, generalTargetName;
+	@Expose
 	private boolean isEntity = false;
 
 	public Interaction(String mouseButton, String item, String target)

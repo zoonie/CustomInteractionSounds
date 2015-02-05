@@ -2,16 +2,18 @@ package com.zoonie.InteractionSounds.sound;
 
 import java.io.File;
 
+import com.google.gson.annotations.Expose;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 
 public class Sound
 {
 	private File soundLocation;
-	private String soundName;
-	private String category;
+	@Expose
+	private String soundName, category;
 	private SoundState state;
 	private long timeLastPlayed = -1;
 	private long delay;
+	@Expose
 	private float volume;
 
 	public Sound(Sound sound)

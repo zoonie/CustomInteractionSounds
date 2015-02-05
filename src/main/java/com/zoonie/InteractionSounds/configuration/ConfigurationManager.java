@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.handler.event.Interaction;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
@@ -53,9 +54,15 @@ public class ConfigurationManager
 				for(Entry<Interaction, Sound> entry : mappings.entrySet())
 				{
 					Sound soundInfo = entry.getValue();
-					Sound sound = new Sound(SoundHandler.getSound(new SoundInfo(soundInfo.getSoundName(), soundInfo.getCategory())));
-					sound.setVolume(soundInfo.getVolume());
-					ClientProxy.mappings.put(entry.getKey(), sound);
+					Sound foundSound = SoundHandler.getSound(new SoundInfo(soundInfo.getSoundName(), soundInfo.getCategory()));
+					if(foundSound != null)
+					{
+						Sound sound = new Sound(foundSound);
+						sound.setVolume(soundInfo.getVolume());
+						ClientProxy.mappings.put(entry.getKey(), sound);
+					}
+					else
+						InteractionSounds.logger.error("Could not find sound: " + soundInfo.getSoundName() + " within a folder named: " + soundInfo.getCategory());
 				}
 			}
 

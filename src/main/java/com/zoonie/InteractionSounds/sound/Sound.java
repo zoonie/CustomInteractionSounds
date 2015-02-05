@@ -20,8 +20,6 @@ public class Sound
 		String path = soundLocation.getAbsolutePath();
 		path = path.substring(0, path.lastIndexOf(File.separator));
 		path = path.substring(path.lastIndexOf(File.separator) + 1);
-		if(path.equals("sounds"))
-			path = "";
 		this.category = path;
 		this.soundName = soundLocation.getName();
 		this.state = SoundState.LOCAL_ONLY;

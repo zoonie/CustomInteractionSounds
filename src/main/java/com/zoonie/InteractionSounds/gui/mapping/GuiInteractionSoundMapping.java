@@ -134,6 +134,8 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 
 					if(!SoundHandler.getSounds().containsKey(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory())))
 						selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
+					else
+						selectedSound = new Sound(selectedSound);
 
 					selectedSound.setVolume((float) slider.getValue() / 100);
 					ClientProxy.mappings.put(interaction, selectedSound);

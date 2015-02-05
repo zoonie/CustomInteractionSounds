@@ -2,6 +2,7 @@ package com.zoonie.InteractionSounds.sound;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundCategory;
@@ -15,6 +16,7 @@ import paulscode.sound.SoundSystem;
 public class SoundPlayer
 {
 	private static SoundSystem soundSystem;
+	private static ArrayList<String> playing = new ArrayList<String>();
 
 	private static void init()
 	{
@@ -31,13 +33,16 @@ public class SoundPlayer
 		}
 		try
 		{
+			playing.add(identifier);
+
 			soundSystem.newSource(false, identifier, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
 
 			volume *= Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS);
 			soundSystem.setVolume(identifier, volume);
 
 			soundSystem.play(identifier);
-		} catch(MalformedURLException e)
+		}
+		catch(MalformedURLException e)
 		{
 			e.printStackTrace();
 		}
@@ -51,5 +56,17 @@ public class SoundPlayer
 	public static void adjustVolume(String identifier, float volume)
 	{
 		soundSystem.setVolume(identifier, volume);
+	}
+
+	public static void stopSounds()
+	{
+		if(soundSystem != null)
+		{
+			for(int i = 0; i < playing.size(); i++)
+			{
+				soundSystem.stop(playing.get(i));
+			}
+		}
+		playing = new ArrayList<String>();
 	}
 }

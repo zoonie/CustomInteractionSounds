@@ -62,15 +62,18 @@ public class ConfigurationManager
 				ClientProxy.mappings.put(interaction, sound);
 			}
 			br.close();
-		} catch(IOException e)
+		}
+		catch(IOException e)
 		{
 			System.err.println(e.getMessage());
-		} finally
+		}
+		finally
 		{
 			try
 			{
 				br.close();
-			} catch(IOException e)
+			}
+			catch(IOException e)
 			{
 				e.printStackTrace();
 			}
@@ -101,7 +104,9 @@ public class ConfigurationManager
 				bw.write("\n");
 			}
 			bw.close();
-		} catch(IOException e)
+			fw.close();
+		}
+		catch(IOException e)
 		{
 			e.printStackTrace();
 		}

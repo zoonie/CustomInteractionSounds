@@ -37,7 +37,10 @@ public class SoundPlayer
 		{
 			playing[index++ % SIZE] = identifier;
 
-			soundSystem.newSource(false, identifier, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
+			if(sound.length() > 500000)
+				soundSystem.newStreamingSource(false, identifier, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
+			else
+				soundSystem.newSource(false, identifier, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
 
 			volume *= Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS);
 			soundSystem.setVolume(identifier, volume);

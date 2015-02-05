@@ -100,15 +100,23 @@ public class InteractionHandler
 		if(useGeneral)
 			interaction.useGeneralTargetName();
 		if(ClientProxy.mappings.containsKey(interaction))
+		{
 			return playSound(interaction, player);
+		}
 		else
 		{
 			Interaction anyItem = new Interaction(click, "any", interaction.getTarget(), interaction.getGeneralTargetName());
+			Interaction anyBlockTarget = new Interaction(click, interaction.getItem(), "any.block", interaction.getGeneralTargetName());
+			Interaction anyEntityTarget = new Interaction(click, interaction.getItem(), "any.entity", interaction.getGeneralTargetName());
 			Interaction anyTarget = new Interaction(click, interaction.getItem(), "any", interaction.getGeneralTargetName());
 			Interaction any = new Interaction(click, "any", "any", interaction.getGeneralTargetName());
 
 			if(ClientProxy.mappings.containsKey(anyItem))
 				return playSound(anyItem, player);
+			else if(ClientProxy.mappings.containsKey(anyBlockTarget) && !interaction.isEntity())
+				return playSound(anyBlockTarget, player);
+			else if(ClientProxy.mappings.containsKey(anyEntityTarget) && interaction.isEntity())
+				return playSound(anyEntityTarget, player);
 			else if(ClientProxy.mappings.containsKey(anyTarget))
 				return playSound(anyTarget, player);
 			else if(ClientProxy.mappings.containsKey(any))
@@ -218,9 +226,17 @@ public class InteractionHandler
 		else if(entity != null)
 		{
 			if(EntityList.getEntityString(entity) == null || entity.hasCustomName())
-				return new Interaction(button == 0 ? "left" : "right", item, entity.getName());
+			{
+				Interaction in = new Interaction(button == 0 ? "left" : "right", item, entity.getName());
+				in.setIsEntity(true);
+				return in;
+			}
 			else
-				return new Interaction(button == 0 ? "left" : "right", item, "entity." + EntityList.getEntityString(entity));
+			{
+				Interaction in = new Interaction(button == 0 ? "left" : "right", item, "entity." + EntityList.getEntityString(entity));
+				in.setIsEntity(true);
+				return in;
+			}
 		}
 		else
 			return null;

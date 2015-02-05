@@ -6,12 +6,15 @@ public class Interaction
 	private String item;
 	private String target;
 	private String generalTargetName;
+	private boolean isEntity = false;
 
-	public Interaction(String mouseButton, String item, String target) {
+	public Interaction(String mouseButton, String item, String target)
+	{
 		this(mouseButton, item, target, target);
 	}
 
-	public Interaction(String mouseButton, String item, String target, String generalTargetName) {
+	public Interaction(String mouseButton, String item, String target, String generalTargetName)
+	{
 		this.mouseButton = mouseButton;
 		this.item = item;
 		this.target = target;
@@ -51,6 +54,16 @@ public class Interaction
 	public void useGeneralTargetName()
 	{
 		target = generalTargetName;
+	}
+
+	public void setIsEntity(boolean isEntity)
+	{
+		this.isEntity = isEntity;
+	}
+
+	public boolean isEntity()
+	{
+		return isEntity;
 	}
 
 	@Override

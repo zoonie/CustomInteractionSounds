@@ -50,9 +50,10 @@ public class ConfigurationManager
 				String value = line.substring(i + 1);
 
 				String[] values = value.split("\\|");
-				if(values.length != 6)
-					throw new IOException("Config error: on line " + lineNo + " of " + config.getName() + ". Length = " + values.length + " when it should equal 6.");
+				if(values.length != 7)
+					throw new IOException("Config error: on line " + lineNo + " of " + config.getName() + ". Length = " + values.length + " when it should equal 7.");
 				Interaction interaction = new Interaction(values[0].trim(), values[1].trim(), values[2].trim());
+				interaction.setIsEntity(Boolean.getBoolean(values[6]));
 				Sound sound = SoundHandler.getSounds().get(new SoundInfo(values[3].trim(), values[4].trim()));
 				if(sound != null)
 					sound.setVolume((float) Float.parseFloat(values[5].trim()));
@@ -100,7 +101,8 @@ public class ConfigurationManager
 				bw.write(interaction.getTarget() + " | ");
 				bw.write(sound.getSoundName() + " | ");
 				bw.write(sound.getCategory() + " | ");
-				bw.write(Float.toString(sound.getVolume()));
+				bw.write(Float.toString(sound.getVolume()) + " | ");
+				bw.write(String.valueOf(interaction.isEntity()));
 				bw.write("\n");
 			}
 			bw.close();

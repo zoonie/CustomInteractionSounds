@@ -125,11 +125,13 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 				{
 					if(itemChecked.isChecked())
 						interaction.setItem("any");
-					if(targetChecked.isChecked())
-						interaction.setTarget("any");
+					if(targetChecked.isChecked() && interaction.isEntity())
+						interaction.setTarget("any.entity");
+					if(targetChecked.isChecked() && !interaction.isEntity())
+						interaction.setTarget("any.block");
 					if(generalTargetChecked.isChecked())
 						interaction.useGeneralTargetName();
-					InteractionSounds.proxy.getConfig().writeAll();
+
 					if(!SoundHandler.getSounds().containsKey(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory())))
 						selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
 
@@ -137,6 +139,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 					ClientProxy.mappings.put(interaction, selectedSound);
 					NetworkHelper.clientSoundUpload(selectedSound);
 
+					InteractionSounds.proxy.getConfig().writeAll();
 				}
 				this.mc.displayGuiScreen(null);
 				this.mc.setIngameFocus();
@@ -237,9 +240,10 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 
 	private void drawInteractionInfo()
 	{
+		String targetAny = interaction.isEntity() ? translate("any.entity") : translate("any.block");
 		String item = itemChecked.isChecked() ? translate("interaction.any") : translate(interaction.getItem());
 		String preTarget = generalTargetChecked.isChecked() ? translate(interaction.getGeneralTargetName()) : translate(interaction.getTarget());
-		String target = targetChecked.isChecked() ? translate("interaction.any") : preTarget;
+		String target = targetChecked.isChecked() ? targetAny : preTarget;
 
 		this.drawString(this.getFontRenderer(), translate("interaction.mouse") + ":", (int) (getWidth() / 2.45), getHeight() - 110, 0xFFFFFF);
 		this.drawString(this.getFontRenderer(), translate(interaction.getMouseButton()), (int) (getWidth() / 1.95), getHeight() - 110, 0xFFFFFF);

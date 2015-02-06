@@ -67,7 +67,6 @@ $RECYCLE.BIN/
 
 # Build files
 Build.bat
-build.gradle
 /build/
 .gradle
 .settings

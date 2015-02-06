@@ -42,6 +42,7 @@ public class ConfigurationManager
 		{
 			if(!config.exists())
 			{
+				config.getParentFile().mkdirs();
 				config.createNewFile();
 			}
 			BufferedReader br = new BufferedReader(new FileReader(config));
@@ -80,6 +81,7 @@ public class ConfigurationManager
 		{
 			if(!config.exists())
 			{
+				config.getParentFile().mkdirs();
 				config.createNewFile();
 			}
 

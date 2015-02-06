@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.io.Files;
+import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.network.packet.client.CheckPresencePacket;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
@@ -128,7 +129,7 @@ public class SoundHandler
 	@SideOnly(Side.CLIENT)
 	public static Sound setupSound(File file)
 	{
-		File category = new File("sounds" + File.separator + "Interaction Sounds" + File.separator + Minecraft.getMinecraft().thePlayer.getDisplayNameString());
+		File category = new File("sounds" + File.separator + InteractionSounds.MOD_NAME + File.separator + Minecraft.getMinecraft().thePlayer.getDisplayNameString());
 		if(!category.exists())
 		{
 			category.mkdirs();

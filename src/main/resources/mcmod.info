@@ -2,9 +2,11 @@
 {
     "modid": "InteractionSounds",
     "name": "Interaction Sounds",
+    "url": "https://github.com/zoonie/InteractionSounds",
     "description": "Add your own sounds to interactions with blocks, items and players with this intuitive mod.",
-    "version": "1.0",
-    "mcversion": "1.8",
-    "authorList": ["zoonie"]
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "authorList": ["zoonie"],
+    "credits": "Inspired by Dynious's Sounds Cool mod."
 }
 ]

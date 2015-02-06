@@ -29,5 +29,6 @@ InteractionSounds.sound.playerList=Your Sounds
 InteractionSounds.EntityAnimal=Animals
 InteractionSounds.EntityMob=Monsters
 InteractionSounds.AbstractClientPlayer=Players
+InteractionSounds.delete.confirm=Are you sure you want to delete the selected entry?
 
 

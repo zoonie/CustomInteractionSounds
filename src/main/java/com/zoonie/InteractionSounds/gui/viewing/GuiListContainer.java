@@ -63,7 +63,7 @@ public class GuiListContainer extends GuiScreen implements IListGui, GuiYesNoCal
 			{
 			case 0:
 				if(selected >= 0)
-					mc.displayGuiScreen(new GuiYesNo(this, null, "Confirm Deletion?", selected));
+					mc.displayGuiScreen(new GuiYesNo(this, null, translate("delete.confirm"), selected));
 				break;
 			case 1:
 				this.mc.displayGuiScreen(null);

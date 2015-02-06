@@ -38,7 +38,8 @@ public class ClientProxy extends CommonProxy
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch(Exception e)
+		}
+		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -55,9 +56,9 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public void configSetup(File file)
+	public void configSetup()
 	{
-		config = new ConfigurationManager(new File(file, InteractionSounds.MODID + ".cfg"));
+		config = new ConfigurationManager(new File("sounds" + File.separator + InteractionSounds.MOD_NAME + File.separator + InteractionSounds.MODID + ".json"));
 	}
 
 	@Override

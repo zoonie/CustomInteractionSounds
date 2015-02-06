@@ -39,7 +39,7 @@ public class InteractionSounds
 
 		proxy.soundSetup();
 
-		proxy.configSetup(event.getModConfigurationDirectory());
+		proxy.configSetup();
 
 		ChannelHandler.init();
 	}

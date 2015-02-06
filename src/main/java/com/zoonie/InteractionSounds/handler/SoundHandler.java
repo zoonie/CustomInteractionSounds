@@ -6,13 +6,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.io.Files;
 import com.zoonie.InteractionSounds.network.packet.client.CheckPresencePacket;
-import com.zoonie.InteractionSounds.network.packet.server.SoundRemovedPacket;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
@@ -73,22 +71,6 @@ public class SoundHandler
 		}
 		sounds = new LinkedHashMap<SoundInfo, Sound>();
 		addSoundsFromDir(soundsFolder);
-	}
-
-	public static void removeSound(Sound sound)
-	{
-		if(sound != null)
-		{
-			if(!sound.getSoundLocation().delete())
-			{
-				sound.getSoundLocation().deleteOnExit();
-			}
-			sounds.remove(sound.getSoundName() + sound.getCategory());
-			if(FMLCommonHandler.instance().getEffectiveSide().isServer())
-			{
-				ChannelHandler.network.sendToAll(new SoundRemovedPacket(sound.getSoundName()));
-			}
-		}
 	}
 
 	private static void addSoundsFromDir(File dir)
@@ -156,7 +138,8 @@ public class SoundHandler
 		try
 		{
 			Files.copy(file, newFile);
-		} catch(IOException e)
+		}
+		catch(IOException e)
 		{
 			e.printStackTrace();
 		}

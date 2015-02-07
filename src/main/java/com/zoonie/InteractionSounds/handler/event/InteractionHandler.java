@@ -226,6 +226,9 @@ public class InteractionHandler
 		else if(entity != null)
 		{
 			String generalCategory = entity.getClass().getSuperclass().getSimpleName();
+			if(generalCategory.equals("EntityAgeable"))
+				generalCategory = EntityList.getEntityString(entity);
+
 			if(EntityList.getEntityString(entity) == null || entity.hasCustomName())
 			{
 				Interaction in = new Interaction(button == 0 ? "left" : "right", item, entity.getName(), generalCategory);

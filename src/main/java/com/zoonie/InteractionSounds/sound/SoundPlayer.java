@@ -51,6 +51,10 @@ public class SoundPlayer
 		{
 			e.printStackTrace();
 		}
+		catch(NullPointerException e) // Can't replicate, unknown cause
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public static void stopSound(String identifier)

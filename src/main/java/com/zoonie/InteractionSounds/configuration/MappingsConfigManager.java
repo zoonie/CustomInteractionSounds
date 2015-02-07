@@ -9,9 +9,6 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -22,17 +19,14 @@ import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
 
-public class ConfigurationManager
+public class MappingsConfigManager
 {
-	private File config;
+	private static File config;
 
-	public ConfigurationManager(File config)
+	public MappingsConfigManager(File config)
 	{
-		if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
-		{
-			this.config = config;
-			this.read();
-		}
+		this.config = config;
+		read();
 	}
 
 	private void read()
@@ -75,7 +69,7 @@ public class ConfigurationManager
 		}
 	}
 
-	public void writeAll()
+	public static void write()
 	{
 		try
 		{

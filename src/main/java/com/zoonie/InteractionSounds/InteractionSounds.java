@@ -33,13 +33,7 @@ public class InteractionSounds
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		proxy.preInit();
-
-		proxy.UISetup();
-
-		proxy.soundSetup();
-
-		proxy.configSetup();
+		proxy.preInit(event);
 
 		ChannelHandler.init();
 	}

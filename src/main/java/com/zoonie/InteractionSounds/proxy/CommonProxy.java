@@ -1,33 +1,18 @@
 package com.zoonie.InteractionSounds.proxy;
 
-import com.zoonie.InteractionSounds.configuration.ConfigurationManager;
+import java.io.File;
+
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class CommonProxy
 {
-	private static ConfigurationManager config;
-
-	public void preInit()
+	public void preInit(FMLPreInitializationEvent event)
 	{
-
+		configSetup(event.getSuggestedConfigurationFile());
 	}
 
-	public void UISetup()
+	private void configSetup(File config)
 	{
 
-	}
-
-	public void soundSetup()
-	{
-
-	}
-
-	public void configSetup()
-	{
-
-	}
-
-	public ConfigurationManager getConfig()
-	{
-		return config;
 	}
 }

@@ -22,7 +22,7 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 
 import org.apache.commons.io.FileUtils;
 
-import com.zoonie.InteractionSounds.InteractionSounds;
+import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.gui.IListGui;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.handler.event.Interaction;
@@ -141,7 +141,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 					ClientProxy.mappings.put(interaction, selectedSound);
 					NetworkHelper.clientSoundUpload(selectedSound);
 
-					InteractionSounds.proxy.getConfig().writeAll();
+					MappingsConfigManager.write();
 				}
 				this.mc.displayGuiScreen(null);
 				this.mc.setIngameFocus();

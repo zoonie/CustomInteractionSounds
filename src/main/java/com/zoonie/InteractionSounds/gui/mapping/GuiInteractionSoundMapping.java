@@ -53,6 +53,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	private GuiCheckBox itemChecked, targetChecked, generalTargetChecked;
 	private GuiSlider slider;
 	protected static List<Sound> sounds;
+	private double soundLength;
 
 	public GuiInteractionSoundMapping(EntityPlayer player, Interaction interaction)
 	{
@@ -221,6 +222,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		{
 			saveButton.enabled = true;
 			playButton.enabled = true;
+			soundLength = SoundHelper.getSoundLength(selectedSound.getSoundLocation());
 		}
 		else
 		{
@@ -238,10 +240,9 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		this.drawString(this.getFontRenderer(), selectedSound.getCategory(), infoAlign, 35, 0xFFFFFF);
 
 		this.drawString(this.getFontRenderer(), translate("sound.length") + ":", labelAlign, 55, 0xFFFFFF);
-		double scnds = SoundHelper.getSoundLength(selectedSound.getSoundLocation());
-		long milliseconds = (long) (scnds * 100) % 100;
-		long minutes = TimeUnit.SECONDS.toMinutes((long) scnds) - (TimeUnit.SECONDS.toHours((long) scnds) * 60);
-		long seconds = TimeUnit.SECONDS.toSeconds((long) scnds) - (TimeUnit.SECONDS.toMinutes((long) scnds) * 60);
+		long milliseconds = (long) (soundLength * 100) % 100;
+		long minutes = TimeUnit.SECONDS.toMinutes((long) soundLength) - (TimeUnit.SECONDS.toHours((long) soundLength) * 60);
+		long seconds = TimeUnit.SECONDS.toSeconds((long) soundLength) - (TimeUnit.SECONDS.toMinutes((long) soundLength) * 60);
 		this.drawString(this.getFontRenderer(), String.format("%02d:%02d.%02d", minutes, seconds, milliseconds), infoAlign, 55, 0xFFFFFF);
 
 		this.drawString(this.getFontRenderer(), translate("sound.size") + ":", labelAlign, 75, 0xFFFFFF);

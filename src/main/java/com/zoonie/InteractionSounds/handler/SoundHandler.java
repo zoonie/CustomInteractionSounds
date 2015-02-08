@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.io.Files;
 import com.zoonie.InteractionSounds.InteractionSounds;
-import com.zoonie.InteractionSounds.network.packet.client.CheckPresencePacket;
+import com.zoonie.InteractionSounds.network.packet.client.RequestSoundMessage;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
@@ -113,16 +113,15 @@ public class SoundHandler
 	public static void playSound(String soundName, String category, String identifier, int x, int y, int z, float volume)
 	{
 		Sound sound = SoundHandler.getSound(new SoundInfo(soundName, category));
-		if(sound != null)
+		if(sound != null && sound.hasLocal())
 		{
-			if(sound.hasLocal())
-				SoundPlayer.playSound(sound.getSoundLocation(), identifier, x, y, z, true, volume);
+			SoundPlayer.playSound(sound.getSoundLocation(), identifier, x, y, z, true, volume);
 		}
 		else
 		{
 			sounds.put(new SoundInfo(soundName, category), new Sound(soundName, category));
 			DelayedPlayHandler.addDelayedPlay(soundName, category, identifier, x, y, z, volume);
-			ChannelHandler.network.sendToServer(new CheckPresencePacket(soundName, category));
+			ChannelHandler.network.sendToServer(new RequestSoundMessage(soundName, category));
 		}
 	}
 

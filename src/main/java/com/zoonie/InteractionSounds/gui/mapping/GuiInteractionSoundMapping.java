@@ -24,10 +24,11 @@ import org.apache.commons.io.FileUtils;
 
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.gui.IListGui;
+import com.zoonie.InteractionSounds.handler.ChannelHandler;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.handler.event.Interaction;
-import com.zoonie.InteractionSounds.helper.NetworkHelper;
 import com.zoonie.InteractionSounds.helper.SoundHelper;
+import com.zoonie.InteractionSounds.network.packet.client.RequestSoundMessage;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
@@ -133,14 +134,16 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 						interaction.useGeneralTargetName();
 
 					if(!SoundHandler.getSounds().containsKey(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory())))
+					{
 						selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
-					else
-						selectedSound = new Sound(selectedSound);
+						SoundHandler.addSound(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory()), selectedSound.getSoundLocation());
+					}
+					selectedSound = new Sound(selectedSound);
+
+					ChannelHandler.network.sendToServer(new RequestSoundMessage(selectedSound.getSoundName(), selectedSound.getCategory(), true));
 
 					selectedSound.setVolume((float) slider.getValue() / 100);
 					ClientProxy.mappings.put(interaction, selectedSound);
-					NetworkHelper.clientSoundUpload(selectedSound);
-
 					MappingsConfigManager.write();
 				}
 				this.mc.displayGuiScreen(null);

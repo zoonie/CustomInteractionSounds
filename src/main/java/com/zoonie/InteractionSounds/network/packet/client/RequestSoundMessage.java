@@ -7,26 +7,32 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import com.zoonie.InteractionSounds.handler.ChannelHandler;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.helper.NetworkHelper;
 import com.zoonie.InteractionSounds.network.packet.server.SoundNotFoundPacket;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
 
-public class CheckPresencePacket implements IMessage
+public class RequestSoundMessage implements IMessage
 {
-	String fileName;
+	String soundName;
 	String category;
+	boolean soundExistsCheck;
 
-	public CheckPresencePacket()
+	public RequestSoundMessage()
 	{
 	}
 
-	public CheckPresencePacket(String soundName, String category)
+	public RequestSoundMessage(String soundName, String category)
 	{
-		this.fileName = soundName;
+		this(soundName, category, false);
+	}
+
+	public RequestSoundMessage(String soundName, String category, boolean soundExistsCheck)
+	{
+		this.soundName = soundName;
 		this.category = category;
+		this.soundExistsCheck = soundExistsCheck;
 	}
 
 	@Override
@@ -38,7 +44,7 @@ public class CheckPresencePacket implements IMessage
 		{
 			fileChars[i] = bytes.readChar();
 		}
-		fileName = String.valueOf(fileChars);
+		soundName = String.valueOf(fileChars);
 
 		int catLength = bytes.readInt();
 		char[] catChars = new char[catLength];
@@ -47,59 +53,63 @@ public class CheckPresencePacket implements IMessage
 			catChars[i] = bytes.readChar();
 		}
 		category = String.valueOf(catChars);
+
+		soundExistsCheck = bytes.readBoolean();
 	}
 
 	@Override
 	public void toBytes(ByteBuf bytes)
 	{
-		bytes.writeInt(fileName.length());
-		for(char c : fileName.toCharArray())
+		bytes.writeInt(soundName.length());
+		for(char c : soundName.toCharArray())
 		{
 			bytes.writeChar(c);
 		}
+
 		bytes.writeInt(category.length());
 		for(char c : category.toCharArray())
 		{
 			bytes.writeChar(c);
 		}
+
+		bytes.writeBoolean(soundExistsCheck);
 	}
 
-	public static class ServerHandler implements IMessageHandler<CheckPresencePacket, IMessage>
+	public static class ServerSideHandler implements IMessageHandler<RequestSoundMessage, IMessage>
 	{
 		@Override
-		public IMessage onMessage(CheckPresencePacket message, MessageContext ctx)
+		public IMessage onMessage(RequestSoundMessage message, MessageContext ctx)
 		{
 			EntityPlayer player = ctx.getServerHandler().playerEntity;
-			Sound sound = SoundHandler.getSound(new SoundInfo(message.fileName, message.category));
+			Sound sound = SoundHandler.getSound(new SoundInfo(message.soundName, message.category));
 
-			if(sound != null)
+			if(sound != null && !message.soundExistsCheck)
 			{
 				NetworkHelper.serverSoundUpload(sound, (EntityPlayerMP) player);
 			}
-			else
+			else if(sound == null && message.soundExistsCheck)
 			{
-				NetworkHelper.sendMessageToPlayer(new SoundNotFoundPacket(message.fileName, message.category), (EntityPlayerMP) player);
+				return new RequestSoundMessage(message.soundName, message.category);
+			}
+			else if(sound == null)
+			{
+				return new SoundNotFoundPacket(message.soundName, message.category);
 			}
 
 			return null;
 		}
 	}
 
-	public static class ClientHandler implements IMessageHandler<CheckPresencePacket, IMessage>
+	public static class ClientSideHandler implements IMessageHandler<RequestSoundMessage, IMessage>
 	{
 		@Override
-		public IMessage onMessage(CheckPresencePacket message, MessageContext ctx)
+		public IMessage onMessage(RequestSoundMessage message, MessageContext ctx)
 		{
-			Sound sound = SoundHandler.getSound(new SoundInfo(message.fileName, message.category));
+			Sound sound = SoundHandler.getSound(new SoundInfo(message.soundName, message.category));
 
 			if(sound != null)
-			{
 				NetworkHelper.clientSoundUpload(sound);
-			}
-			else
-			{
-				ChannelHandler.network.sendToServer(new SoundNotFoundPacket(message.fileName, message.category));
-			}
+
 			return null;
 		}
 	}

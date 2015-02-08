@@ -13,6 +13,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.handler.ChannelHandler;
+import com.zoonie.InteractionSounds.handler.NetworkHandler;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.network.packet.SoundChunkPacket;
 import com.zoonie.InteractionSounds.network.packet.SoundUploadedPacket;
@@ -63,7 +64,8 @@ public class NetworkHelper
 			try
 			{
 				return FileUtils.readFileToByteArray(file);
-			} catch(IOException e)
+			}
+			catch(IOException e)
 			{
 				e.printStackTrace();
 			}
@@ -71,15 +73,17 @@ public class NetworkHelper
 		return null;
 	}
 
-	public static File createFileFromByteArr(byte[] byteFile, String category, String fileName)
+	public static File createFile(String fileName, String category)
 	{
+		byte[] byteFile = NetworkHandler.soundUploaded(fileName, category);
 		if(byteFile != null && byteFile.length > 0 && !category.isEmpty() && !fileName.isEmpty())
 		{
 			File file = new File(SoundHandler.getSoundsFolder().getAbsolutePath() + File.separator + InteractionSounds.MOD_NAME + File.separator + category + File.separator + fileName);
 			try
 			{
 				FileUtils.writeByteArrayToFile(file, byteFile);
-			} catch(IOException e)
+			}
+			catch(IOException e)
 			{
 				e.printStackTrace();
 			}

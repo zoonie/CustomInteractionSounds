@@ -4,21 +4,22 @@ import io.netty.buffer.ByteBuf;
 
 import java.io.File;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import com.zoonie.InteractionSounds.configuration.Config;
 import com.zoonie.InteractionSounds.handler.DelayedPlayHandler;
-import com.zoonie.InteractionSounds.handler.NetworkHandler;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.helper.NetworkHelper;
+import com.zoonie.InteractionSounds.helper.SoundHelper;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
 
 public class SoundUploadedPacket implements IMessage
 {
-	String category;
-	String soundName;
+	private String category;
+	private String soundName;
+	private static File soundFile;
 
 	public SoundUploadedPacket()
 	{
@@ -49,11 +50,7 @@ public class SoundUploadedPacket implements IMessage
 		}
 		soundName = String.valueOf(fileCars);
 
-		File soundFile = NetworkHelper.createFileFromByteArr(NetworkHandler.soundUploaded(soundName, category), category, soundName);
-		SoundHandler.addSound(new SoundInfo(soundName, category), soundFile);
-
-		if(FMLCommonHandler.instance().getSide().isClient())
-			DelayedPlayHandler.onSoundReceived(soundName, category);
+		soundFile = NetworkHelper.createFile(soundName, category);
 	}
 
 	@Override
@@ -71,11 +68,39 @@ public class SoundUploadedPacket implements IMessage
 		}
 	}
 
-	public static class Handler implements IMessageHandler<SoundUploadedPacket, IMessage>
+	public static class ServerSideHandler implements IMessageHandler<SoundUploadedPacket, IMessage>
 	{
 		@Override
 		public IMessage onMessage(SoundUploadedPacket message, MessageContext ctx)
 		{
+			if(soundFile.length() <= Config.MaxSoundSize && SoundHelper.getSoundLength(soundFile) <= Config.MaxSoundLength)
+			{
+				SoundHandler.addSound(new SoundInfo(message.soundName, message.category), soundFile);
+			}
+			else
+			{
+				soundFile.delete();
+				File folder = soundFile.getParentFile();
+				if(folder.isDirectory() && folder.list() != null)
+				{
+					if(folder.list().length == 0)
+					{
+						folder.delete();
+					}
+				}
+			}
+			return null;
+		}
+	}
+
+	public static class ClientSideHandler implements IMessageHandler<SoundUploadedPacket, IMessage>
+	{
+		@Override
+		public IMessage onMessage(SoundUploadedPacket message, MessageContext ctx)
+		{
+			SoundHandler.addSound(new SoundInfo(message.soundName, message.category), soundFile);
+			DelayedPlayHandler.onSoundReceived(message.soundName, message.category);
+
 			return null;
 		}
 	}

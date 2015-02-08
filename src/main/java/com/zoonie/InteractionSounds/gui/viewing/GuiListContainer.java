@@ -49,9 +49,9 @@ public class GuiListContainer extends GuiScreen implements IListGui, GuiYesNoCal
 		super.drawScreen(p_571_1_, p_571_2_, p_571_3_);
 
 		getFontRenderer().drawString(translate("interaction.mouse"), 13, 5, 0xFFFFFF);
-		getFontRenderer().drawString(translate("interaction.target"), (int) (getWidth() * 0.12), 5, 0xFFFFFF);
-		getFontRenderer().drawString(translate("interaction.item"), (int) (getWidth() * 0.4), 5, 0xFFFFFF);
-		getFontRenderer().drawString(translate("sound.soundName"), (int) (getWidth() * 0.68), 5, 0xFFFFFF);
+		getFontRenderer().drawString(translate("interaction.target"), (int) (getWidth() * 0.14), 5, 0xFFFFFF);
+		getFontRenderer().drawString(translate("interaction.item"), (int) (getWidth() * 0.42), 5, 0xFFFFFF);
+		getFontRenderer().drawString(translate("sound.soundName"), (int) (getWidth() * 0.7), 5, 0xFFFFFF);
 	}
 
 	@Override

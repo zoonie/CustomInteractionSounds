@@ -65,9 +65,9 @@ public class GuiMappingList extends GuiScrollableList
 			int width = (int) (parent.getWidth() * 0.28);
 
 			parent.getFontRenderer().drawString(translate(inter.getMouseButton()), this.left + 3, var3 + 2, 0xFFFFFF);
-			parent.getFontRenderer().drawString(trim(translate(inter.getTarget()), width), (int) (parent.getWidth() * 0.12), var3 + 2, 0xFFFFFF);
-			parent.getFontRenderer().drawString(trim(translate(inter.getItem()), width), (int) (parent.getWidth() * 0.4), var3 + 2, 0xFFFFFF);
-			parent.getFontRenderer().drawString(trim(translate(sound.getSoundName()), width), (int) (parent.getWidth() * 0.68), var3 + 2, 0xFFFFFF);
+			parent.getFontRenderer().drawString(trim(translate(inter.getTarget()), width), (int) (parent.getWidth() * 0.14), var3 + 2, 0xFFFFFF);
+			parent.getFontRenderer().drawString(trim(translate(inter.getItem()), width), (int) (parent.getWidth() * 0.42), var3 + 2, 0xFFFFFF);
+			parent.getFontRenderer().drawString(trim(translate(sound.getSoundName()), width), (int) (parent.getWidth() * 0.7), var3 + 2, 0xFFFFFF);
 		}
 	}
 

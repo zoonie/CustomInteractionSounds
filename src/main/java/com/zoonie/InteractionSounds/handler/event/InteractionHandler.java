@@ -46,7 +46,6 @@ public class InteractionHandler
 	public static Interaction currentInteraction;
 	private boolean reopenGui = false;
 	private boolean buttonState = false;
-	private boolean inWorld = false;
 
 	/**
 	 * Called when user clicks with mouse. If the record interaction key has
@@ -178,18 +177,6 @@ public class InteractionHandler
 		{
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 			player.closeScreen();
-		}
-		else if(event.gui != null && event.gui.getClass().getSimpleName().equals("GuiMainMenu"))
-		{
-			if(inWorld)
-			{
-				SoundPlayer.stopSounds();
-				inWorld = false;
-			}
-		}
-		else if(event.gui != null && event.gui.getClass().getSimpleName().equals("GuiDownloadTerrain"))
-		{
-			inWorld = true;
 		}
 	}
 

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
+import com.zoonie.InteractionSounds.handler.ConnectionHandler;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.handler.event.Interaction;
 import com.zoonie.InteractionSounds.handler.event.InteractionHandler;
@@ -26,17 +27,19 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		inputHandlerSetup();
+		handlerSetup();
 		UISetup();
 		soundSetup();
 		configSetup();
 	}
 
-	private void inputHandlerSetup()
+	private void handlerSetup()
 	{
 		MinecraftForge.EVENT_BUS.register(new InteractionHandler());
-		FMLCommonHandler.instance().bus().register(new KeyInputHandler());
 
+		FMLCommonHandler.instance().bus().register(new ConnectionHandler());
+
+		FMLCommonHandler.instance().bus().register(new KeyInputHandler());
 		KeyBindings.init();
 	}
 

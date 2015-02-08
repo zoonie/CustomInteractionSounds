@@ -3,10 +3,17 @@ package com.zoonie.InteractionSounds.handler;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+
 import org.apache.commons.lang3.ArrayUtils;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.zoonie.InteractionSounds.sound.SoundInfo;
 
 public class NetworkHandler
 {
+	public static Multimap<SoundInfo, EntityPlayerMP> waiting = ArrayListMultimap.create();
 
 	private static Map<String, byte[]> soundChunks = new HashMap<String, byte[]>();
 

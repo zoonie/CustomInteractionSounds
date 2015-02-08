@@ -7,9 +7,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import com.zoonie.InteractionSounds.handler.NetworkHandler;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.helper.NetworkHelper;
-import com.zoonie.InteractionSounds.network.packet.server.SoundNotFoundPacket;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
 
@@ -93,7 +93,7 @@ public class RequestSoundMessage implements IMessage
 			}
 			else if(sound == null)
 			{
-				return new SoundNotFoundPacket(message.soundName, message.category);
+				NetworkHandler.waiting.put(new SoundInfo(message.soundName, message.category), (EntityPlayerMP) player);
 			}
 
 			return null;

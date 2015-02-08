@@ -4,15 +4,18 @@ import io.netty.buffer.ByteBuf;
 
 import java.io.File;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.zoonie.InteractionSounds.configuration.Config;
 import com.zoonie.InteractionSounds.handler.DelayedPlayHandler;
+import com.zoonie.InteractionSounds.handler.NetworkHandler;
 import com.zoonie.InteractionSounds.handler.SoundHandler;
 import com.zoonie.InteractionSounds.helper.NetworkHelper;
 import com.zoonie.InteractionSounds.helper.SoundHelper;
+import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
 
 public class SoundUploadedPacket implements IMessage
@@ -75,7 +78,14 @@ public class SoundUploadedPacket implements IMessage
 		{
 			if(soundFile.length() <= Config.MaxSoundSize && SoundHelper.getSoundLength(soundFile) <= Config.MaxSoundLength)
 			{
-				SoundHandler.addSound(new SoundInfo(message.soundName, message.category), soundFile);
+				SoundInfo soundInfo = new SoundInfo(message.soundName, message.category);
+
+				for(EntityPlayerMP player : NetworkHandler.waiting.get(soundInfo))
+				{
+					NetworkHelper.serverSoundUpload(new Sound(soundFile), player);
+				}
+
+				SoundHandler.addSound(soundInfo, soundFile);
 			}
 			else
 			{

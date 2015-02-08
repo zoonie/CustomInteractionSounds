@@ -23,6 +23,7 @@ import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.InteractionSounds.handler.ChannelHandler;
 import com.zoonie.InteractionSounds.network.packet.client.PlaySoundMessage;
+import com.zoonie.InteractionSounds.network.packet.client.RequestSoundMessage;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
@@ -132,6 +133,7 @@ public class InteractionHandler
 
 		SoundPlayer.playSound(sound.getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
 
+		ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
 		ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), id, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ,
 				(float) sound.getVolume(), player.getDisplayNameString()));
 		return true;

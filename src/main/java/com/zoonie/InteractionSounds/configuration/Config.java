@@ -9,7 +9,7 @@ public class Config
 
 	public Config(Configuration config)
 	{
-		MaxSoundLength = config.get("Server Upload Settings", "Max Sound Length", Double.POSITIVE_INFINITY).getDouble();
-		MaxSoundSize = (long) config.get("Server Upload Settings", "Max Sound Size", Double.POSITIVE_INFINITY).getDouble();
+		MaxSoundLength = config.get("Server Side Settings", "Max sound length in seconds", Double.POSITIVE_INFINITY).getDouble();
+		MaxSoundSize = (long) (config.get("Server Side Settings", "Max sound size in bytes", Double.POSITIVE_INFINITY).getDouble());
 	}
 }

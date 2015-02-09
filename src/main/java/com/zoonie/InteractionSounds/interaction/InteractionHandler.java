@@ -16,6 +16,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
@@ -42,8 +43,10 @@ import com.zoonie.InteractionSounds.sound.SoundPlayer;
 public class InteractionHandler
 {
 	public static Interaction currentInteraction;
+	private String lastTarget;
+	private BlockPos lastPos;
 	private boolean reopenGui = false;
-	private boolean buttonState = false;
+	private int tick = 0;
 
 	/**
 	 * Called when user clicks with mouse. If the record interaction key has
@@ -62,7 +65,6 @@ public class InteractionHandler
 		// Left or right click and mouse click down.
 		if((event.button == 0 || event.button == 1) && event.buttonstate)
 		{
-			buttonState = true;
 			Interaction interaction = createInteraction(event.button);
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 
@@ -78,12 +80,11 @@ public class InteractionHandler
 			else
 				processClick(interaction, event.button, player);
 		}
-		else if((event.button == 0 || event.button == 1))
-			buttonState = false;
 	}
 
 	private void processClick(Interaction interaction, int button, EntityPlayerSP player)
 	{
+		lastTarget = interaction.getTarget();
 		if(ClientProxy.mappings != null)
 		{
 			String click = button == 0 ? "left" : "right";
@@ -103,11 +104,16 @@ public class InteractionHandler
 		}
 		else
 		{
-			Interaction anyItem = new Interaction(click, "any", interaction.getTarget(), interaction.getGeneralTargetName());
-			Interaction anyBlockTarget = new Interaction(click, interaction.getItem(), "any.block", interaction.getGeneralTargetName());
-			Interaction anyEntityTarget = new Interaction(click, interaction.getItem(), "any.entity", interaction.getGeneralTargetName());
-			Interaction anyTarget = new Interaction(click, interaction.getItem(), "any", interaction.getGeneralTargetName());
-			Interaction any = new Interaction(click, "any", "any", interaction.getGeneralTargetName());
+			String target = interaction.getTarget();
+			String generalTarget = interaction.getGeneralTargetName();
+			String item = interaction.getItem();
+			String stringAny = "any";
+
+			Interaction anyItem = new Interaction(click, stringAny, target, generalTarget);
+			Interaction anyBlockTarget = new Interaction(click, item, "any.block", generalTarget);
+			Interaction anyEntityTarget = new Interaction(click, item, "any.entity", generalTarget);
+			Interaction anyTarget = new Interaction(click, item, stringAny, generalTarget);
+			Interaction any = new Interaction(click, stringAny, stringAny, generalTarget);
 
 			if(ClientProxy.mappings.containsKey(anyItem))
 				return playSound(anyItem, player);
@@ -138,11 +144,31 @@ public class InteractionHandler
 	@SubscribeEvent
 	public void onBreak(BreakEvent event)
 	{
-		if(buttonState)
+		if(Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown())
 		{
 			Interaction interaction = createInteraction(0);
 			processClick(interaction, 0, Minecraft.getMinecraft().thePlayer);
 		}
+	}
+
+	@SubscribeEvent
+	public void detectNewTarget(PlayerTickEvent event)
+	{
+		if(tick == 0 && Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown())
+		{
+			String lastTarget = this.lastTarget;
+			BlockPos lastPos = this.lastPos;
+			Interaction interaction = createInteraction(0);
+
+			MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
+			BlockPos pos = mop.getBlockPos();
+
+			if(!interaction.isEntity() && !pos.equals(lastPos) && !(lastTarget.equals("tile.air") && interaction.getTarget().equals("tile.air")))
+			{
+				processClick(interaction, 0, Minecraft.getMinecraft().thePlayer);
+			}
+		}
+		tick = ++tick % 10;
 	}
 
 	/**
@@ -193,6 +219,7 @@ public class InteractionHandler
 			item = player.getCurrentEquippedItem().getUnlocalizedName();
 		MovingObjectPosition mop = mc.objectMouseOver;
 		BlockPos pos = mop.getBlockPos();
+		lastPos = pos;
 		Entity entity = mop.entityHit;
 		if(pos != null)
 		{

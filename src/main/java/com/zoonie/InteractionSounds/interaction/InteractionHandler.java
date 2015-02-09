@@ -13,7 +13,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
@@ -138,16 +137,6 @@ public class InteractionHandler
 		ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ, (float) sound
 				.getVolume(), player.getDisplayNameString()));
 		return true;
-	}
-
-	@SubscribeEvent
-	public void onBreak(BreakEvent event)
-	{
-		if(Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown())
-		{
-			Interaction interaction = createInteraction(0);
-			processClick(interaction, 0, Minecraft.getMinecraft().thePlayer);
-		}
 	}
 
 	@SubscribeEvent

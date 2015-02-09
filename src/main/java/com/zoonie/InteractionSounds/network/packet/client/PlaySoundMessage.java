@@ -12,7 +12,7 @@ import com.zoonie.InteractionSounds.handler.SoundHandler;
 
 public class PlaySoundMessage implements IMessage
 {
-	String soundName, category, identifier, caller;
+	String soundName, category, caller;
 	int dimensionId;
 	int x, y, z;
 	float volume;
@@ -21,11 +21,10 @@ public class PlaySoundMessage implements IMessage
 	{
 	}
 
-	public PlaySoundMessage(String name, String category, String identifier, int dimensionId, int x, int y, int z, float volume, String caller)
+	public PlaySoundMessage(String name, String category, int dimensionId, int x, int y, int z, float volume, String caller)
 	{
 		this.soundName = name;
 		this.category = category;
-		this.identifier = identifier;
 		this.dimensionId = dimensionId;
 		this.x = x;
 		this.y = y;
@@ -44,14 +43,6 @@ public class PlaySoundMessage implements IMessage
 			nameChars[i] = bytes.readChar();
 		}
 		soundName = String.valueOf(nameChars);
-
-		int identifierLength = bytes.readInt();
-		char[] idChars = new char[identifierLength];
-		for(int i = 0; i < identifierLength; i++)
-		{
-			idChars[i] = bytes.readChar();
-		}
-		identifier = String.valueOf(idChars);
 
 		int catLength = bytes.readInt();
 		char[] catChars = new char[catLength];
@@ -85,12 +76,6 @@ public class PlaySoundMessage implements IMessage
 			bytes.writeChar(c);
 		}
 
-		bytes.writeInt(identifier.length());
-		for(char c : identifier.toCharArray())
-		{
-			bytes.writeChar(c);
-		}
-
 		bytes.writeInt(category.length());
 		for(char c : category.toCharArray())
 		{
@@ -116,7 +101,7 @@ public class PlaySoundMessage implements IMessage
 		public IMessage onMessage(PlaySoundMessage message, MessageContext ctx)
 		{
 			if(!Minecraft.getMinecraft().thePlayer.getDisplayNameString().equals(message.caller))
-				SoundHandler.playSound(message.soundName, message.category, message.identifier, message.x, message.y, message.z, message.volume);
+				SoundHandler.playSound(message.soundName, message.category, message.x, message.y, message.z, message.volume);
 			return null;
 		}
 	}
@@ -127,8 +112,7 @@ public class PlaySoundMessage implements IMessage
 		public IMessage onMessage(PlaySoundMessage message, MessageContext ctx)
 		{
 			TargetPoint tp = new TargetPoint(message.dimensionId, message.x, message.y, message.z, 16);
-			ChannelHandler.network.sendToAllAround(new PlaySoundMessage(message.soundName, message.category, message.identifier, message.dimensionId, message.x, message.y, message.z, message.volume,
-					message.caller), tp);
+			ChannelHandler.network.sendToAllAround(new PlaySoundMessage(message.soundName, message.category, message.dimensionId, message.x, message.y, message.z, message.volume, message.caller), tp);
 			return null;
 		}
 	}

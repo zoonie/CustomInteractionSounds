@@ -6,7 +6,6 @@ import java.awt.Component;
 import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JDialog;
@@ -46,7 +45,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	private JFileChooser fileChooser;
 	private EntityPlayer player;
 	private GuiButton saveButton, playButton, listButton;
-	private UUID currentlyPlayerSoundId;
+	private String currentlyPlayerSoundId;
 	private long timeSoundFinishedPlaying;
 	private Interaction interaction;
 	private Boolean justUploaded = false;
@@ -182,9 +181,8 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 				{
 					if(System.currentTimeMillis() > timeSoundFinishedPlaying)
 					{
-						currentlyPlayerSoundId = UUID.randomUUID();
 						timeSoundFinishedPlaying = (long) (SoundHelper.getSoundLength(selectedSound.getSoundLocation()) * 1000) + System.currentTimeMillis();
-						SoundPlayer.playSound(selectedSound.getSoundLocation(), currentlyPlayerSoundId.toString(), (float) player.posX, (float) player.posY, (float) player.posZ, false,
+						currentlyPlayerSoundId = SoundPlayer.playSound(selectedSound.getSoundLocation(), (float) player.posX, (float) player.posY, (float) player.posZ, false,
 								(float) slider.getValue() / 100);
 						playButton.displayString = translate("sound.stop");
 					}
@@ -252,7 +250,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		this.drawString(this.getFontRenderer(), translate("sound.volume") + ":", labelAlign, 100, 0xFFFFFF);
 
 		if(timeSoundFinishedPlaying > 0)
-			SoundPlayer.adjustVolume(currentlyPlayerSoundId.toString(), (float) slider.getValue() / 100);
+			SoundPlayer.adjustVolume(currentlyPlayerSoundId, (float) slider.getValue() / 100);
 	}
 
 	private void drawInteractionInfo()
@@ -324,7 +322,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	{
 		if(System.currentTimeMillis() < timeSoundFinishedPlaying)
 		{
-			SoundPlayer.stopSound(currentlyPlayerSoundId.toString());
+			SoundPlayer.stopSound(currentlyPlayerSoundId);
 		}
 	}
 }

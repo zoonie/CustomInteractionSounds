@@ -1,7 +1,5 @@
 package com.zoonie.InteractionSounds.handler.event;
 
-import java.util.UUID;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -128,13 +126,12 @@ public class InteractionHandler
 	private Boolean playSound(Interaction interaction, EntityPlayerSP player)
 	{
 		Sound sound = ClientProxy.mappings.get(interaction);
-		String id = UUID.randomUUID().toString();
 
-		SoundPlayer.playSound(sound.getSoundLocation(), id, (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
+		SoundPlayer.playSound(sound.getSoundLocation(), (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
 
 		ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
-		ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), id, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ,
-				(float) sound.getVolume(), player.getDisplayNameString()));
+		ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ, (float) sound
+				.getVolume(), player.getDisplayNameString()));
 		return true;
 	}
 

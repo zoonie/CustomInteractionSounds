@@ -11,6 +11,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import paulscode.sound.SoundSystem;
 
+import com.zoonie.InteractionSounds.helper.SoundHelper;
+
 @SideOnly(Side.CLIENT)
 public class SoundPlayer
 {
@@ -27,7 +29,7 @@ public class SoundPlayer
 		soundSystem = ObfuscationReflectionHelper.getPrivateValue(SoundManager.class, soundManager, "sndSystem", "field_148620_e", "e");
 	}
 
-	public static void playSound(File sound, String identifier, float x, float y, float z, boolean fading, float volume)
+	public static String playSound(File sound, float x, float y, float z, boolean fading, float volume)
 	{
 		if(soundSystem == null)
 		{
@@ -35,26 +37,26 @@ public class SoundPlayer
 		}
 		try
 		{
-			playing[index++ % SIZE] = identifier;
+			String identifier;
 
-			if(sound.length() > 500000)
-				soundSystem.newStreamingSource(false, identifier, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
+			if(SoundHelper.getSoundLength(sound) > 5)
+			{
+				identifier = soundSystem.quickStream(false, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
+				playing[index++ % SIZE] = identifier;
+			}
 			else
-				soundSystem.newSource(false, identifier, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
+				identifier = soundSystem.quickPlay(false, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
 
 			volume *= Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS);
 			soundSystem.setVolume(identifier, volume);
 
-			soundSystem.play(identifier);
+			return identifier;
 		}
 		catch(MalformedURLException e)
 		{
 			e.printStackTrace();
 		}
-		catch(NullPointerException e) // Can't replicate, unknown cause
-		{
-			e.printStackTrace();
-		}
+		return null;
 	}
 
 	public static void stopSound(String identifier)
@@ -77,5 +79,6 @@ public class SoundPlayer
 				stopSound(playing[i]);
 			}
 		}
+		soundSystem = null;
 	}
 }

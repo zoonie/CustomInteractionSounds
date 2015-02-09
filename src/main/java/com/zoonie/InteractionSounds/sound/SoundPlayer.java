@@ -18,7 +18,7 @@ public class SoundPlayer
 {
 	private static SoundSystem soundSystem;
 
-	private static final int SIZE = 200;
+	private static final int SIZE = 100;
 	private static String[] playing = new String[SIZE];
 	private static int index = 0;
 
@@ -76,7 +76,8 @@ public class SoundPlayer
 		{
 			for(int i = 0; i < SIZE; i++)
 			{
-				stopSound(playing[i]);
+				if(playing[i] != null)
+					stopSound(playing[i]);
 			}
 		}
 		soundSystem = null;

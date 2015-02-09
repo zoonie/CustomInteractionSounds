@@ -9,7 +9,6 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -109,11 +108,11 @@ public class InteractionHandler
 			String item = interaction.getItem();
 			String stringAny = "any";
 
-			Interaction anyItem = new Interaction(click, stringAny, target, generalTarget);
-			Interaction anyBlockTarget = new Interaction(click, item, "any.block", generalTarget);
-			Interaction anyEntityTarget = new Interaction(click, item, "any.entity", generalTarget);
-			Interaction anyTarget = new Interaction(click, item, stringAny, generalTarget);
-			Interaction any = new Interaction(click, stringAny, stringAny, generalTarget);
+			Interaction anyItem = new Interaction(click, stringAny, target);
+			Interaction anyBlockTarget = new Interaction(click, item, "any.block");
+			Interaction anyEntityTarget = new Interaction(click, item, "any.entity");
+			Interaction anyTarget = new Interaction(click, item, stringAny);
+			Interaction any = new Interaction(click, stringAny, stringAny);
 
 			if(ClientProxy.mappings.containsKey(anyItem))
 				return playSound(anyItem, player);
@@ -226,13 +225,7 @@ public class InteractionHandler
 			IBlockState bs = mc.theWorld.getBlockState(pos);
 			Block b = bs.getBlock();
 			String name = getUnlocalizedName(b, bs);
-			String generalName;
-			String unlocalizedParentName = getUnlocalizedParentName(name);
-
-			if(StatCollector.canTranslate(unlocalizedParentName + ".name"))
-				generalName = unlocalizedParentName;
-			else
-				generalName = getUnlocalizedName(b, b.getDefaultState());
+			String generalName = getUnlocalizedParentName(name);
 
 			return new Interaction(button == 0 ? "left" : "right", item, name, generalName);
 		}

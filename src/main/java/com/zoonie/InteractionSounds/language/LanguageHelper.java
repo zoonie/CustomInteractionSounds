@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.helper;
+package com.zoonie.InteractionSounds.language;
 
 import net.minecraft.util.StatCollector;
 

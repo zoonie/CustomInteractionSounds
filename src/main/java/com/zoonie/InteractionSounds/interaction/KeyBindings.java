@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.handler.event;
+package com.zoonie.InteractionSounds.interaction;
 
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;

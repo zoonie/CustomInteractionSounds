@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.handler;
+package com.zoonie.InteractionSounds.network;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;

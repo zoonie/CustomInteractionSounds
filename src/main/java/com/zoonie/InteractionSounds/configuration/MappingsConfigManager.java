@@ -13,10 +13,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.zoonie.InteractionSounds.InteractionSounds;
-import com.zoonie.InteractionSounds.handler.SoundHandler;
-import com.zoonie.InteractionSounds.handler.event.Interaction;
+import com.zoonie.InteractionSounds.interaction.Interaction;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundHandler;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
 
 public class MappingsConfigManager

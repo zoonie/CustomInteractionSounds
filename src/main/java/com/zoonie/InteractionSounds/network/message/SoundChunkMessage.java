@@ -1,22 +1,22 @@
-package com.zoonie.InteractionSounds.network.packet;
+package com.zoonie.InteractionSounds.network.message;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import com.zoonie.InteractionSounds.handler.NetworkHandler;
+import com.zoonie.InteractionSounds.network.NetworkHandler;
 
-public class SoundChunkPacket implements IMessage
+public class SoundChunkMessage implements IMessage
 {
 	String soundName, category;
 	byte[] soundChunk;
 
-	public SoundChunkPacket()
+	public SoundChunkMessage()
 	{
 	}
 
-	public SoundChunkPacket(String soundName, String category, byte[] soundChunk)
+	public SoundChunkMessage(String soundName, String category, byte[] soundChunk)
 	{
 		this.soundName = soundName;
 		this.category = category;
@@ -68,10 +68,10 @@ public class SoundChunkPacket implements IMessage
 		bytes.writeBytes(soundChunk);
 	}
 
-	public static class Handler implements IMessageHandler<SoundChunkPacket, IMessage>
+	public static class Handler implements IMessageHandler<SoundChunkMessage, IMessage>
 	{
 		@Override
-		public IMessage onMessage(SoundChunkPacket message, MessageContext ctx)
+		public IMessage onMessage(SoundChunkMessage message, MessageContext ctx)
 		{
 			return null;
 		}

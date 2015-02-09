@@ -11,14 +11,14 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
-import com.zoonie.InteractionSounds.handler.ConnectionHandler;
-import com.zoonie.InteractionSounds.handler.SoundHandler;
-import com.zoonie.InteractionSounds.handler.event.Interaction;
-import com.zoonie.InteractionSounds.handler.event.InteractionHandler;
-import com.zoonie.InteractionSounds.handler.event.KeyBindings;
-import com.zoonie.InteractionSounds.handler.event.KeyInputHandler;
-import com.zoonie.InteractionSounds.handler.event.SoundEventHandler;
+import com.zoonie.InteractionSounds.interaction.Interaction;
+import com.zoonie.InteractionSounds.interaction.InteractionHandler;
+import com.zoonie.InteractionSounds.interaction.KeyBindings;
+import com.zoonie.InteractionSounds.interaction.KeyInputHandler;
+import com.zoonie.InteractionSounds.network.ConnectionHandler;
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundEventHandler;
+import com.zoonie.InteractionSounds.sound.SoundHandler;
 
 public class ClientProxy extends CommonProxy
 {

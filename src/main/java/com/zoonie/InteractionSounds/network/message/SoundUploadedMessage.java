@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.network.packet;
+package com.zoonie.InteractionSounds.network.message;
 
 import io.netty.buffer.ByteBuf;
 
@@ -10,25 +10,25 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.zoonie.InteractionSounds.configuration.Config;
-import com.zoonie.InteractionSounds.handler.DelayedPlayHandler;
-import com.zoonie.InteractionSounds.handler.NetworkHandler;
-import com.zoonie.InteractionSounds.handler.SoundHandler;
-import com.zoonie.InteractionSounds.helper.NetworkHelper;
-import com.zoonie.InteractionSounds.helper.SoundHelper;
+import com.zoonie.InteractionSounds.network.NetworkHandler;
+import com.zoonie.InteractionSounds.network.NetworkHelper;
+import com.zoonie.InteractionSounds.sound.DelayedPlayHandler;
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundHandler;
+import com.zoonie.InteractionSounds.sound.SoundHelper;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
 
-public class SoundUploadedPacket implements IMessage
+public class SoundUploadedMessage implements IMessage
 {
 	private String category;
 	private String soundName;
 	private static File soundFile;
 
-	public SoundUploadedPacket()
+	public SoundUploadedMessage()
 	{
 	}
 
-	public SoundUploadedPacket(String soundName, String category)
+	public SoundUploadedMessage(String soundName, String category)
 	{
 		this.category = category;
 		this.soundName = soundName;
@@ -71,10 +71,10 @@ public class SoundUploadedPacket implements IMessage
 		}
 	}
 
-	public static class ServerSideHandler implements IMessageHandler<SoundUploadedPacket, IMessage>
+	public static class ServerSideHandler implements IMessageHandler<SoundUploadedMessage, IMessage>
 	{
 		@Override
-		public IMessage onMessage(SoundUploadedPacket message, MessageContext ctx)
+		public IMessage onMessage(SoundUploadedMessage message, MessageContext ctx)
 		{
 			if(soundFile.length() <= Config.MaxSoundSize && SoundHelper.getSoundLength(soundFile) <= Config.MaxSoundLength)
 			{
@@ -103,10 +103,10 @@ public class SoundUploadedPacket implements IMessage
 		}
 	}
 
-	public static class ClientSideHandler implements IMessageHandler<SoundUploadedPacket, IMessage>
+	public static class ClientSideHandler implements IMessageHandler<SoundUploadedMessage, IMessage>
 	{
 		@Override
-		public IMessage onMessage(SoundUploadedPacket message, MessageContext ctx)
+		public IMessage onMessage(SoundUploadedMessage message, MessageContext ctx)
 		{
 			SoundHandler.addSound(new SoundInfo(message.soundName, message.category), soundFile);
 			DelayedPlayHandler.onSoundReceived(message.soundName, message.category);

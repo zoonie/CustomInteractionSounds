@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.helper;
+package com.zoonie.InteractionSounds.network;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,12 +12,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
-import com.zoonie.InteractionSounds.handler.ChannelHandler;
-import com.zoonie.InteractionSounds.handler.NetworkHandler;
-import com.zoonie.InteractionSounds.handler.SoundHandler;
-import com.zoonie.InteractionSounds.network.packet.SoundChunkPacket;
-import com.zoonie.InteractionSounds.network.packet.SoundUploadedPacket;
+import com.zoonie.InteractionSounds.network.message.SoundChunkMessage;
+import com.zoonie.InteractionSounds.network.message.SoundUploadedMessage;
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundHandler;
 
 public class NetworkHelper
 {
@@ -41,9 +39,9 @@ public class NetworkHelper
 		for(int i = 0; i < soundBytes.length; i += PARTITION_SIZE)
 		{
 			byte[] bytes = ArrayUtils.subarray(soundBytes, i, i + Math.min(PARTITION_SIZE, soundBytes.length - i));
-			ChannelHandler.network.sendTo(new SoundChunkPacket(sound.getSoundName(), sound.getCategory(), bytes), player);
+			ChannelHandler.network.sendTo(new SoundChunkMessage(sound.getSoundName(), sound.getCategory(), bytes), player);
 		}
-		ChannelHandler.network.sendTo(new SoundUploadedPacket(sound.getSoundName(), sound.getCategory()), player);
+		ChannelHandler.network.sendTo(new SoundUploadedMessage(sound.getSoundName(), sound.getCategory()), player);
 	}
 
 	private static void uploadSound(Sound sound, String category)
@@ -52,9 +50,9 @@ public class NetworkHelper
 		for(int i = 0; i < soundBytes.length; i += PARTITION_SIZE)
 		{
 			byte[] bytes = ArrayUtils.subarray(soundBytes, i, i + Math.min(PARTITION_SIZE, soundBytes.length - i));
-			ChannelHandler.network.sendToServer(new SoundChunkPacket(sound.getSoundName(), sound.getCategory(), bytes));
+			ChannelHandler.network.sendToServer(new SoundChunkMessage(sound.getSoundName(), sound.getCategory(), bytes));
 		}
-		ChannelHandler.network.sendToServer(new SoundUploadedPacket(sound.getSoundName(), category));
+		ChannelHandler.network.sendToServer(new SoundUploadedMessage(sound.getSoundName(), category));
 	}
 
 	public static byte[] convertFileToByteArr(File file)

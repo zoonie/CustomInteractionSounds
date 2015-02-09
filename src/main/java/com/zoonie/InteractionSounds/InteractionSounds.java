@@ -12,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.zoonie.InteractionSounds.gui.GuiHandler;
-import com.zoonie.InteractionSounds.handler.ChannelHandler;
+import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.proxy.CommonProxy;
 
 @Mod(modid = InteractionSounds.MODID, name = InteractionSounds.MOD_NAME, version = InteractionSounds.VERSION, acceptableRemoteVersions = "*")

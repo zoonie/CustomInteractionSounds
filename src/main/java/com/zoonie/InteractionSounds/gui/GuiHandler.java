@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.InteractionSounds.gui.viewing.GuiListContainer;
-import com.zoonie.InteractionSounds.handler.event.InteractionHandler;
+import com.zoonie.InteractionSounds.interaction.InteractionHandler;
 
 public class GuiHandler implements IGuiHandler
 {

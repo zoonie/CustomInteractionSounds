@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.handler.event;
+package com.zoonie.InteractionSounds.interaction;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

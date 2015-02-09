@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.handler.event;
+package com.zoonie.InteractionSounds.interaction;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -19,9 +19,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
-import com.zoonie.InteractionSounds.handler.ChannelHandler;
-import com.zoonie.InteractionSounds.network.packet.client.PlaySoundMessage;
-import com.zoonie.InteractionSounds.network.packet.client.RequestSoundMessage;
+import com.zoonie.InteractionSounds.network.ChannelHandler;
+import com.zoonie.InteractionSounds.network.message.PlaySoundMessage;
+import com.zoonie.InteractionSounds.network.message.RequestSoundMessage;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;

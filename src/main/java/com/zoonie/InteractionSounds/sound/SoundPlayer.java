@@ -11,8 +11,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import paulscode.sound.SoundSystem;
 
-import com.zoonie.InteractionSounds.helper.SoundHelper;
-
 @SideOnly(Side.CLIENT)
 public class SoundPlayer
 {

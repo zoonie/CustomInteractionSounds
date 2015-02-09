@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.handler.event;
+package com.zoonie.InteractionSounds.interaction;
 
 import com.google.gson.annotations.Expose;
 

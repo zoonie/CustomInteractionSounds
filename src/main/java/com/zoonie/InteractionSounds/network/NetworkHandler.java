@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.handler;
+package com.zoonie.InteractionSounds.network;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.handler;
+package com.zoonie.InteractionSounds.sound;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,10 +11,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.io.Files;
 import com.zoonie.InteractionSounds.InteractionSounds;
-import com.zoonie.InteractionSounds.network.packet.client.RequestSoundMessage;
-import com.zoonie.InteractionSounds.sound.Sound;
-import com.zoonie.InteractionSounds.sound.SoundInfo;
-import com.zoonie.InteractionSounds.sound.SoundPlayer;
+import com.zoonie.InteractionSounds.network.ChannelHandler;
+import com.zoonie.InteractionSounds.network.message.RequestSoundMessage;
 
 public class SoundHandler
 {

@@ -1,4 +1,4 @@
-package com.zoonie.InteractionSounds.network.packet.client;
+package com.zoonie.InteractionSounds.network.message;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -7,8 +7,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import com.zoonie.InteractionSounds.handler.ChannelHandler;
-import com.zoonie.InteractionSounds.handler.SoundHandler;
+import com.zoonie.InteractionSounds.network.ChannelHandler;
+import com.zoonie.InteractionSounds.sound.SoundHandler;
 
 public class PlaySoundMessage implements IMessage
 {

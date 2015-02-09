@@ -3,7 +3,6 @@ package com.zoonie.InteractionSounds.sound;
 import java.io.File;
 
 import com.google.gson.annotations.Expose;
-import com.zoonie.InteractionSounds.handler.SoundHandler;
 
 public class Sound
 {

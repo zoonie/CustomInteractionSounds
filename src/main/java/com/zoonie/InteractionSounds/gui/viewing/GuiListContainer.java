@@ -1,6 +1,6 @@
 package com.zoonie.InteractionSounds.gui.viewing;
 
-import static com.zoonie.InteractionSounds.helper.LanguageHelper.translate;
+import static com.zoonie.InteractionSounds.language.LanguageHelper.translate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.gui.IListGui;
-import com.zoonie.InteractionSounds.handler.event.Interaction;
+import com.zoonie.InteractionSounds.interaction.Interaction;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
 

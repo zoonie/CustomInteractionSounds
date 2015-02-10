@@ -2,6 +2,10 @@ package com.zoonie.InteractionSounds.sound;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundCategory;
@@ -18,7 +22,7 @@ public class SoundPlayer
 
 	private SoundSystem soundSystem;
 	private final int SIZE = 100;
-	private String[] playing = new String[SIZE];
+	private HashMap<String, Double> playing = new HashMap<String, Double>();
 	private int index = 0;
 
 	private void init()
@@ -37,14 +41,17 @@ public class SoundPlayer
 		try
 		{
 			String identifier;
+			double soundLength = SoundHelper.getSoundLength(sound);
 
-			if(SoundHelper.getSoundLength(sound) > 5)
+			if(soundLength > 5)
 			{
 				identifier = soundSystem.quickStream(false, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
-				playing[index++ % SIZE] = identifier;
 			}
 			else
 				identifier = soundSystem.quickPlay(false, sound.toURI().toURL(), sound.getName(), false, x, y, z, fading ? 2 : 0, 16);
+
+			double timeToEnd = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis((long) soundLength);
+			playing.put(identifier, timeToEnd);
 
 			volume *= Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS);
 			soundSystem.setVolume(identifier, volume);
@@ -64,6 +71,11 @@ public class SoundPlayer
 			soundSystem.stop(identifier);
 	}
 
+	public void removeSound(String identifier)
+	{
+		playing.remove(identifier);
+	}
+
 	public void adjustVolume(String identifier, float volume)
 	{
 		soundSystem.setVolume(identifier, volume);
@@ -73,11 +85,15 @@ public class SoundPlayer
 	{
 		if(soundSystem != null)
 		{
-			for(int i = 0; i < SIZE; i++)
+			Iterator<Entry<String, Double>> playingList = playing.entrySet().iterator();
+			while(playingList.hasNext())
 			{
-				stopSound(playing[i]);
+				Entry<String, Double> e = playingList.next();
+				if(e.getValue() > System.currentTimeMillis())
+					stopSound(e.getKey());
 			}
 		}
+		playing = new HashMap<String, Double>();
 		soundSystem = null;
 	}
 

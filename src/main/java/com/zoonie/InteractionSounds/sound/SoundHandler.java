@@ -113,7 +113,7 @@ public class SoundHandler
 		Sound sound = SoundHandler.getSound(new SoundInfo(soundName, category));
 		if(sound != null && sound.hasLocal())
 		{
-			SoundPlayer.playSound(sound.getSoundLocation(), x, y, z, true, volume);
+			SoundPlayer.getInstance().playSound(sound.getSoundLocation(), x, y, z, true, volume);
 		}
 		else
 		{

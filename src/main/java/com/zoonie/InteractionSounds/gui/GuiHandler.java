@@ -26,7 +26,7 @@ public class GuiHandler implements IGuiHandler
 		switch(ID)
 		{
 		case 0:
-			return new GuiInteractionSoundMapping(player, InteractionHandler.currentInteraction);
+			return new GuiInteractionSoundMapping(player, InteractionHandler.getInstance().currentInteraction);
 		case 1:
 			return new GuiListContainer(player);
 		default:

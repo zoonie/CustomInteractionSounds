@@ -14,20 +14,21 @@ import paulscode.sound.SoundSystem;
 @SideOnly(Side.CLIENT)
 public class SoundPlayer
 {
-	private static SoundSystem soundSystem;
+	private static SoundPlayer instance = new SoundPlayer();
 
-	private static final int SIZE = 100;
-	private static String[] playing = new String[SIZE];
-	private static int index = 0;
+	private SoundSystem soundSystem;
+	private final int SIZE = 100;
+	private String[] playing = new String[SIZE];
+	private int index = 0;
 
-	private static void init()
+	private void init()
 	{
 		SoundManager soundManager = ObfuscationReflectionHelper.getPrivateValue(net.minecraft.client.audio.SoundHandler.class, Minecraft.getMinecraft().getSoundHandler(), "sndManager",
 				"field_147694_f", "V");
 		soundSystem = ObfuscationReflectionHelper.getPrivateValue(SoundManager.class, soundManager, "sndSystem", "field_148620_e", "e");
 	}
 
-	public static String playSound(File sound, float x, float y, float z, boolean fading, float volume)
+	public String playSound(File sound, float x, float y, float z, boolean fading, float volume)
 	{
 		if(soundSystem == null)
 		{
@@ -57,27 +58,31 @@ public class SoundPlayer
 		return null;
 	}
 
-	public static void stopSound(String identifier)
+	public void stopSound(String identifier)
 	{
 		if(identifier != null)
 			soundSystem.stop(identifier);
 	}
 
-	public static void adjustVolume(String identifier, float volume)
+	public void adjustVolume(String identifier, float volume)
 	{
 		soundSystem.setVolume(identifier, volume);
 	}
 
-	public static void stopSounds()
+	public void stopSounds()
 	{
 		if(soundSystem != null)
 		{
 			for(int i = 0; i < SIZE; i++)
 			{
-				if(playing[i] != null)
-					stopSound(playing[i]);
+				stopSound(playing[i]);
 			}
 		}
 		soundSystem = null;
+	}
+
+	public static SoundPlayer getInstance()
+	{
+		return instance;
 	}
 }

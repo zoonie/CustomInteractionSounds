@@ -182,7 +182,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 					if(System.currentTimeMillis() > timeSoundFinishedPlaying)
 					{
 						timeSoundFinishedPlaying = (long) (SoundHelper.getSoundLength(selectedSound.getSoundLocation()) * 1000) + System.currentTimeMillis();
-						currentlyPlayerSoundId = SoundPlayer.playSound(selectedSound.getSoundLocation(), (float) player.posX, (float) player.posY, (float) player.posZ, false,
+						currentlyPlayerSoundId = SoundPlayer.getInstance().playSound(selectedSound.getSoundLocation(), (float) player.posX, (float) player.posY, (float) player.posZ, false,
 								(float) slider.getValue() / 100);
 						playButton.displayString = translate("sound.stop");
 					}
@@ -190,7 +190,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 					{
 						timeSoundFinishedPlaying = 0;
 						playButton.displayString = translate("sound.play");
-						SoundPlayer.stopSound(currentlyPlayerSoundId.toString());
+						SoundPlayer.getInstance().stopSound(currentlyPlayerSoundId.toString());
 					}
 				}
 				break;
@@ -250,7 +250,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		this.drawString(this.getFontRenderer(), translate("sound.volume") + ":", labelAlign, 100, 0xFFFFFF);
 
 		if(timeSoundFinishedPlaying > 0)
-			SoundPlayer.adjustVolume(currentlyPlayerSoundId, (float) slider.getValue() / 100);
+			SoundPlayer.getInstance().adjustVolume(currentlyPlayerSoundId, (float) slider.getValue() / 100);
 	}
 
 	private void drawInteractionInfo()
@@ -322,7 +322,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	{
 		if(System.currentTimeMillis() < timeSoundFinishedPlaying)
 		{
-			SoundPlayer.stopSound(currentlyPlayerSoundId);
+			SoundPlayer.getInstance().stopSound(currentlyPlayerSoundId);
 		}
 	}
 }

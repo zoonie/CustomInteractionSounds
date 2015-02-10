@@ -14,7 +14,6 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
@@ -40,11 +39,11 @@ import com.zoonie.InteractionSounds.sound.SoundPlayer;
  */
 public class InteractionHandler
 {
-	public static Interaction currentInteraction;
+	private static InteractionHandler instance = new InteractionHandler();
+	public Interaction currentInteraction;
 	private String lastTarget;
 	private BlockPos lastPos;
 	private boolean reopenGui = false;
-	private int tick = 0;
 
 	/**
 	 * Called when user clicks with mouse. If the record interaction key has
@@ -131,7 +130,7 @@ public class InteractionHandler
 	{
 		Sound sound = ClientProxy.mappings.get(interaction);
 
-		SoundPlayer.playSound(sound.getSoundLocation(), (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
+		SoundPlayer.getInstance().playSound(sound.getSoundLocation(), (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
 
 		ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
 		ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ, (float) sound
@@ -139,24 +138,19 @@ public class InteractionHandler
 		return true;
 	}
 
-	@SubscribeEvent
-	public void detectNewTarget(PlayerTickEvent event)
+	public void detectNewTarget()
 	{
-		if(tick == 0 && Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown())
+		String lastTarget = this.lastTarget;
+		BlockPos lastPos = this.lastPos;
+		Interaction interaction = createInteraction(0);
+
+		MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
+		BlockPos pos = mop.getBlockPos();
+
+		if(!interaction.isEntity() && !pos.equals(lastPos) && !(lastTarget.equals("tile.air") && interaction.getTarget().equals("tile.air")))
 		{
-			String lastTarget = this.lastTarget;
-			BlockPos lastPos = this.lastPos;
-			Interaction interaction = createInteraction(0);
-
-			MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
-			BlockPos pos = mop.getBlockPos();
-
-			if(!interaction.isEntity() && !pos.equals(lastPos) && !(lastTarget.equals("tile.air") && interaction.getTarget().equals("tile.air")))
-			{
-				processClick(interaction, 0, Minecraft.getMinecraft().thePlayer);
-			}
+			processClick(interaction, 0, Minecraft.getMinecraft().thePlayer);
 		}
-		tick = ++tick % 10;
 	}
 
 	/**
@@ -255,5 +249,10 @@ public class InteractionHandler
 		if(array.length == 3)
 			return array[0] + "." + array[1];
 		return child;
+	}
+
+	public static InteractionHandler getInstance()
+	{
+		return instance;
 	}
 }

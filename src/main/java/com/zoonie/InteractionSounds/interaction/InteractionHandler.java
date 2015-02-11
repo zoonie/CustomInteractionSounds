@@ -145,7 +145,8 @@ public class InteractionHandler
 
 		String identifier = SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), null, (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
 		Double soundLength = (double) TimeUnit.SECONDS.toMillis((long) SoundHelper.getSoundLength(sound.getSoundLocation()));
-		SoundPlayer.getInstance().addLoop(identifier, soundLength);
+		if(interaction.getMouseButton().equals("left") && !interaction.isEntity())
+			SoundPlayer.getInstance().addLoop(identifier, soundLength);
 
 		ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
 		ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), identifier, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ,
@@ -167,6 +168,8 @@ public class InteractionHandler
 			SoundPlayer.getInstance().stopAllLooping();
 			processClick(interaction, 0, Minecraft.getMinecraft().thePlayer);
 		}
+		else if(interaction.isEntity())
+			SoundPlayer.getInstance().stopAllLooping();
 	}
 
 	/**

@@ -108,17 +108,17 @@ public class SoundHandler
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void playSound(String soundName, String category, int x, int y, int z, float volume)
+	public static void playSound(String soundName, String category, String identifier, int x, int y, int z, float volume)
 	{
 		Sound sound = SoundHandler.getSound(new SoundInfo(soundName, category));
 		if(sound != null && sound.hasLocal())
 		{
-			SoundPlayer.getInstance().playSound(sound.getSoundLocation(), x, y, z, true, volume);
+			SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), identifier, x, y, z, true, volume);
 		}
 		else
 		{
 			sounds.put(new SoundInfo(soundName, category), new Sound(soundName, category));
-			DelayedPlayHandler.addDelayedPlay(soundName, category, x, y, z, volume);
+			DelayedPlayHandler.addDelayedPlay(soundName, category, identifier, x, y, z, volume);
 			ChannelHandler.network.sendToServer(new RequestSoundMessage(soundName, category));
 		}
 	}

@@ -182,7 +182,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 					if(System.currentTimeMillis() > timeSoundFinishedPlaying)
 					{
 						timeSoundFinishedPlaying = (long) (SoundHelper.getSoundLength(selectedSound.getSoundLocation()) * 1000) + System.currentTimeMillis();
-						currentlyPlayingSoundId = SoundPlayer.getInstance().playSound(selectedSound.getSoundLocation(), (float) player.posX, (float) player.posY, (float) player.posZ, false,
+						currentlyPlayingSoundId = SoundPlayer.getInstance().playNewSound(selectedSound.getSoundLocation(), null, (float) player.posX, (float) player.posY, (float) player.posZ, false,
 								(float) slider.getValue() / 100);
 						playButton.displayString = translate("sound.stop");
 					}

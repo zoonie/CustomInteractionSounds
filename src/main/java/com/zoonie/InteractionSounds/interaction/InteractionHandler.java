@@ -1,5 +1,7 @@
 package com.zoonie.InteractionSounds.interaction;
 
+import java.util.concurrent.TimeUnit;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -22,6 +24,7 @@ import com.zoonie.InteractionSounds.network.message.PlaySoundMessage;
 import com.zoonie.InteractionSounds.network.message.RequestSoundMessage;
 import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundHelper;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 /**
@@ -77,6 +80,8 @@ public class InteractionHandler
 			else
 				processClick(interaction, event.button, player);
 		}
+		else if(event.button == 0 || event.button == 1)
+			SoundPlayer.getInstance().stopAllLooping();
 	}
 
 	private void processClick(Interaction interaction, int button, EntityPlayerSP player)
@@ -130,11 +135,13 @@ public class InteractionHandler
 	{
 		Sound sound = ClientProxy.mappings.get(interaction);
 
-		SoundPlayer.getInstance().playSound(sound.getSoundLocation(), (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
+		String identifier = SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), null, (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
+		Double soundLength = (double) TimeUnit.SECONDS.toMillis((long) SoundHelper.getSoundLength(sound.getSoundLocation()));
+		SoundPlayer.getInstance().addLoop(identifier, soundLength);
 
 		ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
-		ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ, (float) sound
-				.getVolume(), player.getDisplayNameString()));
+		ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), identifier, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ,
+				(float) sound.getVolume(), player.getDisplayNameString()));
 		return true;
 	}
 
@@ -149,6 +156,7 @@ public class InteractionHandler
 
 		if(!interaction.isEntity() && !pos.equals(lastPos) && !(lastTarget.equals("tile.air") && interaction.getTarget().equals("tile.air")))
 		{
+			SoundPlayer.getInstance().stopAllLooping();
 			processClick(interaction, 0, Minecraft.getMinecraft().thePlayer);
 		}
 	}

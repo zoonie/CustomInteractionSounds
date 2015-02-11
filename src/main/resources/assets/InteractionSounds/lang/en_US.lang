@@ -26,9 +26,9 @@ InteractionSounds.any=Any
 InteractionSounds.soundFiles=Sound Files
 InteractionSounds.sound.list=All Sounds
 InteractionSounds.sound.playerList=Your Sounds
-InteractionSounds.EntityAnimal=Animals
-InteractionSounds.EntityMob=Monsters
-InteractionSounds.AbstractClientPlayer=Players
+InteractionSounds.passive=Passive Mobs
+InteractionSounds.monster=Monsters
+InteractionSounds.player=Players
 InteractionSounds.delete.confirm=Are you sure you want to delete the selected entry?
 InteractionSounds.sound.length=Length
 

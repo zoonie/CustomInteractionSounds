@@ -230,9 +230,16 @@ public class InteractionHandler
 		}
 		else if(entity != null)
 		{
-			String generalCategory = entity.getClass().getSuperclass().getSimpleName();
-			if(generalCategory.equals("EntityAgeable"))
-				generalCategory = EntityList.getEntityString(entity);
+			String generalCategory;
+			String className = entity.getClass().getName();
+			if(className.contains("passive"))
+				generalCategory = "passive";
+			else if(className.contains("monster"))
+				generalCategory = "monster";
+			else if(className.contains("boss"))
+				generalCategory = "boss";
+			else
+				generalCategory = "player";
 
 			if(EntityList.getEntityString(entity) == null || entity.hasCustomName())
 			{

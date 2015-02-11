@@ -110,10 +110,14 @@ public class InteractionHandler
 			String generalTarget = interaction.getGeneralTargetName();
 			String item = interaction.getItem();
 			String stringAny = "any";
+			String anyBlock = "any.block";
+			String anyEntity = "any.entity";
 
 			Interaction anyItem = new Interaction(click, stringAny, target);
-			Interaction anyBlockTarget = new Interaction(click, item, "any.block");
-			Interaction anyEntityTarget = new Interaction(click, item, "any.entity");
+			Interaction anyBlockTarget = new Interaction(click, item, anyBlock);
+			Interaction anyEntityTarget = new Interaction(click, item, anyEntity);
+			Interaction anyBlockTargetItem = new Interaction(click, stringAny, anyBlock);
+			Interaction anyEntityTargetItem = new Interaction(click, stringAny, anyEntity);
 			Interaction anyTarget = new Interaction(click, item, stringAny);
 			Interaction any = new Interaction(click, stringAny, stringAny);
 
@@ -123,6 +127,10 @@ public class InteractionHandler
 				return playSound(anyBlockTarget, player);
 			else if(ClientProxy.mappings.containsKey(anyEntityTarget) && interaction.isEntity())
 				return playSound(anyEntityTarget, player);
+			else if(ClientProxy.mappings.containsKey(anyBlockTargetItem) && !interaction.isEntity())
+				return playSound(anyBlockTargetItem, player);
+			else if(ClientProxy.mappings.containsKey(anyEntityTargetItem) && interaction.isEntity())
+				return playSound(anyEntityTargetItem, player);
 			else if(ClientProxy.mappings.containsKey(anyTarget))
 				return playSound(anyTarget, player);
 			else if(ClientProxy.mappings.containsKey(any))

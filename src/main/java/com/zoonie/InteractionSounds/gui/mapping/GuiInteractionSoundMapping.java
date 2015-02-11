@@ -199,6 +199,12 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 				this.mc.displayGuiScreen(null);
 				this.mc.setIngameFocus();
 				break;
+			case 5:
+				generalTargetChecked.setIsChecked(false);
+				break;
+			case 6:
+				targetChecked.setIsChecked(false);
+				break;
 			case 8:
 				if(!listButton.displayString.equals(translate("sound.playerList")))
 				{

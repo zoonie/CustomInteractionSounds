@@ -16,7 +16,7 @@ import com.zoonie.InteractionSounds.interaction.InteractionHandler;
 import com.zoonie.InteractionSounds.interaction.KeyBindings;
 import com.zoonie.InteractionSounds.interaction.KeyInputHandler;
 import com.zoonie.InteractionSounds.interaction.TickHandler;
-import com.zoonie.InteractionSounds.network.ConnectionHandler;
+import com.zoonie.InteractionSounds.network.ClientConnectionHandler;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundEventHandler;
 import com.zoonie.InteractionSounds.sound.SoundHandler;
@@ -38,7 +38,7 @@ public class ClientProxy extends CommonProxy
 	{
 		MinecraftForge.EVENT_BUS.register(InteractionHandler.getInstance());
 		FMLCommonHandler.instance().bus().register(new TickHandler());
-		FMLCommonHandler.instance().bus().register(new ConnectionHandler());
+		FMLCommonHandler.instance().bus().register(new ClientConnectionHandler());
 
 		FMLCommonHandler.instance().bus().register(new KeyInputHandler());
 		KeyBindings.init();

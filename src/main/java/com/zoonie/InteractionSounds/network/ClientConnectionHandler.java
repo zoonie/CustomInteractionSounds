@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
-public class ConnectionHandler
+public class ClientConnectionHandler
 {
 	@SubscribeEvent
 	public void disconnect(ClientDisconnectionFromServerEvent event)

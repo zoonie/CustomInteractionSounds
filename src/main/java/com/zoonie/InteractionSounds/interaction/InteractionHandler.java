@@ -18,6 +18,7 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
+import com.zoonie.InteractionSounds.configuration.Config;
 import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.network.message.PlaySoundMessage;
@@ -148,9 +149,12 @@ public class InteractionHandler
 		if(interaction.getMouseButton().equals("left") && !interaction.isEntity())
 			SoundPlayer.getInstance().addLoop(identifier, soundLength);
 
-		ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
-		ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), identifier, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ,
-				(float) sound.getVolume(), player.getDisplayNameString()));
+		if(sound.getSoundLocation().length() <= Config.MaxSoundSize && SoundHelper.getSoundLength(sound.getSoundLocation()) <= Config.MaxSoundLength)
+		{
+			ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
+			ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), identifier, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ,
+					(float) sound.getVolume(), player.getDisplayNameString()));
+		}
 		return true;
 	}
 

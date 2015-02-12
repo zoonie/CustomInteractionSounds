@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JDialog;
@@ -45,14 +46,16 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	private JFileChooser fileChooser;
 	private EntityPlayer player;
 	private GuiButton saveButton, playButton, listButton;
-	private String currentlyPlayingSoundId;
+	private String currentlyPlayingSoundId = null;
 	private long timeSoundFinishedPlaying;
 	private Interaction interaction;
 	private Boolean justUploaded = false;
 	private GuiCheckBox itemChecked, targetChecked, generalTargetChecked;
 	private GuiSlider slider;
 	protected static List<Sound> sounds;
-	private double soundLength;
+	private String soundLength;
+	private String soundSize;
+	private double soundLengthSeconds;
 
 	public GuiInteractionSoundMapping(EntityPlayer player, Interaction interaction)
 	{
@@ -107,8 +110,12 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 
 		if(selectedSound != null)
 		{
+			selectIndex(selected);
 			drawSoundInfo();
+			this.drawString(this.getFontRenderer(), translate("sound.volume") + ":", labelAlign, 100, 0xFFFFFF);
 			slider.visible = true;
+			if(timeSoundFinishedPlaying > 0)
+				SoundPlayer.getInstance().adjustVolume(currentlyPlayingSoundId, (float) slider.getValue() / 100);
 		}
 		else
 			slider.visible = false;
@@ -143,15 +150,9 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 					if(generalTargetChecked.isChecked())
 						interaction.useGeneralTargetName();
 
-					if(!SoundHandler.getSounds().containsKey(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory())))
-					{
-						selectedSound = SoundHandler.setupSound(selectedSound.getSoundLocation());
-						SoundHandler.addSound(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory()), selectedSound.getSoundLocation());
-					}
-					selectedSound = new Sound(selectedSound);
-
 					ChannelHandler.network.sendToServer(new RequestSoundMessage(selectedSound.getSoundName(), selectedSound.getCategory(), true));
 
+					selectedSound = new Sound(selectedSound);
 					selectedSound.setVolume((float) slider.getValue() / 100);
 					ClientProxy.mappings.put(interaction, selectedSound);
 					MappingsConfigManager.write();
@@ -170,7 +171,14 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 				{
 					selectIndex(-1);
 					if(fileChooser.getSelectedFile().exists())
-						selectedSound = new Sound(fileChooser.getSelectedFile());
+					{
+						Sound sound = new Sound(fileChooser.getSelectedFile());
+						if(!SoundHandler.getSounds().containsKey(new SoundInfo(sound.getSoundName(), sound.getCategory())))
+						{
+							selectedSound = SoundHandler.setupSound(sound.getSoundLocation());
+							SoundHandler.addSound(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory()), selectedSound.getSoundLocation());
+						}
+					}
 					else
 						selectedSound = null;
 					onSelectedSoundChanged();
@@ -181,9 +189,10 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 				{
 					if(System.currentTimeMillis() > timeSoundFinishedPlaying)
 					{
-						timeSoundFinishedPlaying = (long) (SoundHelper.getSoundLength(selectedSound.getSoundLocation()) * 1000) + System.currentTimeMillis();
-						currentlyPlayingSoundId = SoundPlayer.getInstance().playNewSound(selectedSound.getSoundLocation(), null, (float) player.posX, (float) player.posY, (float) player.posZ, false,
-								(float) slider.getValue() / 100);
+						timeSoundFinishedPlaying = (long) (soundLengthSeconds * 1000) + System.currentTimeMillis();
+						currentlyPlayingSoundId = UUID.randomUUID().toString();
+						SoundHandler.playSound(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory()), currentlyPlayingSoundId, (int) player.posX, (int) player.posY,
+								(int) player.posZ, (float) slider.getValue() / 100);
 						playButton.displayString = translate("sound.stop");
 					}
 					else
@@ -221,13 +230,42 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		}
 	}
 
+	private void updateSoundsList()
+	{
+		if(listButton.displayString.equals(translate("sound.playerList")))
+		{
+			sounds = SoundHandler.getPlayerSounds();
+			listButton.displayString = translate("sound.playerList");
+		}
+		else
+		{
+			sounds = new ArrayList<Sound>(SoundHandler.getSounds().values());
+			listButton.displayString = translate("sound.list");
+		}
+	}
+
 	public void onSelectedSoundChanged()
 	{
 		if(selectedSound != null)
 		{
-			saveButton.enabled = true;
-			playButton.enabled = true;
-			soundLength = SoundHelper.getSoundLength(selectedSound.getSoundLocation());
+			if(selectedSound.hasLocal())
+			{
+				saveButton.enabled = true;
+				playButton.enabled = true;
+				soundLengthSeconds = SoundHelper.getSoundLength(selectedSound.getSoundLocation());
+				soundSize = FileUtils.byteCountToDisplaySize(selectedSound.getSoundLocation().length());
+			}
+			else
+			{
+				saveButton.enabled = false;
+				playButton.enabled = true;
+				soundLengthSeconds = selectedSound.getLength();
+				soundSize = FileUtils.byteCountToDisplaySize(selectedSound.getSize());
+			}
+			long milliseconds = (long) (soundLengthSeconds * 100) % 100;
+			long minutes = TimeUnit.SECONDS.toMinutes((long) soundLengthSeconds) - (TimeUnit.SECONDS.toHours((long) soundLengthSeconds) * 60);
+			long seconds = TimeUnit.SECONDS.toSeconds((long) soundLengthSeconds) - (TimeUnit.SECONDS.toMinutes((long) soundLengthSeconds) * 60);
+			soundLength = String.format("%02d:%02d.%02d", minutes, seconds, milliseconds);
 		}
 		else
 		{
@@ -245,19 +283,10 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		this.drawString(this.getFontRenderer(), selectedSound.getCategory(), infoAlign, 35, 0xFFFFFF);
 
 		this.drawString(this.getFontRenderer(), translate("sound.length") + ":", labelAlign, 55, 0xFFFFFF);
-		long milliseconds = (long) (soundLength * 100) % 100;
-		long minutes = TimeUnit.SECONDS.toMinutes((long) soundLength) - (TimeUnit.SECONDS.toHours((long) soundLength) * 60);
-		long seconds = TimeUnit.SECONDS.toSeconds((long) soundLength) - (TimeUnit.SECONDS.toMinutes((long) soundLength) * 60);
-		this.drawString(this.getFontRenderer(), String.format("%02d:%02d.%02d", minutes, seconds, milliseconds), infoAlign, 55, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), soundLength, infoAlign, 55, 0xFFFFFF);
 
 		this.drawString(this.getFontRenderer(), translate("sound.size") + ":", labelAlign, 75, 0xFFFFFF);
-		String space = FileUtils.byteCountToDisplaySize(selectedSound.getSoundLocation().length());
-		this.drawString(this.getFontRenderer(), space, infoAlign, 75, 0xFFFFFF);
-
-		this.drawString(this.getFontRenderer(), translate("sound.volume") + ":", labelAlign, 100, 0xFFFFFF);
-
-		if(timeSoundFinishedPlaying > 0)
-			SoundPlayer.getInstance().adjustVolume(currentlyPlayingSoundId, (float) slider.getValue() / 100);
+		this.drawString(this.getFontRenderer(), soundSize, infoAlign, 75, 0xFFFFFF);
 	}
 
 	private void drawInteractionInfo()
@@ -292,12 +321,13 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	@Override
 	public void selectIndex(int selected)
 	{
+		updateSoundsList();
 		this.selected = selected;
-		if(selected >= 0 && selected < SoundHandler.getSounds().size())
+		if(selected >= 0 && selected < sounds.size())
 		{
 			this.selectedSound = sounds.get(selected);
+			onSelectedSoundChanged();
 		}
-		onSelectedSoundChanged();
 	}
 
 	@Override

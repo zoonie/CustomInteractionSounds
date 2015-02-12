@@ -32,7 +32,7 @@ public class SoundPlayer
 	private HashMap<String, Entry<Double, Double>> loops = new HashMap<String, Entry<Double, Double>>();
 	private int index = 0;
 
-	private void init()
+	public void init()
 	{
 		SoundManager soundManager = ObfuscationReflectionHelper.getPrivateValue(net.minecraft.client.audio.SoundHandler.class, Minecraft.getMinecraft().getSoundHandler(), "sndManager",
 				"field_147694_f", "V");
@@ -41,10 +41,6 @@ public class SoundPlayer
 
 	public String playNewSound(File sound, String id, float x, float y, float z, boolean fading, float volume)
 	{
-		if(soundSystem == null)
-		{
-			init();
-		}
 		try
 		{
 			String identifier;

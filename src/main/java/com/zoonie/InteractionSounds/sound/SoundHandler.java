@@ -107,19 +107,35 @@ public class SoundHandler
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	public static void playSound(String soundName, String category, String identifier, int x, int y, int z, float volume)
+	public static void addRemoteSound(SoundInfo soundInfo)
 	{
-		Sound sound = SoundHandler.getSound(new SoundInfo(soundName, category));
+		Sound sound = getSound(soundInfo);
+		if(sound != null)
+		{
+			if(sound.hasLocal())
+			{
+				sound.onSoundUploaded();
+			}
+		}
+		else
+		{
+			sounds.put(soundInfo, new Sound(soundInfo));
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void playSound(SoundInfo soundInfo, String identifier, int x, int y, int z, float volume)
+	{
+		Sound sound = SoundHandler.getSound(soundInfo);
 		if(sound != null && sound.hasLocal())
 		{
 			SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), identifier, x, y, z, true, volume);
 		}
 		else
 		{
-			sounds.put(new SoundInfo(soundName, category), new Sound(soundName, category));
-			DelayedPlayHandler.addDelayedPlay(soundName, category, identifier, x, y, z, volume);
-			ChannelHandler.network.sendToServer(new RequestSoundMessage(soundName, category));
+			sounds.put(soundInfo, new Sound(soundInfo));
+			DelayedPlayHandler.addDelayedPlay(soundInfo, identifier, x, y, z, volume);
+			ChannelHandler.network.sendToServer(new RequestSoundMessage(soundInfo.name, soundInfo.category));
 		}
 	}
 

@@ -10,10 +10,10 @@ public class Sound
 	@Expose
 	private String soundName, category;
 	private SoundState state;
-	private long timeLastPlayed = -1;
-	private long delay;
 	@Expose
 	private float volume;
+	private double length;
+	private long size;
 
 	public Sound(Sound sound)
 	{
@@ -22,6 +22,8 @@ public class Sound
 		this.category = sound.category;
 		this.state = sound.state;
 		this.volume = sound.volume;
+		this.size = sound.size;
+		this.length = sound.length;
 	}
 
 	public Sound(File soundLocation)
@@ -35,11 +37,13 @@ public class Sound
 		this.state = SoundState.LOCAL_ONLY;
 	}
 
-	public Sound(String soundName, String category)
+	public Sound(SoundInfo soundInfo)
 	{
 		this.soundLocation = null;
-		this.soundName = soundName;
-		this.category = category;
+		this.soundName = soundInfo.name;
+		this.category = soundInfo.category;
+		this.length = soundInfo.length;
+		this.size = soundInfo.size;
 		this.state = SoundState.REMOTE_ONLY;
 	}
 
@@ -68,16 +72,6 @@ public class Sound
 		return state;
 	}
 
-	public void setTimeLastPlayed()
-	{
-		timeLastPlayed = System.currentTimeMillis();
-	}
-
-	public long getTimeLastPlayed()
-	{
-		return timeLastPlayed;
-	}
-
 	public float getVolume()
 	{
 		return volume;
@@ -86,6 +80,16 @@ public class Sound
 	public void setVolume(float volume)
 	{
 		this.volume = volume;
+	}
+
+	public Double getLength()
+	{
+		return length;
+	}
+
+	public Long getSize()
+	{
+		return size;
 	}
 
 	public void onSoundUploaded()

@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.sound.SoundHandler;
+import com.zoonie.InteractionSounds.sound.SoundInfo;
 
 public class PlaySoundMessage implements IMessage
 {
@@ -116,7 +117,7 @@ public class PlaySoundMessage implements IMessage
 		public IMessage onMessage(PlaySoundMessage message, MessageContext ctx)
 		{
 			if(!Minecraft.getMinecraft().thePlayer.getDisplayNameString().equals(message.caller))
-				SoundHandler.playSound(message.soundName, message.category, message.identifier, message.x, message.y, message.z, message.volume);
+				SoundHandler.playSound(new SoundInfo(message.soundName, message.category), message.identifier, message.x, message.y, message.z, message.volume);
 			return null;
 		}
 	}

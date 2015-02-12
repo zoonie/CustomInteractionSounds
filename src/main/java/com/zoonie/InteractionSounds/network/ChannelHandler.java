@@ -9,6 +9,7 @@ import com.zoonie.InteractionSounds.network.message.PlaySoundMessage;
 import com.zoonie.InteractionSounds.network.message.RepeatSoundMessage;
 import com.zoonie.InteractionSounds.network.message.RequestSoundMessage;
 import com.zoonie.InteractionSounds.network.message.ServerSettingsMessage;
+import com.zoonie.InteractionSounds.network.message.ServerSoundsMessage;
 import com.zoonie.InteractionSounds.network.message.SoundChunkMessage;
 import com.zoonie.InteractionSounds.network.message.SoundUploadedMessage;
 
@@ -34,5 +35,7 @@ public class ChannelHandler
 		network.registerMessage(RepeatSoundMessage.ServerSideHandler.class, RepeatSoundMessage.class, 4, Side.SERVER);
 
 		network.registerMessage(ServerSettingsMessage.Handler.class, ServerSettingsMessage.class, 5, Side.CLIENT);
+
+		network.registerMessage(ServerSoundsMessage.Handler.class, ServerSoundsMessage.class, 6, Side.CLIENT);
 	}
 }

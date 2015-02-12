@@ -109,7 +109,7 @@ public class SoundUploadedMessage implements IMessage
 		public IMessage onMessage(SoundUploadedMessage message, MessageContext ctx)
 		{
 			SoundHandler.addSound(new SoundInfo(message.soundName, message.category), soundFile);
-			DelayedPlayHandler.onSoundReceived(message.soundName, message.category);
+			DelayedPlayHandler.onSoundReceived(new SoundInfo(message.soundName, message.category));
 
 			return null;
 		}

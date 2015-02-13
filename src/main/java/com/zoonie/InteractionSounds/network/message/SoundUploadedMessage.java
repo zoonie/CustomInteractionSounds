@@ -3,13 +3,17 @@ package com.zoonie.InteractionSounds.network.message;
 import io.netty.buffer.ByteBuf;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.zoonie.InteractionSounds.configuration.Config;
+import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.network.NetworkHandler;
 import com.zoonie.InteractionSounds.network.NetworkHelper;
 import com.zoonie.InteractionSounds.sound.DelayedPlayHandler;
@@ -98,6 +102,10 @@ public class SoundUploadedMessage implements IMessage
 						folder.delete();
 					}
 				}
+			}
+			for(EntityPlayerMP player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList)
+			{
+				ChannelHandler.network.sendTo(new ServerSoundsMessage(player, new ArrayList<Sound>(SoundHandler.getSounds().values())), player);
 			}
 			return null;
 		}

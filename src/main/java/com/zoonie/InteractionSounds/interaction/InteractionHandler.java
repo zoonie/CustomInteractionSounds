@@ -203,6 +203,7 @@ public class InteractionHandler
 	{
 		if(event.gui != null && reopenGui && !event.gui.getClass().equals(GuiInteractionSoundMapping.class))
 		{
+			reopenGui = false;
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 			player.closeScreen();
 		}

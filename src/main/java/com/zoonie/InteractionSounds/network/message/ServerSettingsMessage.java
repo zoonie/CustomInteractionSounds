@@ -10,7 +10,6 @@ import com.zoonie.InteractionSounds.configuration.Config;
 public class ServerSettingsMessage implements IMessage
 {
 	private double maxSoundLength;
-	private long maxSoundSize;
 
 	public ServerSettingsMessage()
 	{
@@ -20,14 +19,12 @@ public class ServerSettingsMessage implements IMessage
 	public void fromBytes(ByteBuf buf)
 	{
 		maxSoundLength = buf.readDouble();
-		maxSoundSize = buf.readLong();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
 		buf.writeDouble(Config.MaxSoundLength);
-		buf.writeLong(Config.MaxSoundSize);
 	}
 
 	public static class Handler implements IMessageHandler<ServerSettingsMessage, IMessage>
@@ -36,7 +33,6 @@ public class ServerSettingsMessage implements IMessage
 		public IMessage onMessage(ServerSettingsMessage message, MessageContext ctx)
 		{
 			Config.MaxSoundLength = message.maxSoundLength;
-			Config.MaxSoundSize = message.maxSoundSize;
 			return null;
 		}
 	}

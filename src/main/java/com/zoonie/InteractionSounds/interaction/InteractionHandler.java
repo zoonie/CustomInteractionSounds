@@ -149,7 +149,7 @@ public class InteractionHandler
 		if(interaction.getMouseButton().equals("left") && !interaction.isEntity())
 			SoundPlayer.getInstance().addLoop(identifier, soundLength);
 
-		if(sound.getSoundLocation().length() <= Config.MaxSoundSize && SoundHelper.getSoundLength(sound.getSoundLocation()) <= Config.MaxSoundLength)
+		if(SoundHelper.getSoundLength(sound.getSoundLocation()) <= Config.MaxSoundLength)
 		{
 			ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
 			ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), identifier, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ,

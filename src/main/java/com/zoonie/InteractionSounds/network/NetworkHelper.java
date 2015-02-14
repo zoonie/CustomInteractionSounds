@@ -31,7 +31,7 @@ public class NetworkHelper
 	@SideOnly(Side.CLIENT)
 	public static void clientSoundUpload(Sound sound)
 	{
-		if(sound.getSoundLocation().length() <= Config.MaxSoundSize && SoundHelper.getSoundLength(sound.getSoundLocation()) <= Config.MaxSoundLength)
+		if(SoundHelper.getSoundLength(sound.getSoundLocation()) <= Config.MaxSoundLength)
 		{
 			sound.setState(Sound.SoundState.UPLOADING);
 			uploadSound(sound, sound.getCategory());

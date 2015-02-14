@@ -80,7 +80,7 @@ public class SoundUploadedMessage implements IMessage
 		@Override
 		public IMessage onMessage(SoundUploadedMessage message, MessageContext ctx)
 		{
-			if(soundFile.length() <= Config.MaxSoundSize && SoundHelper.getSoundLength(soundFile) <= Config.MaxSoundLength)
+			if(SoundHelper.getSoundLength(soundFile) <= Config.MaxSoundLength)
 			{
 				SoundInfo soundInfo = new SoundInfo(message.soundName, message.category);
 

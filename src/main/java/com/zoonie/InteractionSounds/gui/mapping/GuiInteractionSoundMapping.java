@@ -26,7 +26,6 @@ import org.apache.commons.io.FileUtils;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.gui.IListGui;
 import com.zoonie.InteractionSounds.interaction.Interaction;
-import com.zoonie.InteractionSounds.interaction.InteractionHandler;
 import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.network.message.RequestSoundMessage;
 import com.zoonie.InteractionSounds.sound.Sound;
@@ -154,7 +153,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 
 					selectedSound = new Sound(selectedSound);
 					selectedSound.setVolume((float) slider.getValue() / 100);
-					InteractionHandler.mappings.put(interaction, selectedSound);
+					MappingsConfigManager.mappings.put(interaction, selectedSound);
 					MappingsConfigManager.write();
 				}
 				this.mc.displayGuiScreen(null);

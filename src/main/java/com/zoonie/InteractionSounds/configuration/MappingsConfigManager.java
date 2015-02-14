@@ -14,7 +14,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.interaction.Interaction;
-import com.zoonie.InteractionSounds.interaction.InteractionHandler;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundHandler;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
@@ -22,6 +21,7 @@ import com.zoonie.InteractionSounds.sound.SoundInfo;
 public class MappingsConfigManager
 {
 	private static File config;
+	public static HashMap<Interaction, Sound> mappings = new HashMap<Interaction, Sound>();
 
 	public MappingsConfigManager(File config)
 	{
@@ -29,7 +29,7 @@ public class MappingsConfigManager
 		read();
 	}
 
-	private void read()
+	public static void read()
 	{
 		Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
 		try
@@ -46,6 +46,7 @@ public class MappingsConfigManager
 
 			if(mappings != null)
 			{
+				MappingsConfigManager.mappings = new HashMap<Interaction, Sound>();
 				for(Entry<Interaction, Sound> entry : mappings.entrySet())
 				{
 					Sound soundInfo = entry.getValue();
@@ -54,7 +55,7 @@ public class MappingsConfigManager
 					{
 						Sound sound = new Sound(foundSound);
 						sound.setVolume(soundInfo.getVolume());
-						InteractionHandler.mappings.put(entry.getKey(), sound);
+						MappingsConfigManager.mappings.put(entry.getKey(), sound);
 					}
 					else
 						InteractionSounds.logger.error("Could not find sound: " + soundInfo.getSoundName() + " within a folder named: " + soundInfo.getCategory());
@@ -81,7 +82,7 @@ public class MappingsConfigManager
 
 			Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 
-			String json = gson.toJson(InteractionHandler.mappings);
+			String json = gson.toJson(MappingsConfigManager.mappings);
 
 			FileWriter writer = new FileWriter(config.getAbsoluteFile());
 			writer.write(json);

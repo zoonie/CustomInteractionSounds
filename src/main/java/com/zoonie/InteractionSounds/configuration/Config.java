@@ -7,7 +7,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class Config
 {
 	public static double MaxSoundLength = Double.POSITIVE_INFINITY;
-
 	@SideOnly(Side.SERVER)
 	public Config(Configuration config)
 	{

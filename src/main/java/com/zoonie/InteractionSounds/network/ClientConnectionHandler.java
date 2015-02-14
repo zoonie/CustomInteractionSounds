@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 
+import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 public class ClientConnectionHandler
@@ -18,5 +19,6 @@ public class ClientConnectionHandler
 	public void disconnect(ClientDisconnectionFromServerEvent event)
 	{
 		SoundPlayer.getInstance().stopSounds();
+		MappingsConfigManager.read();
 	}
 }

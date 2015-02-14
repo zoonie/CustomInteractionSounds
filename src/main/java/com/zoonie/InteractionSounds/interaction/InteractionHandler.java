@@ -1,6 +1,5 @@
 package com.zoonie.InteractionSounds.interaction;
 
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import net.minecraft.block.Block;
@@ -20,6 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.configuration.Config;
+import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.network.message.PlaySoundMessage;
@@ -48,8 +48,6 @@ public class InteractionHandler
 	private String lastTarget;
 	private BlockPos lastPos;
 	private boolean reopenGui = false;
-	public static HashMap<Interaction, Sound> mappings = new HashMap<Interaction, Sound>();
-
 	/**
 	 * Called when user clicks with mouse. If the record interaction key has
 	 * been pressed, the GUI for selecting a sound will be opened which can set
@@ -89,7 +87,7 @@ public class InteractionHandler
 	private void processClick(Interaction interaction, int button, EntityPlayerSP player)
 	{
 		lastTarget = interaction.getTarget();
-		if(InteractionHandler.mappings != null)
+		if(MappingsConfigManager.mappings != null)
 		{
 			String click = button == 0 ? "left" : "right";
 			if(lookUp(interaction, click, player, false))
@@ -102,7 +100,7 @@ public class InteractionHandler
 	{
 		if(useGeneral)
 			interaction.useGeneralTargetName();
-		if(InteractionHandler.mappings.containsKey(interaction))
+		if(MappingsConfigManager.mappings.containsKey(interaction))
 		{
 			return playSound(interaction, player);
 		}
@@ -123,19 +121,19 @@ public class InteractionHandler
 			Interaction anyTarget = new Interaction(click, item, stringAny);
 			Interaction any = new Interaction(click, stringAny, stringAny);
 
-			if(InteractionHandler.mappings.containsKey(anyItem))
+			if(MappingsConfigManager.mappings.containsKey(anyItem))
 				return playSound(anyItem, player);
-			else if(InteractionHandler.mappings.containsKey(anyBlockTarget) && !interaction.isEntity())
+			else if(MappingsConfigManager.mappings.containsKey(anyBlockTarget) && !interaction.isEntity())
 				return playSound(anyBlockTarget, player);
-			else if(InteractionHandler.mappings.containsKey(anyEntityTarget) && interaction.isEntity())
+			else if(MappingsConfigManager.mappings.containsKey(anyEntityTarget) && interaction.isEntity())
 				return playSound(anyEntityTarget, player);
-			else if(InteractionHandler.mappings.containsKey(anyBlockTargetItem) && !interaction.isEntity())
+			else if(MappingsConfigManager.mappings.containsKey(anyBlockTargetItem) && !interaction.isEntity())
 				return playSound(anyBlockTargetItem, player);
-			else if(InteractionHandler.mappings.containsKey(anyEntityTargetItem) && interaction.isEntity())
+			else if(MappingsConfigManager.mappings.containsKey(anyEntityTargetItem) && interaction.isEntity())
 				return playSound(anyEntityTargetItem, player);
-			else if(InteractionHandler.mappings.containsKey(anyTarget))
+			else if(MappingsConfigManager.mappings.containsKey(anyTarget))
 				return playSound(anyTarget, player);
-			else if(InteractionHandler.mappings.containsKey(any))
+			else if(MappingsConfigManager.mappings.containsKey(any))
 				return playSound(any, player);
 		}
 		return false;
@@ -143,7 +141,7 @@ public class InteractionHandler
 
 	private Boolean playSound(Interaction interaction, EntityPlayerSP player)
 	{
-		Sound sound = InteractionHandler.mappings.get(interaction);
+		Sound sound = MappingsConfigManager.mappings.get(interaction);
 
 		String identifier = SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), null, (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
 		Double soundLength = (double) TimeUnit.SECONDS.toMillis((long) SoundHelper.getSoundLength(sound.getSoundLocation()));

@@ -3,7 +3,7 @@ package com.zoonie.InteractionSounds.sound;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.TreeMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,7 +17,7 @@ import com.zoonie.InteractionSounds.network.message.RequestSoundMessage;
 public class SoundHandler
 {
 	private static File soundsFolder;
-	private static LinkedHashMap<SoundInfo, Sound> sounds;
+	private static TreeMap<SoundInfo, Sound> sounds;
 
 	public static File getSoundsFolder()
 	{
@@ -28,7 +28,7 @@ public class SoundHandler
 		return soundsFolder;
 	}
 
-	public static LinkedHashMap<SoundInfo, Sound> getSounds()
+	public static TreeMap<SoundInfo, Sound> getSounds()
 	{
 		if(sounds == null)
 			findSounds();
@@ -68,7 +68,7 @@ public class SoundHandler
 		{
 			soundsFolder.mkdir();
 		}
-		sounds = new LinkedHashMap<SoundInfo, Sound>();
+		sounds = new TreeMap<SoundInfo, Sound>();
 		addSoundsFromDir(soundsFolder);
 	}
 

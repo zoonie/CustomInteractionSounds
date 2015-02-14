@@ -1,7 +1,6 @@
 package com.zoonie.InteractionSounds.proxy;
 
 import java.io.File;
-import java.util.HashMap;
 
 import javax.swing.UIManager;
 
@@ -11,20 +10,16 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
-import com.zoonie.InteractionSounds.interaction.Interaction;
 import com.zoonie.InteractionSounds.interaction.InteractionHandler;
 import com.zoonie.InteractionSounds.interaction.KeyBindings;
 import com.zoonie.InteractionSounds.interaction.KeyInputHandler;
 import com.zoonie.InteractionSounds.interaction.TickHandler;
 import com.zoonie.InteractionSounds.network.ClientConnectionHandler;
-import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundEventHandler;
 import com.zoonie.InteractionSounds.sound.SoundHandler;
 
 public class ClientProxy extends CommonProxy
 {
-	public static HashMap<Interaction, Sound> mappings = new HashMap<Interaction, Sound>();
-
 	@Override
 	public void preInit(FMLPreInitializationEvent event)
 	{

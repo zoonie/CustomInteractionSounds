@@ -17,7 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.gui.IListGui;
 import com.zoonie.InteractionSounds.interaction.Interaction;
-import com.zoonie.InteractionSounds.proxy.ClientProxy;
+import com.zoonie.InteractionSounds.interaction.InteractionHandler;
 import com.zoonie.InteractionSounds.sound.Sound;
 
 public class GuiListContainer extends GuiScreen implements IListGui, GuiYesNoCallback
@@ -30,7 +30,7 @@ public class GuiListContainer extends GuiScreen implements IListGui, GuiYesNoCal
 	public GuiListContainer(EntityPlayer player)
 	{
 		this.player = player;
-		mappingsList = new ArrayList<Entry<Interaction, Sound>>(ClientProxy.mappings.entrySet());
+		mappingsList = new ArrayList<Entry<Interaction, Sound>>(InteractionHandler.mappings.entrySet());
 	}
 
 	@Override
@@ -120,10 +120,10 @@ public class GuiListContainer extends GuiScreen implements IListGui, GuiYesNoCal
 		if(result)
 		{
 			mappingsList.remove(selected);
-			ClientProxy.mappings = new HashMap<Interaction, Sound>();
+			InteractionHandler.mappings = new HashMap<Interaction, Sound>();
 			for(Entry<Interaction, Sound> entry : mappingsList)
 			{
-				ClientProxy.mappings.put(entry.getKey(), entry.getValue());
+				InteractionHandler.mappings.put(entry.getKey(), entry.getValue());
 			}
 			MappingsConfigManager.write();
 			selected = -1;

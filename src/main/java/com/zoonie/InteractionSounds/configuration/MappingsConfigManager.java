@@ -14,7 +14,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.interaction.Interaction;
-import com.zoonie.InteractionSounds.proxy.ClientProxy;
+import com.zoonie.InteractionSounds.interaction.InteractionHandler;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundHandler;
 import com.zoonie.InteractionSounds.sound.SoundInfo;
@@ -54,7 +54,7 @@ public class MappingsConfigManager
 					{
 						Sound sound = new Sound(foundSound);
 						sound.setVolume(soundInfo.getVolume());
-						ClientProxy.mappings.put(entry.getKey(), sound);
+						InteractionHandler.mappings.put(entry.getKey(), sound);
 					}
 					else
 						InteractionSounds.logger.error("Could not find sound: " + soundInfo.getSoundName() + " within a folder named: " + soundInfo.getCategory());
@@ -81,7 +81,7 @@ public class MappingsConfigManager
 
 			Gson gson = new GsonBuilder().enableComplexMapKeySerialization().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 
-			String json = gson.toJson(ClientProxy.mappings);
+			String json = gson.toJson(InteractionHandler.mappings);
 
 			FileWriter writer = new FileWriter(config.getAbsoluteFile());
 			writer.write(json);

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.Tessellator;
 import com.zoonie.InteractionSounds.gui.GuiScrollableList;
 import com.zoonie.InteractionSounds.gui.IListGui;
 import com.zoonie.InteractionSounds.interaction.Interaction;
-import com.zoonie.InteractionSounds.proxy.ClientProxy;
+import com.zoonie.InteractionSounds.interaction.InteractionHandler;
 import com.zoonie.InteractionSounds.sound.Sound;
 
 public class GuiMappingList extends GuiScrollableList
@@ -26,7 +26,7 @@ public class GuiMappingList extends GuiScrollableList
 	@Override
 	protected int getSize()
 	{
-		return ClientProxy.mappings.size();
+		return InteractionHandler.mappings.size();
 	}
 
 	@Override

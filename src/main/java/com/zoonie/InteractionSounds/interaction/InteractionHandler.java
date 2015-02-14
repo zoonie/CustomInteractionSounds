@@ -1,5 +1,6 @@
 package com.zoonie.InteractionSounds.interaction;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import net.minecraft.block.Block;
@@ -23,7 +24,6 @@ import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.network.message.PlaySoundMessage;
 import com.zoonie.InteractionSounds.network.message.RequestSoundMessage;
-import com.zoonie.InteractionSounds.proxy.ClientProxy;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundHelper;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
@@ -48,6 +48,7 @@ public class InteractionHandler
 	private String lastTarget;
 	private BlockPos lastPos;
 	private boolean reopenGui = false;
+	public static HashMap<Interaction, Sound> mappings = new HashMap<Interaction, Sound>();
 
 	/**
 	 * Called when user clicks with mouse. If the record interaction key has
@@ -88,7 +89,7 @@ public class InteractionHandler
 	private void processClick(Interaction interaction, int button, EntityPlayerSP player)
 	{
 		lastTarget = interaction.getTarget();
-		if(ClientProxy.mappings != null)
+		if(InteractionHandler.mappings != null)
 		{
 			String click = button == 0 ? "left" : "right";
 			if(lookUp(interaction, click, player, false))
@@ -101,7 +102,7 @@ public class InteractionHandler
 	{
 		if(useGeneral)
 			interaction.useGeneralTargetName();
-		if(ClientProxy.mappings.containsKey(interaction))
+		if(InteractionHandler.mappings.containsKey(interaction))
 		{
 			return playSound(interaction, player);
 		}
@@ -122,19 +123,19 @@ public class InteractionHandler
 			Interaction anyTarget = new Interaction(click, item, stringAny);
 			Interaction any = new Interaction(click, stringAny, stringAny);
 
-			if(ClientProxy.mappings.containsKey(anyItem))
+			if(InteractionHandler.mappings.containsKey(anyItem))
 				return playSound(anyItem, player);
-			else if(ClientProxy.mappings.containsKey(anyBlockTarget) && !interaction.isEntity())
+			else if(InteractionHandler.mappings.containsKey(anyBlockTarget) && !interaction.isEntity())
 				return playSound(anyBlockTarget, player);
-			else if(ClientProxy.mappings.containsKey(anyEntityTarget) && interaction.isEntity())
+			else if(InteractionHandler.mappings.containsKey(anyEntityTarget) && interaction.isEntity())
 				return playSound(anyEntityTarget, player);
-			else if(ClientProxy.mappings.containsKey(anyBlockTargetItem) && !interaction.isEntity())
+			else if(InteractionHandler.mappings.containsKey(anyBlockTargetItem) && !interaction.isEntity())
 				return playSound(anyBlockTargetItem, player);
-			else if(ClientProxy.mappings.containsKey(anyEntityTargetItem) && interaction.isEntity())
+			else if(InteractionHandler.mappings.containsKey(anyEntityTargetItem) && interaction.isEntity())
 				return playSound(anyEntityTargetItem, player);
-			else if(ClientProxy.mappings.containsKey(anyTarget))
+			else if(InteractionHandler.mappings.containsKey(anyTarget))
 				return playSound(anyTarget, player);
-			else if(ClientProxy.mappings.containsKey(any))
+			else if(InteractionHandler.mappings.containsKey(any))
 				return playSound(any, player);
 		}
 		return false;
@@ -142,7 +143,7 @@ public class InteractionHandler
 
 	private Boolean playSound(Interaction interaction, EntityPlayerSP player)
 	{
-		Sound sound = ClientProxy.mappings.get(interaction);
+		Sound sound = InteractionHandler.mappings.get(interaction);
 
 		String identifier = SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), null, (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
 		Double soundLength = (double) TimeUnit.SECONDS.toMillis((long) SoundHelper.getSoundLength(sound.getSoundLocation()));

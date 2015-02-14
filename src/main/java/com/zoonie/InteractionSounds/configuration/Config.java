@@ -7,9 +7,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class Config
 {
 	public static double MaxSoundLength = Double.POSITIVE_INFINITY;
+	public static boolean UseServerMappings = false;
+
 	@SideOnly(Side.SERVER)
 	public Config(Configuration config)
 	{
-		MaxSoundLength = config.get("Server Side Settings", "Max sound length in seconds", Double.POSITIVE_INFINITY).getDouble();
+		String category = "Server Side Settings";
+		MaxSoundLength = config.get(category, "Max sound length in seconds", Double.POSITIVE_INFINITY).getDouble();
+		UseServerMappings = config.get(category, "Force server's interaction->sound mappings to players", false).getBoolean();
 	}
 }

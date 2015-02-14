@@ -1,5 +1,6 @@
 package com.zoonie.InteractionSounds.interaction;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import net.minecraft.block.Block;
@@ -24,8 +25,11 @@ import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.network.message.PlaySoundMessage;
 import com.zoonie.InteractionSounds.network.message.RequestSoundMessage;
+import com.zoonie.InteractionSounds.sound.DelayedPlayHandler;
 import com.zoonie.InteractionSounds.sound.Sound;
+import com.zoonie.InteractionSounds.sound.SoundHandler;
 import com.zoonie.InteractionSounds.sound.SoundHelper;
+import com.zoonie.InteractionSounds.sound.SoundInfo;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 /**
@@ -48,6 +52,7 @@ public class InteractionHandler
 	private String lastTarget;
 	private BlockPos lastPos;
 	private boolean reopenGui = false;
+
 	/**
 	 * Called when user clicks with mouse. If the record interaction key has
 	 * been pressed, the GUI for selecting a sound will be opened which can set
@@ -142,19 +147,33 @@ public class InteractionHandler
 	private Boolean playSound(Interaction interaction, EntityPlayerSP player)
 	{
 		Sound sound = MappingsConfigManager.mappings.get(interaction);
-
-		String identifier = SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), null, (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
-		Double soundLength = (double) TimeUnit.SECONDS.toMillis((long) SoundHelper.getSoundLength(sound.getSoundLocation()));
-		if(interaction.getMouseButton().equals("left") && !interaction.isEntity())
-			SoundPlayer.getInstance().addLoop(identifier, soundLength);
-
-		if(SoundHelper.getSoundLength(sound.getSoundLocation()) <= Config.MaxSoundLength)
+		if(!sound.getSoundLocation().exists())
 		{
-			ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
-			ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), identifier, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ,
-					(float) sound.getVolume(), player.getDisplayNameString()));
+			boolean loop = false;
+			if(interaction.getMouseButton().equals("left") && !interaction.isEntity())
+				loop = true;
+
+			SoundInfo soundInfo = new SoundInfo(sound.getSoundName(), sound.getCategory());
+			SoundHandler.addRemoteSound(soundInfo);
+			DelayedPlayHandler.addDelayedPlay(soundInfo, UUID.randomUUID().toString(), (int) player.posX, (int) player.posY, (int) player.posZ, sound.getVolume(), loop);
+			ChannelHandler.network.sendToServer(new RequestSoundMessage(soundInfo.name, soundInfo.category));
+			return true;
 		}
-		return true;
+		else
+		{
+			String identifier = SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), null, (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
+			Double soundLength = (double) TimeUnit.SECONDS.toMillis((long) SoundHelper.getSoundLength(sound.getSoundLocation()));
+			if(interaction.getMouseButton().equals("left") && !interaction.isEntity())
+				SoundPlayer.getInstance().addLoop(identifier, soundLength);
+
+			if(SoundHelper.getSoundLength(sound.getSoundLocation()) <= Config.MaxSoundLength)
+			{
+				ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
+				ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), identifier, player.dimension, (int) player.posX, (int) player.posY,
+						(int) player.posZ, (float) sound.getVolume(), player.getDisplayNameString()));
+			}
+			return true;
+		}
 	}
 
 	public void detectNewTarget()

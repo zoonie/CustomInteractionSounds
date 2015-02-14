@@ -1,8 +1,10 @@
 package com.zoonie.InteractionSounds.interaction;
 
+import java.io.Serializable;
+
 import com.google.gson.annotations.Expose;
 
-public class Interaction
+public class Interaction implements Serializable
 {
 	@Expose
 	private String mouseButton, item, target, generalTargetName;

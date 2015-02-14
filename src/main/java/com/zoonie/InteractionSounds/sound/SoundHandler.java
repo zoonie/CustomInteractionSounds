@@ -134,7 +134,7 @@ public class SoundHandler
 		else
 		{
 			sounds.put(soundInfo, new Sound(soundInfo));
-			DelayedPlayHandler.addDelayedPlay(soundInfo, identifier, x, y, z, volume);
+			DelayedPlayHandler.addDelayedPlay(soundInfo, identifier, x, y, z, volume, false);
 			ChannelHandler.network.sendToServer(new RequestSoundMessage(soundInfo.name, soundInfo.category));
 		}
 	}

@@ -44,9 +44,9 @@ public class MappingsConfigManager
 			}.getType();
 			HashMap<Interaction, Sound> mappings = gson.fromJson(br, type);
 
+			MappingsConfigManager.mappings = new HashMap<Interaction, Sound>();
 			if(mappings != null)
 			{
-				MappingsConfigManager.mappings = new HashMap<Interaction, Sound>();
 				for(Entry<Interaction, Sound> entry : mappings.entrySet())
 				{
 					Sound soundInfo = entry.getValue();

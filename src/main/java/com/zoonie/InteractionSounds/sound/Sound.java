@@ -1,10 +1,11 @@
 package com.zoonie.InteractionSounds.sound;
 
 import java.io.File;
+import java.io.Serializable;
 
 import com.google.gson.annotations.Expose;
 
-public class Sound
+public class Sound implements Serializable
 {
 	private File soundLocation;
 	@Expose

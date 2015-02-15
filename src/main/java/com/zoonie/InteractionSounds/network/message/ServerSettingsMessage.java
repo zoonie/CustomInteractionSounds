@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import com.zoonie.InteractionSounds.configuration.Config;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.interaction.Interaction;
+import com.zoonie.InteractionSounds.interaction.KeyBindings;
 import com.zoonie.InteractionSounds.sound.Sound;
 
 public class ServerSettingsMessage implements IMessage
@@ -30,7 +31,8 @@ public class ServerSettingsMessage implements IMessage
 	public void fromBytes(ByteBuf buf)
 	{
 		maxSoundLength = buf.readDouble();
-		if(buf.readBoolean())
+		Config.UseServerMappings = buf.readBoolean();
+		if(Config.UseServerMappings)
 		{
 			try
 			{
@@ -39,6 +41,8 @@ public class ServerSettingsMessage implements IMessage
 				ByteArrayInputStream baos = new ByteArrayInputStream(mappingsBytes);
 				ObjectInputStream ois = new ObjectInputStream(baos);
 				MappingsConfigManager.mappings = (HashMap<Interaction, Sound>) ois.readObject();
+
+				KeyBindings.deInit();
 			}
 			catch(IOException e)
 			{

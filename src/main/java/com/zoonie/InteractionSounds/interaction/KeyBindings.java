@@ -13,10 +13,21 @@ public class KeyBindings
 
 	public static void init()
 	{
-		recordInteraction = new KeyBinding("Record Interaction", Keyboard.KEY_R, InteractionSounds.MOD_NAME);
-		listSavedInteractions = new KeyBinding("Interaction->Sound List", Keyboard.KEY_L, InteractionSounds.MOD_NAME);
+		assign();
 
 		ClientRegistry.registerKeyBinding(recordInteraction);
 		ClientRegistry.registerKeyBinding(listSavedInteractions);
+	}
+
+	public static void assign()
+	{
+		recordInteraction = new KeyBinding("Record Interaction", Keyboard.KEY_R, InteractionSounds.MOD_NAME);
+		listSavedInteractions = new KeyBinding("Interaction->Sound List", Keyboard.KEY_L, InteractionSounds.MOD_NAME);
+	}
+
+	public static void deInit()
+	{
+		recordInteraction = new KeyBinding("Record Interaction", Keyboard.CHAR_NONE, InteractionSounds.MOD_NAME);
+		listSavedInteractions = new KeyBinding("Interaction->Sound List", Keyboard.CHAR_NONE, InteractionSounds.MOD_NAME);
 	}
 }

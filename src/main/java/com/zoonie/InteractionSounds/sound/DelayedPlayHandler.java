@@ -18,7 +18,8 @@ public class DelayedPlayHandler
 		if(playInfo != null)
 		{
 			SoundHandler.playSound(soundInfo, playInfo.identifier, playInfo.x, playInfo.y, playInfo.z, playInfo.volume);
-			SoundPlayer.getInstance().addLoop(playInfo.identifier, SoundHandler.getSound(soundInfo).getLength());
+			if(playInfo.loop)
+				SoundPlayer.getInstance().addLoop(playInfo.identifier, SoundHandler.getSound(soundInfo).getLength());
 			map.remove(soundInfo);
 		}
 	}

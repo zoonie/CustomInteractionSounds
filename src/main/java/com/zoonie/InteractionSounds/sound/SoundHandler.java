@@ -36,6 +36,12 @@ public class SoundHandler
 		return sounds;
 	}
 
+	public static void reloadSounds()
+	{
+		sounds = null;
+		getSounds();
+	}
+
 	public static Sound getSound(SoundInfo soundInfo)
 	{
 		if(sounds == null)

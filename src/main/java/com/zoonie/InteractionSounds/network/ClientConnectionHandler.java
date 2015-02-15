@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import com.zoonie.InteractionSounds.configuration.Config;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.interaction.KeyBindings;
+import com.zoonie.InteractionSounds.sound.SoundHandler;
 import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 public class ClientConnectionHandler
@@ -22,6 +23,7 @@ public class ClientConnectionHandler
 	{
 		SoundPlayer.getInstance().stopSounds();
 		MappingsConfigManager.read();
+		SoundHandler.reloadSounds();
 		if(Config.UseServerMappings)
 		{
 			KeyBindings.assign();

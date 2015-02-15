@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
@@ -52,6 +54,7 @@ public class InteractionHandler
 	private String lastTarget;
 	private BlockPos lastPos;
 	private boolean reopenGui = false;
+	private boolean stopSound = false;
 
 	/**
 	 * Called when user clicks with mouse. If the record interaction key has
@@ -146,6 +149,8 @@ public class InteractionHandler
 
 	private Boolean playSound(Interaction interaction, EntityPlayerSP player)
 	{
+		stopSound = true;
+		BlockPos pos = getTargetPos();
 		Sound sound = MappingsConfigManager.mappings.get(interaction);
 		if(!sound.getSoundLocation().exists())
 		{
@@ -155,13 +160,13 @@ public class InteractionHandler
 
 			SoundInfo soundInfo = new SoundInfo(sound.getSoundName(), sound.getCategory());
 			SoundHandler.addRemoteSound(soundInfo);
-			DelayedPlayHandler.addDelayedPlay(soundInfo, UUID.randomUUID().toString(), (int) player.posX, (int) player.posY, (int) player.posZ, sound.getVolume(), loop);
+			DelayedPlayHandler.addDelayedPlay(soundInfo, UUID.randomUUID().toString(), pos.getX(), pos.getY(), pos.getZ(), sound.getVolume(), loop);
 			ChannelHandler.network.sendToServer(new RequestSoundMessage(soundInfo.name, soundInfo.category));
 			return true;
 		}
 		else
 		{
-			String identifier = SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), null, (float) player.posX, (float) player.posY, (float) player.posZ, true, (float) sound.getVolume());
+			String identifier = SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), null, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ(), true, (float) sound.getVolume());
 			Double soundLength = (double) TimeUnit.SECONDS.toMillis((long) SoundHelper.getSoundLength(sound.getSoundLocation()));
 			if(interaction.getMouseButton().equals("left") && !interaction.isEntity() && !interaction.getTarget().equals("tile.air"))
 				SoundPlayer.getInstance().addLoop(identifier, soundLength);
@@ -169,8 +174,8 @@ public class InteractionHandler
 			if(SoundHelper.getSoundLength(sound.getSoundLocation()) <= Config.MaxSoundLength)
 			{
 				ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
-				ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), identifier, player.dimension, (int) player.posX, (int) player.posY,
-						(int) player.posZ, (float) sound.getVolume(), player.getDisplayNameString()));
+				ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), identifier, player.dimension, pos.getX(), pos.getY(), pos.getZ(), (float) sound
+						.getVolume(), player.getDisplayNameString()));
 			}
 			return true;
 		}
@@ -182,10 +187,7 @@ public class InteractionHandler
 		BlockPos lastPos = this.lastPos;
 		Interaction interaction = createInteraction(0);
 
-		MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
-		BlockPos pos = mop.getBlockPos();
-
-		if(!interaction.isEntity() && !pos.equals(lastPos) && !(lastTarget.equals("tile.air") && interaction.getTarget().equals("tile.air")))
+		if(!interaction.isEntity() && !getTargetPos().equals(lastPos) && !(lastTarget.equals("tile.air") && interaction.getTarget().equals("tile.air")))
 		{
 			SoundPlayer.getInstance().stopAllLooping();
 			processClick(interaction, 0, Minecraft.getMinecraft().thePlayer);
@@ -241,7 +243,7 @@ public class InteractionHandler
 		String item = "item.hand";
 		if(player.getCurrentEquippedItem() != null)
 			item = player.getCurrentEquippedItem().getUnlocalizedName();
-		MovingObjectPosition mop = mc.objectMouseOver;
+		MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
 		BlockPos pos = mop.getBlockPos();
 		lastPos = pos;
 		Entity entity = mop.entityHit;
@@ -300,6 +302,30 @@ public class InteractionHandler
 		if(array.length == 3)
 			return array[0] + "." + array[1];
 		return child;
+	}
+
+	@SubscribeEvent
+	public void stopSound(PlaySoundEvent event)
+	{
+		if(stopSound)
+		{
+			ISound sound = event.sound;
+			BlockPos pos = getTargetPos();
+			if(Math.floor(sound.getXPosF()) == pos.getX() && Math.floor(sound.getYPosF()) == pos.getY() && Math.floor(sound.getZPosF()) == pos.getZ())
+			{
+				event.result = null;
+				stopSound = false;
+			}
+		}
+	}
+
+	private BlockPos getTargetPos()
+	{
+		MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
+		if(mop.getBlockPos() != null)
+			return mop.getBlockPos();
+		else
+			return mop.entityHit.getPosition();
 	}
 
 	public static InteractionHandler getInstance()

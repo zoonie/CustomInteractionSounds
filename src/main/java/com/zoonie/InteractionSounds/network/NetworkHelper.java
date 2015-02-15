@@ -12,7 +12,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
-import com.zoonie.InteractionSounds.configuration.Config;
+import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
 import com.zoonie.InteractionSounds.network.message.SoundChunkMessage;
 import com.zoonie.InteractionSounds.network.message.SoundUploadedMessage;
 import com.zoonie.InteractionSounds.sound.Sound;
@@ -31,7 +31,7 @@ public class NetworkHelper
 	@SideOnly(Side.CLIENT)
 	public static void clientSoundUpload(Sound sound)
 	{
-		if(SoundHelper.getSoundLength(sound.getSoundLocation()) <= Config.MaxSoundLength)
+		if(SoundHelper.getSoundLength(sound.getSoundLocation()) <= ServerSettingsConfig.MaxSoundLength)
 		{
 			sound.setState(Sound.SoundState.UPLOADING);
 			uploadSound(sound, sound.getCategory());

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import com.zoonie.InteractionSounds.configuration.Config;
+import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.interaction.Interaction;
 import com.zoonie.InteractionSounds.interaction.KeyBindings;
@@ -31,8 +31,8 @@ public class ServerSettingsMessage implements IMessage
 	public void fromBytes(ByteBuf buf)
 	{
 		maxSoundLength = buf.readDouble();
-		Config.UseServerMappings = buf.readBoolean();
-		if(Config.UseServerMappings)
+		ServerSettingsConfig.UseServerMappings = buf.readBoolean();
+		if(ServerSettingsConfig.UseServerMappings)
 		{
 			try
 			{
@@ -58,9 +58,9 @@ public class ServerSettingsMessage implements IMessage
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		buf.writeDouble(Config.MaxSoundLength);
-		buf.writeBoolean(Config.UseServerMappings);
-		if(Config.UseServerMappings)
+		buf.writeDouble(ServerSettingsConfig.MaxSoundLength);
+		buf.writeBoolean(ServerSettingsConfig.UseServerMappings);
+		if(ServerSettingsConfig.UseServerMappings)
 		{
 			try
 			{
@@ -81,7 +81,7 @@ public class ServerSettingsMessage implements IMessage
 		@Override
 		public IMessage onMessage(ServerSettingsMessage message, MessageContext ctx)
 		{
-			Config.MaxSoundLength = message.maxSoundLength;
+			ServerSettingsConfig.MaxSoundLength = message.maxSoundLength;
 			return null;
 		}
 	}

@@ -4,7 +4,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 
-import com.zoonie.InteractionSounds.configuration.Config;
+import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.interaction.KeyBindings;
 import com.zoonie.InteractionSounds.sound.SoundHandler;
@@ -24,10 +24,10 @@ public class ClientConnectionHandler
 		SoundPlayer.getInstance().stopSounds();
 		MappingsConfigManager.read();
 		SoundHandler.reloadSounds();
-		if(Config.UseServerMappings)
+		if(ServerSettingsConfig.UseServerMappings)
 		{
 			KeyBindings.assign();
-			Config.UseServerMappings = false;
+			ServerSettingsConfig.UseServerMappings = false;
 		}
 	}
 }

@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import com.zoonie.InteractionSounds.configuration.Config;
+import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
 import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.network.NetworkHandler;
 import com.zoonie.InteractionSounds.network.NetworkHelper;
@@ -80,7 +80,7 @@ public class SoundUploadedMessage implements IMessage
 		@Override
 		public IMessage onMessage(SoundUploadedMessage message, MessageContext ctx)
 		{
-			if(SoundHelper.getSoundLength(soundFile) <= Config.MaxSoundLength)
+			if(SoundHelper.getSoundLength(soundFile) <= ServerSettingsConfig.MaxSoundLength)
 			{
 				SoundInfo soundInfo = new SoundInfo(message.soundName, message.category);
 

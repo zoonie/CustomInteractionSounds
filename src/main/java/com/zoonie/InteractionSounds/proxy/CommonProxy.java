@@ -7,8 +7,8 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
-import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
+import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
 import com.zoonie.InteractionSounds.network.ServerHandler;
 
 public class CommonProxy
@@ -25,7 +25,7 @@ public class CommonProxy
 		MinecraftForge.EVENT_BUS.register(new ServerHandler());
 	}
 
-	private void configSetup(File file)
+	public void configSetup(File file)
 	{
 		Configuration config = new Configuration(file);
 		new ServerSettingsConfig(config);

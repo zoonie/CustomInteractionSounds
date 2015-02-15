@@ -21,8 +21,9 @@ import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
-import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
+import com.zoonie.InteractionSounds.configuration.ClientSettingsConfig;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
+import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
 import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.network.message.PlaySoundMessage;
@@ -89,7 +90,10 @@ public class InteractionHandler
 				processClick(interaction, event.button, player);
 		}
 		else if(event.button == 0 || event.button == 1)
+		{
 			SoundPlayer.getInstance().stopAllLooping();
+			stopSound = false;
+		}
 	}
 
 	private void processClick(Interaction interaction, int button, EntityPlayerSP player)
@@ -149,7 +153,8 @@ public class InteractionHandler
 
 	private Boolean playSound(Interaction interaction, EntityPlayerSP player)
 	{
-		stopSound = true;
+		if(!interaction.isEntity())
+			stopSound = true;
 		BlockPos pos = getTargetPos();
 		Sound sound = MappingsConfigManager.mappings.get(interaction);
 		if(!sound.getSoundLocation().exists())
@@ -307,14 +312,13 @@ public class InteractionHandler
 	@SubscribeEvent
 	public void stopSound(PlaySoundEvent event)
 	{
-		if(stopSound)
+		if(ClientSettingsConfig.soundOverride && stopSound)
 		{
 			ISound sound = event.sound;
 			BlockPos pos = getTargetPos();
 			if(Math.floor(sound.getXPosF()) == pos.getX() && Math.floor(sound.getYPosF()) == pos.getY() && Math.floor(sound.getZPosF()) == pos.getZ())
 			{
 				event.result = null;
-				stopSound = false;
 			}
 		}
 	}

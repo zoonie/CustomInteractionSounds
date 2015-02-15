@@ -12,7 +12,7 @@ public class ServerSettingsConfig
 	@SideOnly(Side.SERVER)
 	public ServerSettingsConfig(Configuration config)
 	{
-		String category = "Server Side Settings";
+		String category = "Server Settings";
 		MaxSoundLength = config.get(category, "Max sound length in seconds", Double.POSITIVE_INFINITY).getDouble();
 		UseServerMappings = config.get(category, "Force server's interaction->sound mappings to players", false).getBoolean();
 	}

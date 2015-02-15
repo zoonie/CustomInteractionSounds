@@ -251,6 +251,8 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 			{
 				saveButton.enabled = true;
 				playButton.enabled = true;
+				if(!playButton.displayString.equals(translate("gui.sound.stop")))
+					playButton.displayString = translate("gui.sound.play");
 				soundLengthSeconds = SoundHelper.getSoundLength(selectedSound.getSoundLocation());
 				soundSize = FileUtils.byteCountToDisplaySize(selectedSound.getSoundLocation().length());
 			}
@@ -258,6 +260,8 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 			{
 				saveButton.enabled = false;
 				playButton.enabled = true;
+				if(!playButton.displayString.equals(translate("gui.sound.stop")))
+					playButton.displayString = translate("gui.sound.download") + "/" + translate("gui.sound.play");
 				soundLengthSeconds = selectedSound.getLength();
 				soundSize = FileUtils.byteCountToDisplaySize(selectedSound.getSize());
 			}

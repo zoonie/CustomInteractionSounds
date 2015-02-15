@@ -14,11 +14,9 @@ public class DelayedPlayHandler
 
 	public static void onSoundReceived(SoundInfo soundInfo)
 	{
-		System.out.println("here");
 		SoundPlayInfo playInfo = map.get(soundInfo);
 		if(playInfo != null)
 		{
-			System.out.println("here");
 			SoundHandler.playSound(soundInfo, playInfo.identifier, playInfo.x, playInfo.y, playInfo.z, playInfo.volume);
 			SoundPlayer.getInstance().addLoop(playInfo.identifier, SoundHandler.getSound(soundInfo).getLength());
 			map.remove(soundInfo);

@@ -238,7 +238,7 @@ public class InteractionHandler
 	{
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = mc.thePlayer;
-		String item = "hand";
+		String item = "item.hand";
 		if(player.getCurrentEquippedItem() != null)
 			item = player.getCurrentEquippedItem().getUnlocalizedName();
 		MovingObjectPosition mop = mc.objectMouseOver;
@@ -259,13 +259,15 @@ public class InteractionHandler
 			String generalCategory;
 			String className = entity.getClass().getName();
 			if(className.contains("passive"))
-				generalCategory = "passive";
+				generalCategory = "entity.passive";
 			else if(className.contains("monster"))
-				generalCategory = "monster";
+				generalCategory = "entity.monsters";
 			else if(className.contains("boss"))
-				generalCategory = "boss";
+				generalCategory = "entity.bosses";
+			else if(className.contains("player"))
+				generalCategory = "entity.players";
 			else
-				generalCategory = "player";
+				generalCategory = entity.getName();
 
 			if(EntityList.getEntityString(entity) == null || entity.hasCustomName())
 			{

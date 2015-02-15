@@ -37,8 +37,8 @@ public class GuiListContainer extends GuiScreen implements IListGui, GuiYesNoCal
 	{
 		super.initGui();
 		mappingList = new GuiMappingList(this, mc, getWidth() - 20, 0, 15, getHeight() - 25, 10, 20);
-		this.buttonList.add(new GuiButton(0, (int) (getWidth() / 2) - 155, getHeight() - 23, 140, 20, translate("interaction.delete")));
-		this.buttonList.add(new GuiButton(1, (int) (getWidth() / 2) + 15, getHeight() - 23, 140, 20, translate("interaction.cancel")));
+		this.buttonList.add(new GuiButton(0, (int) (getWidth() / 2) - 155, getHeight() - 23, 140, 20, translate("gui.mapping.delete")));
+		this.buttonList.add(new GuiButton(1, (int) (getWidth() / 2) + 15, getHeight() - 23, 140, 20, translate("gui.mapping.cancel")));
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class GuiListContainer extends GuiScreen implements IListGui, GuiYesNoCal
 		getFontRenderer().drawString(translate("interaction.mouse"), 13, 5, 0xFFFFFF);
 		getFontRenderer().drawString(translate("interaction.target"), (int) (getWidth() * 0.14), 5, 0xFFFFFF);
 		getFontRenderer().drawString(translate("interaction.item"), (int) (getWidth() * 0.42), 5, 0xFFFFFF);
-		getFontRenderer().drawString(translate("sound.soundName"), (int) (getWidth() * 0.7), 5, 0xFFFFFF);
+		getFontRenderer().drawString(translate("sound.name"), (int) (getWidth() * 0.7), 5, 0xFFFFFF);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class GuiListContainer extends GuiScreen implements IListGui, GuiYesNoCal
 			{
 			case 0:
 				if(selected >= 0)
-					mc.displayGuiScreen(new GuiYesNo(this, null, translate("delete.confirm"), selected));
+					mc.displayGuiScreen(new GuiYesNo(this, null, translate("gui.delete.confirm"), selected));
 				break;
 			case 1:
 				this.mc.displayGuiScreen(null);

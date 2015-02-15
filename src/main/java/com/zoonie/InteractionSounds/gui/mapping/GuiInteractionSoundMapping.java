@@ -71,7 +71,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 				return dialog;
 			}
 		};
-		fileChooser.setFileFilter(new FileNameExtensionFilter(translate("soundFiles") + " (.ogg, .wav, .mp3)", "ogg", "wav", "mp3"));
+		fileChooser.setFileFilter(new FileNameExtensionFilter(translate("gui.sound.files") + " (.ogg, .wav, .mp3)", "ogg", "wav", "mp3"));
 	}
 
 	@Override
@@ -79,12 +79,12 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	{
 		super.initGui();
 		soundsList = new GuiScrollableSoundsList(this, mc, 140, 0, 30, getHeight() - 25, 10, 18);
-		this.buttonList.add(saveButton = new GuiButton(0, getWidth() / 2, getHeight() - 25, 98, 20, translate("interaction.save")));
+		this.buttonList.add(saveButton = new GuiButton(0, getWidth() / 2, getHeight() - 25, 98, 20, translate("gui.mapping.save")));
 		saveButton.enabled = false;
-		this.buttonList.add(new GuiButton(1, 10, getHeight() - 25, 140, 20, translate("sound.selectFile")));
-		this.buttonList.add(playButton = new GuiButton(2, getWidth() / 2, getHeight() - 50, translate("sound.play")));
+		this.buttonList.add(new GuiButton(1, 10, getHeight() - 25, 140, 20, translate("gui.sound.add")));
+		this.buttonList.add(playButton = new GuiButton(2, getWidth() / 2, getHeight() - 50, translate("gui.sound.play")));
 		playButton.enabled = false;
-		this.buttonList.add(new GuiButton(3, getWidth() / 2 + 103, getHeight() - 25, 98, 20, translate("interaction.cancel")));
+		this.buttonList.add(new GuiButton(3, getWidth() / 2 + 103, getHeight() - 25, 98, 20, translate("gui.mapping.cancel")));
 
 		this.buttonList.add(itemChecked = new GuiCheckBox(4, (int) (getWidth() / 1.18), getHeight() - 70, " " + translate("interaction.any"), false));
 		this.buttonList.add(targetChecked = new GuiCheckBox(5, (int) (getWidth() / 1.18), getHeight() - 95, " " + translate("interaction.any"), false));
@@ -96,7 +96,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		this.buttonList.add(slider = new GuiSlider(7, infoAlign, 95, 100, 20, "", "%", 0, 100, 100, false, true));
 		slider.visible = false;
 
-		this.buttonList.add(listButton = new GuiButton(8, 10, 10, 140, 20, translate("sound.playerList")));
+		this.buttonList.add(listButton = new GuiButton(8, 10, 10, 140, 20, translate("gui.sound.list.player")));
 
 		sounds = SoundHandler.getPlayerSounds();
 	}
@@ -119,9 +119,9 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		else
 			slider.visible = false;
 
-		if(playButton != null && playButton.displayString.equalsIgnoreCase(translate("sound.stop")) && System.currentTimeMillis() > timeSoundFinishedPlaying)
+		if(playButton != null && playButton.displayString.equals(translate("gui.sound.stop")) && System.currentTimeMillis() > timeSoundFinishedPlaying)
 		{
-			playButton.displayString = translate("sound.play");
+			playButton.displayString = translate("gui.sound.play");
 		}
 
 		labelAlign = (int) (getWidth() * 0.4);
@@ -192,12 +192,12 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 						currentlyPlayingSoundId = UUID.randomUUID().toString();
 						SoundHandler.playSound(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory()), currentlyPlayingSoundId, (int) player.posX, (int) player.posY,
 								(int) player.posZ, (float) slider.getValue() / 100);
-						playButton.displayString = translate("sound.stop");
+						playButton.displayString = translate("gui.sound.stop");
 					}
 					else
 					{
 						timeSoundFinishedPlaying = 0;
-						playButton.displayString = translate("sound.play");
+						playButton.displayString = translate("gui.sound.play");
 						SoundPlayer.getInstance().stopSound(currentlyPlayingSoundId);
 						SoundPlayer.getInstance().removeSound(currentlyPlayingSoundId);
 					}
@@ -214,15 +214,15 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 				targetChecked.setIsChecked(false);
 				break;
 			case 8:
-				if(!listButton.displayString.equals(translate("sound.playerList")))
+				if(!listButton.displayString.equals(translate("gui.sound.list.player")))
 				{
 					sounds = SoundHandler.getPlayerSounds();
-					listButton.displayString = translate("sound.playerList");
+					listButton.displayString = translate("gui.sound.list.player");
 				}
 				else
 				{
 					sounds = new ArrayList<Sound>(SoundHandler.getSounds().values());
-					listButton.displayString = translate("sound.list");
+					listButton.displayString = translate("gui.sound.list");
 				}
 				break;
 			}
@@ -231,15 +231,15 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 
 	private void updateSoundsList()
 	{
-		if(listButton.displayString.equals(translate("sound.playerList")))
+		if(listButton.displayString.equals(translate("gui.sound.list.player")))
 		{
 			sounds = SoundHandler.getPlayerSounds();
-			listButton.displayString = translate("sound.playerList");
+			listButton.displayString = translate("gui.sound.list.player");
 		}
 		else
 		{
 			sounds = new ArrayList<Sound>(SoundHandler.getSounds().values());
-			listButton.displayString = translate("sound.list");
+			listButton.displayString = translate("gui.sound.list");
 		}
 	}
 
@@ -290,13 +290,13 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 
 	private void drawInteractionInfo()
 	{
-		String targetAny = interaction.isEntity() ? translate("any.entity") : translate("any.block");
+		String targetAny = interaction.isEntity() ? translate("interaction.any.entity") : translate("interaction.any.block");
 		String item = itemChecked.isChecked() ? translate("interaction.any") : translate(interaction.getItem());
 		String preTarget = generalTargetChecked.isChecked() ? translate(interaction.getGeneralTargetName()) : translate(interaction.getTarget());
 		String target = targetChecked.isChecked() ? targetAny : preTarget;
 
 		this.drawString(this.getFontRenderer(), translate("interaction.mouse") + ":", labelAlign, getHeight() - 110, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), translate(interaction.getMouseButton()), infoAlign, getHeight() - 110, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("interaction.mouse." + interaction.getMouseButton()), infoAlign, getHeight() - 110, 0xFFFFFF);
 
 		this.drawString(this.getFontRenderer(), translate("interaction.target") + ":", labelAlign, getHeight() - 90, 0xFFFFFF);
 		this.drawString(this.getFontRenderer(), getFontRenderer().trimStringToWidth(target, (int) ((getWidth() / 1.18) - infoAlign)), infoAlign, getHeight() - 90, 0xFFFFFF);

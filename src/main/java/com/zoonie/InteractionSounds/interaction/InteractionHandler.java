@@ -102,53 +102,51 @@ public class InteractionHandler
 		if(MappingsConfigManager.mappings != null)
 		{
 			String click = button == 0 ? "left" : "right";
-			if(lookUp(interaction, click, player, false))
-				return;
-			lookUp(interaction, click, player, true);
-		}
-	}
+			Interaction general = new Interaction(click, interaction.getItem(), interaction.getGeneralTargetName());
+			if(MappingsConfigManager.mappings.containsKey(interaction))
+			{
+				playSound(interaction, player);
+			}
+			else if(MappingsConfigManager.mappings.containsKey(general))
+			{
+				playSound(general, player);
+			}
+			else
+			{
+				String target = interaction.getTarget();
+				String generalTarget = interaction.getGeneralTargetName();
+				String item = interaction.getItem();
+				String stringAny = "interaction.any";
+				String anyBlock = "interaction.any.block";
+				String anyEntity = "interaction.any.entity";
 
-	private Boolean lookUp(Interaction interaction, String click, EntityPlayerSP player, Boolean useGeneral)
-	{
-		if(useGeneral)
-			interaction.useGeneralTargetName();
-		if(MappingsConfigManager.mappings.containsKey(interaction))
-		{
-			return playSound(interaction, player);
-		}
-		else
-		{
-			String target = interaction.getTarget();
-			String generalTarget = interaction.getGeneralTargetName();
-			String item = interaction.getItem();
-			String stringAny = "interaction.any";
-			String anyBlock = "interaction.any.block";
-			String anyEntity = "interaction.any.entity";
+				Interaction anyItem = new Interaction(click, stringAny, target);
+				Interaction anyItemGeneneralTarget = new Interaction(click, stringAny, generalTarget);
+				Interaction anyBlockTarget = new Interaction(click, item, anyBlock);
+				Interaction anyEntityTarget = new Interaction(click, item, anyEntity);
+				Interaction anyBlockTargetItem = new Interaction(click, stringAny, anyBlock);
+				Interaction anyEntityTargetItem = new Interaction(click, stringAny, anyEntity);
+				Interaction anyTarget = new Interaction(click, item, stringAny);
+				Interaction any = new Interaction(click, stringAny, stringAny);
 
-			Interaction anyItem = new Interaction(click, stringAny, target);
-			Interaction anyBlockTarget = new Interaction(click, item, anyBlock);
-			Interaction anyEntityTarget = new Interaction(click, item, anyEntity);
-			Interaction anyBlockTargetItem = new Interaction(click, stringAny, anyBlock);
-			Interaction anyEntityTargetItem = new Interaction(click, stringAny, anyEntity);
-			Interaction anyTarget = new Interaction(click, item, stringAny);
-			Interaction any = new Interaction(click, stringAny, stringAny);
-
-			if(MappingsConfigManager.mappings.containsKey(anyItem))
-				return playSound(anyItem, player);
-			else if(MappingsConfigManager.mappings.containsKey(anyBlockTarget) && !interaction.isEntity())
-				return playSound(anyBlockTarget, player);
-			else if(MappingsConfigManager.mappings.containsKey(anyEntityTarget) && interaction.isEntity())
-				return playSound(anyEntityTarget, player);
-			else if(MappingsConfigManager.mappings.containsKey(anyBlockTargetItem) && !interaction.isEntity())
-				return playSound(anyBlockTargetItem, player);
-			else if(MappingsConfigManager.mappings.containsKey(anyEntityTargetItem) && interaction.isEntity())
-				return playSound(anyEntityTargetItem, player);
-			else if(MappingsConfigManager.mappings.containsKey(anyTarget))
-				return playSound(anyTarget, player);
-			else if(MappingsConfigManager.mappings.containsKey(any))
-				return playSound(any, player);
+				if(MappingsConfigManager.mappings.containsKey(anyItem))
+					playSound(anyItem, player);
+				else if(MappingsConfigManager.mappings.containsKey(anyItemGeneneralTarget))
+					playSound(anyItemGeneneralTarget, player);
+				else if(MappingsConfigManager.mappings.containsKey(anyBlockTarget) && !interaction.isEntity())
+					playSound(anyBlockTarget, player);
+				else if(MappingsConfigManager.mappings.containsKey(anyEntityTarget) && interaction.isEntity())
+					playSound(anyEntityTarget, player);
+				else if(MappingsConfigManager.mappings.containsKey(anyBlockTargetItem) && !interaction.isEntity())
+					playSound(anyBlockTargetItem, player);
+				else if(MappingsConfigManager.mappings.containsKey(anyEntityTargetItem) && interaction.isEntity())
+					playSound(anyEntityTargetItem, player);
+				else if(MappingsConfigManager.mappings.containsKey(anyTarget))
+					playSound(anyTarget, player);
+				else if(MappingsConfigManager.mappings.containsKey(any))
+					playSound(any, player);
+			}
 		}
-		return false;
 	}
 
 	private Boolean playSound(Interaction interaction, EntityPlayerSP player)

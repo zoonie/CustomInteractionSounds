@@ -1,5 +1,6 @@
 package com.zoonie.InteractionSounds.interaction;
 
+import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -149,38 +150,46 @@ public class InteractionHandler
 		}
 	}
 
-	private Boolean playSound(Interaction interaction, EntityPlayerSP player)
+	private void playSound(Interaction interaction, EntityPlayerSP player)
 	{
 		if(!interaction.isEntity())
 			stopSound = true;
+
 		BlockPos pos = getTargetPos();
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+
 		Sound sound = MappingsConfigManager.mappings.get(interaction);
-		if(!sound.getSoundLocation().exists())
+		String soundName = sound.getSoundName();
+		String category = sound.getCategory();
+		File soundLocation = sound.getSoundLocation();
+		float volume = sound.getVolume();
+
+		if(!soundLocation.exists())
 		{
 			boolean loop = false;
 			if(interaction.getMouseButton().equals("left") && !interaction.isEntity())
 				loop = true;
 
-			SoundInfo soundInfo = new SoundInfo(sound.getSoundName(), sound.getCategory());
+			SoundInfo soundInfo = new SoundInfo(soundName, category);
 			SoundHandler.addRemoteSound(soundInfo);
-			DelayedPlayHandler.addDelayedPlay(soundInfo, UUID.randomUUID().toString(), pos.getX(), pos.getY(), pos.getZ(), sound.getVolume(), loop);
+			DelayedPlayHandler.addDelayedPlay(soundInfo, UUID.randomUUID().toString(), x, y, z, volume, loop);
 			ChannelHandler.network.sendToServer(new RequestSoundMessage(soundInfo.name, soundInfo.category));
-			return true;
 		}
 		else
 		{
-			String identifier = SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), null, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ(), true, (float) sound.getVolume());
-			Double soundLength = (double) TimeUnit.SECONDS.toMillis((long) SoundHelper.getSoundLength(sound.getSoundLocation()));
+			String identifier = SoundPlayer.getInstance().playNewSound(soundLocation, null, (float) x, (float) y, (float) z, true, volume);
+			Double soundLength = (double) TimeUnit.SECONDS.toMillis((long) SoundHelper.getSoundLength(soundLocation));
+
 			if(interaction.getMouseButton().equals("left") && !interaction.isEntity() && !interaction.getTarget().equals("tile.air"))
 				SoundPlayer.getInstance().addLoop(identifier, soundLength);
 
-			if(SoundHelper.getSoundLength(sound.getSoundLocation()) <= ServerSettingsConfig.MaxSoundLength)
+			if(SoundHelper.getSoundLength(soundLocation) <= ServerSettingsConfig.MaxSoundLength)
 			{
-				ChannelHandler.network.sendToServer(new RequestSoundMessage(sound.getSoundName(), sound.getCategory(), true));
-				ChannelHandler.network.sendToServer(new PlaySoundMessage(sound.getSoundName(), sound.getCategory(), identifier, player.dimension, pos.getX(), pos.getY(), pos.getZ(), (float) sound
-						.getVolume(), player.getDisplayNameString()));
+				ChannelHandler.network.sendToServer(new RequestSoundMessage(soundName, category, true));
+				ChannelHandler.network.sendToServer(new PlaySoundMessage(soundName, category, identifier, player.dimension, x, y, z, volume, player.getDisplayNameString()));
 			}
-			return true;
 		}
 	}
 
@@ -243,16 +252,18 @@ public class InteractionHandler
 	{
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = mc.thePlayer;
+
 		String item = "item.hand";
 		if(player.getCurrentEquippedItem() != null)
 			item = player.getCurrentEquippedItem().getUnlocalizedName();
+
 		MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
-		BlockPos pos = mop.getBlockPos();
-		lastPos = pos;
+		lastPos = mop.getBlockPos();
 		Entity entity = mop.entityHit;
-		if(pos != null)
+
+		if(lastPos != null)
 		{
-			IBlockState bs = mc.theWorld.getBlockState(pos);
+			IBlockState bs = mc.theWorld.getBlockState(lastPos);
 			Block b = bs.getBlock();
 			String name = getUnlocalizedName(b, bs);
 			String generalName = getUnlocalizedParentName(name);
@@ -313,9 +324,17 @@ public class InteractionHandler
 		if(ClientSettingsConfig.soundOverride && stopSound)
 		{
 			ISound sound = event.sound;
+			String soundID = sound.getSoundLocation().toString();
+			double soundX = Math.floor(sound.getXPosF());
+			double soundY = Math.floor(sound.getYPosF());
+			double soundZ = Math.floor(sound.getZPosF());
+
 			BlockPos pos = getTargetPos();
-			if(Math.floor(sound.getXPosF()) == pos.getX() && Math.floor(sound.getYPosF()) == pos.getY() && Math.floor(sound.getZPosF()) == pos.getZ()
-					&& !sound.getSoundLocation().toString().contains(":dig."))
+			int x = pos.getX();
+			int y = pos.getY();
+			int z = pos.getZ();
+
+			if(soundX == x && soundY == y && soundZ == z && !soundID.contains(":dig."))
 			{
 				event.result = null;
 			}

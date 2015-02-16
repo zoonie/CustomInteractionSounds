@@ -316,7 +316,8 @@ public class InteractionHandler
 		{
 			ISound sound = event.sound;
 			BlockPos pos = getTargetPos();
-			if(Math.floor(sound.getXPosF()) == pos.getX() && Math.floor(sound.getYPosF()) == pos.getY() && Math.floor(sound.getZPosF()) == pos.getZ())
+			if(Math.floor(sound.getXPosF()) == pos.getX() && Math.floor(sound.getYPosF()) == pos.getY() && Math.floor(sound.getZPosF()) == pos.getZ()
+					&& !sound.getSoundLocation().toString().contains(":dig."))
 			{
 				event.result = null;
 			}

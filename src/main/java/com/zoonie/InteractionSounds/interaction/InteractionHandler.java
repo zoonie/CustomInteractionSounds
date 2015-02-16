@@ -53,7 +53,6 @@ public class InteractionHandler
 {
 	private static InteractionHandler instance = new InteractionHandler();
 	public Interaction currentInteraction;
-	private String lastTarget;
 	private BlockPos lastPos;
 	private boolean reopenGui = false;
 	private boolean stopSound = false;
@@ -99,7 +98,6 @@ public class InteractionHandler
 
 	private void processClick(Interaction interaction, int button, EntityPlayerSP player)
 	{
-		lastTarget = interaction.getTarget();
 		if(MappingsConfigManager.mappings != null)
 		{
 			String click = button == 0 ? "left" : "right";
@@ -169,7 +167,7 @@ public class InteractionHandler
 		if(!soundLocation.exists())
 		{
 			boolean loop = false;
-			if(interaction.getMouseButton().equals("left") && !interaction.isEntity())
+			if(interaction.getMouseButton().equals("left") && !interaction.isEntity() && !interaction.getTarget().equals("tile.air"))
 				loop = true;
 
 			SoundInfo soundInfo = new SoundInfo(soundName, category);
@@ -195,16 +193,15 @@ public class InteractionHandler
 
 	public void detectNewTarget()
 	{
-		String lastTarget = this.lastTarget;
 		BlockPos lastPos = this.lastPos;
 		Interaction interaction = createInteraction(0);
 
-		if(!interaction.isEntity() && !getTargetPos().equals(lastPos) && !(lastTarget.equals("tile.air") && interaction.getTarget().equals("tile.air")))
+		if(!interaction.isEntity() && !getTargetPos().equals(lastPos) && !interaction.getTarget().equals("tile.air"))
 		{
 			SoundPlayer.getInstance().stopAllLooping();
 			processClick(interaction, 0, Minecraft.getMinecraft().thePlayer);
 		}
-		else if(interaction.isEntity())
+		else if(interaction.isEntity() || interaction.getTarget().equals("tile.air"))
 			SoundPlayer.getInstance().stopAllLooping();
 	}
 

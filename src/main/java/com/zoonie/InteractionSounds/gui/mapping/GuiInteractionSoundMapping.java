@@ -141,11 +141,11 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 				if(selectedSound != null)
 				{
 					if(itemChecked.isChecked())
-						interaction.setItem("any");
+						interaction.setItem("interaction.any");
 					if(targetChecked.isChecked() && interaction.isEntity())
-						interaction.setTarget("any.entity");
+						interaction.setTarget("interaction.any.entity");
 					if(targetChecked.isChecked() && !interaction.isEntity())
-						interaction.setTarget("any.block");
+						interaction.setTarget("interaction.any.block");
 					if(generalTargetChecked.isChecked())
 						interaction.useGeneralTargetName();
 

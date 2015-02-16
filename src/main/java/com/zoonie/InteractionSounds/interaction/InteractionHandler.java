@@ -121,9 +121,9 @@ public class InteractionHandler
 			String target = interaction.getTarget();
 			String generalTarget = interaction.getGeneralTargetName();
 			String item = interaction.getItem();
-			String stringAny = "any";
-			String anyBlock = "any.block";
-			String anyEntity = "any.entity";
+			String stringAny = "interaction.any";
+			String anyBlock = "interaction.any.block";
+			String anyEntity = "interaction.any.entity";
 
 			Interaction anyItem = new Interaction(click, stringAny, target);
 			Interaction anyBlockTarget = new Interaction(click, item, anyBlock);

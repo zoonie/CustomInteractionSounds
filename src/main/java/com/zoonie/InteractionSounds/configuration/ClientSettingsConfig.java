@@ -7,11 +7,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ClientSettingsConfig
 {
 	public static boolean soundOverride;
+	public static boolean muteOthers;
 
 	@SideOnly(Side.CLIENT)
 	public ClientSettingsConfig(Configuration config)
 	{
 		String category = "Client Settings";
 		soundOverride = config.get(category, "Mute default block dig sounds when custom sound is being used", true).getBoolean();
+		muteOthers = config.get(category, "Mute other players' sounds", false).getBoolean();
 	}
 }

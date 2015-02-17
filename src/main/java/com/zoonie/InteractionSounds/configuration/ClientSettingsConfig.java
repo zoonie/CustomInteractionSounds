@@ -12,6 +12,6 @@ public class ClientSettingsConfig
 	public ClientSettingsConfig(Configuration config)
 	{
 		String category = "Client Settings";
-		soundOverride = config.get(category, "Mute default block sounds when custom sound is being used", true).getBoolean();
+		soundOverride = config.get(category, "Mute default block dig sounds when custom sound is being used", true).getBoolean();
 	}
 }

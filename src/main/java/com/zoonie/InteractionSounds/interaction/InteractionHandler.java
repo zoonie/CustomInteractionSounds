@@ -150,6 +150,8 @@ public class InteractionHandler
 
 	private void playSound(Interaction interaction, EntityPlayerSP player)
 	{
+		player.swingItem();
+
 		if(!interaction.isEntity())
 			stopSound = true;
 

@@ -53,7 +53,7 @@ public class GuiScrollableSoundsList extends GuiScrollableList
 		Sound sound = GuiInteractionSoundMapping.sounds.get(listIndex);
 		if(sound != null)
 		{
-			parent.getFontRenderer().drawString(parent.getFontRenderer().trimStringToWidth(sound.getSoundName(), listWidth - 10), this.left + 3, var3 + 2, 0xFFFFFF);
+			parent.getFontRenderer().drawString(parent.getFontRenderer().trimStringToWidth(sound.getSoundName(), listWidth - 10), this.left + 3, var3 + 2, 0x00BBFF);
 		}
 	}
 }

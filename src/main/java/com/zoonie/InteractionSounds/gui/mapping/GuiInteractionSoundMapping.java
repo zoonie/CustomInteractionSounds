@@ -38,6 +38,9 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 {
 	private int labelAlign;
 	private int infoAlign;
+	private final int LABEL_COLOUR = 0xFFFFFF;
+	private final int SOUND_INFO_COLOUR = 0xFFCC00;
+	private final int INTER_INFO_COLOUR = 0x00E600;
 
 	private GuiScrollableSoundsList soundsList;
 	private int selected = -1;
@@ -111,8 +114,6 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		{
 			selectIndex(selected);
 			drawSoundInfo();
-			this.drawString(this.getFontRenderer(), translate("sound.volume") + ":", labelAlign, 100, 0xFFFFFF);
-			slider.visible = true;
 			if(timeSoundFinishedPlaying > 0)
 				SoundPlayer.getInstance().adjustVolume(currentlyPlayingSoundId, (float) slider.getValue() / 100);
 		}
@@ -279,17 +280,20 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 
 	private void drawSoundInfo()
 	{
-		this.drawString(this.getFontRenderer(), translate("sound.name") + ":", labelAlign, 15, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), selectedSound.getSoundName(), infoAlign, 15, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("sound.name") + ":", labelAlign, 15, LABEL_COLOUR);
+		this.drawString(this.getFontRenderer(), selectedSound.getSoundName(), infoAlign, 15, SOUND_INFO_COLOUR);
 
-		this.drawString(this.getFontRenderer(), translate("sound.folder") + ":", labelAlign, 35, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), selectedSound.getCategory(), infoAlign, 35, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("sound.folder") + ":", labelAlign, 35, LABEL_COLOUR);
+		this.drawString(this.getFontRenderer(), selectedSound.getCategory(), infoAlign, 35, SOUND_INFO_COLOUR);
 
-		this.drawString(this.getFontRenderer(), translate("sound.length") + ":", labelAlign, 55, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), soundLength, infoAlign, 55, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("sound.length") + ":", labelAlign, 55, LABEL_COLOUR);
+		this.drawString(this.getFontRenderer(), soundLength, infoAlign, 55, SOUND_INFO_COLOUR);
 
-		this.drawString(this.getFontRenderer(), translate("sound.size") + ":", labelAlign, 75, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), soundSize, infoAlign, 75, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("sound.size") + ":", labelAlign, 75, LABEL_COLOUR);
+		this.drawString(this.getFontRenderer(), soundSize, infoAlign, 75, SOUND_INFO_COLOUR);
+
+		this.drawString(this.getFontRenderer(), translate("sound.volume") + ":", labelAlign, 100, LABEL_COLOUR);
+		slider.visible = true;
 	}
 
 	private void drawInteractionInfo()
@@ -299,14 +303,14 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		String preTarget = generalTargetChecked.isChecked() ? translate(interaction.getGeneralTargetName()) : translate(interaction.getTarget());
 		String target = targetChecked.isChecked() ? targetAny : preTarget;
 
-		this.drawString(this.getFontRenderer(), translate("interaction.mouse") + ":", labelAlign, getHeight() - 110, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), translate("interaction.mouse." + interaction.getMouseButton()), infoAlign, getHeight() - 110, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("interaction.mouse") + ":", labelAlign, getHeight() - 110, LABEL_COLOUR);
+		this.drawString(this.getFontRenderer(), translate("interaction.mouse." + interaction.getMouseButton()), infoAlign, getHeight() - 110, INTER_INFO_COLOUR);
 
-		this.drawString(this.getFontRenderer(), translate("interaction.target") + ":", labelAlign, getHeight() - 90, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), getFontRenderer().trimStringToWidth(target, (int) ((getWidth() / 1.18) - infoAlign)), infoAlign, getHeight() - 90, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("interaction.target") + ":", labelAlign, getHeight() - 90, LABEL_COLOUR);
+		this.drawString(this.getFontRenderer(), getFontRenderer().trimStringToWidth(target, (int) ((getWidth() / 1.18) - infoAlign)), infoAlign, getHeight() - 90, INTER_INFO_COLOUR);
 
-		this.drawString(this.getFontRenderer(), translate("interaction.item") + ":", labelAlign, getHeight() - 70, 0xFFFFFF);
-		this.drawString(this.getFontRenderer(), getFontRenderer().trimStringToWidth(item, (int) ((getWidth() / 1.18) - infoAlign)), infoAlign, getHeight() - 70, 0xFFFFFF);
+		this.drawString(this.getFontRenderer(), translate("interaction.item") + ":", labelAlign, getHeight() - 70, LABEL_COLOUR);
+		this.drawString(this.getFontRenderer(), getFontRenderer().trimStringToWidth(item, (int) ((getWidth() / 1.18) - infoAlign)), infoAlign, getHeight() - 70, INTER_INFO_COLOUR);
 	}
 
 	@Override
@@ -354,7 +358,8 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	@Override
 	public void drawBackground()
 	{
-		drawDefaultBackground();
+		int colour = 0xCC000000;
+		drawGradientRect(0, 0, this.width, this.height, colour, colour);
 	}
 
 	@Override
@@ -362,7 +367,6 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	{
 		if(System.currentTimeMillis() < timeSoundFinishedPlaying)
 		{
-			SoundPlayer.getInstance().stopSound(currentlyPlayingSoundId);
 			SoundPlayer.getInstance().stopSound(currentlyPlayingSoundId);
 		}
 	}

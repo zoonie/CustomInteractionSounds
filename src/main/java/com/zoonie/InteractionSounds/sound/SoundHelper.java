@@ -22,9 +22,10 @@ public class SoundHelper
 			{
 				return ((GenericAudioHeader) audioHeader).getPreciseLength();
 			}
-		} catch(Exception e)
+		}
+		catch(Exception e)
 		{
-			e.printStackTrace();
+			//ignore
 		}
 		return 0;
 	}

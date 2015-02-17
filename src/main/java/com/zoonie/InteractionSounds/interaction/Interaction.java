@@ -1,10 +1,12 @@
 package com.zoonie.InteractionSounds.interaction;
 
+import static com.zoonie.InteractionSounds.language.LanguageHelper.translate;
+
 import java.io.Serializable;
 
 import com.google.gson.annotations.Expose;
 
-public class Interaction implements Serializable
+public class Interaction implements Serializable, Comparable
 {
 	@Expose
 	private String mouseButton, item, target, generalTargetName;
@@ -112,6 +114,28 @@ public class Interaction implements Serializable
 		else if(!target.equals(other.target))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(Object obj)
+	{
+		if(obj == null)
+			throw new NullPointerException();
+		if(this == obj)
+			return 0;
+
+		Interaction other = (Interaction) obj;
+
+		int comparison = this.mouseButton.compareToIgnoreCase(other.mouseButton);
+		if(comparison == 0)
+		{
+			comparison = translate(this.target).compareToIgnoreCase(translate(other.target));
+			if(comparison == 0)
+			{
+				comparison = translate(this.item).compareToIgnoreCase(translate(other.item));
+			}
+		}
+		return comparison;
 	}
 
 }

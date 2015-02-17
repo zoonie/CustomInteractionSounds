@@ -3,8 +3,8 @@ package com.zoonie.InteractionSounds.gui.viewing;
 import static com.zoonie.InteractionSounds.language.LanguageHelper.translate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -119,7 +119,7 @@ public class GuiListContainer extends GuiScreen implements IListGui, GuiYesNoCal
 		if(result)
 		{
 			mappingsList.remove(selected);
-			MappingsConfigManager.mappings = new HashMap<Interaction, Sound>();
+			MappingsConfigManager.mappings = new TreeMap<Interaction, Sound>();
 			for(Entry<Interaction, Sound> entry : mappingsList)
 			{
 				MappingsConfigManager.mappings.put(entry.getKey(), entry.getValue());

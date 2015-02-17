@@ -6,8 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,7 +21,7 @@ import com.zoonie.InteractionSounds.sound.SoundInfo;
 public class MappingsConfigManager
 {
 	private static File config;
-	public static HashMap<Interaction, Sound> mappings = new HashMap<Interaction, Sound>();
+	public static TreeMap<Interaction, Sound> mappings = new TreeMap<Interaction, Sound>();
 
 	public MappingsConfigManager(File config)
 	{
@@ -40,11 +40,10 @@ public class MappingsConfigManager
 				config.createNewFile();
 			}
 			BufferedReader br = new BufferedReader(new FileReader(config));
-			Type type = new TypeToken<HashMap<Interaction, Sound>>() {
-			}.getType();
-			HashMap<Interaction, Sound> mappings = gson.fromJson(br, type);
+			Type type = new TypeToken<TreeMap<Interaction, Sound>>() {}.getType();
+			TreeMap<Interaction, Sound> mappings = gson.fromJson(br, type);
 
-			MappingsConfigManager.mappings = new HashMap<Interaction, Sound>();
+			MappingsConfigManager.mappings = new TreeMap<Interaction, Sound>();
 			if(mappings != null)
 			{
 				for(Entry<Interaction, Sound> entry : mappings.entrySet())

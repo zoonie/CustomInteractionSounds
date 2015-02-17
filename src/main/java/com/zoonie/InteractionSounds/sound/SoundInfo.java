@@ -58,9 +58,14 @@ public class SoundInfo implements Comparable
 	}
 
 	@Override
-	public int compareTo(Object arg0)
+	public int compareTo(Object obj)
 	{
-		SoundInfo other = (SoundInfo) arg0;
+		if(obj == null)
+			throw new NullPointerException();
+		if(this == obj)
+			return 0;
+
+		SoundInfo other = (SoundInfo) obj;
 		int nameCompared = this.name.compareToIgnoreCase(other.name);
 
 		if(nameCompared == 0)

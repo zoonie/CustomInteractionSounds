@@ -7,14 +7,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
+import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
 import com.zoonie.InteractionSounds.interaction.Interaction;
 import com.zoonie.InteractionSounds.interaction.KeyBindings;
 import com.zoonie.InteractionSounds.sound.Sound;
@@ -40,7 +40,7 @@ public class ServerSettingsMessage implements IMessage
 				buf.readBytes(mappingsBytes);
 				ByteArrayInputStream baos = new ByteArrayInputStream(mappingsBytes);
 				ObjectInputStream ois = new ObjectInputStream(baos);
-				MappingsConfigManager.mappings = (HashMap<Interaction, Sound>) ois.readObject();
+				MappingsConfigManager.mappings = (TreeMap<Interaction, Sound>) ois.readObject();
 
 				KeyBindings.deInit();
 			}

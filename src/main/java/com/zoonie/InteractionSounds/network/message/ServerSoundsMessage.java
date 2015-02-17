@@ -17,7 +17,6 @@ import com.zoonie.InteractionSounds.sound.SoundInfo;
 
 public class ServerSoundsMessage implements IMessage
 {
-	static final int CAP = 50;
 	EntityPlayerMP player;
 	ArrayList<Sound> soundsList;
 
@@ -34,8 +33,7 @@ public class ServerSoundsMessage implements IMessage
 	@Override
 	public void fromBytes(ByteBuf bytes)
 	{
-		int sounds = bytes.readInt();
-		for(int i = 0; i < sounds; i++)
+		while(bytes.isReadable())
 		{
 			int soundNameLength = bytes.readInt();
 			char[] soundNameChars = new char[soundNameLength];
@@ -63,9 +61,8 @@ public class ServerSoundsMessage implements IMessage
 	@Override
 	public void toBytes(ByteBuf bytes)
 	{
-		int listSize = soundsList.size() > CAP ? CAP : soundsList.size();
-		bytes.writeInt(listSize);
-		for(int i = 0; i < listSize; i++)
+		int i = 0;
+		while(i < soundsList.size() && bytes.writerIndex() < 1000000)
 		{
 			Sound sound = soundsList.get(i);
 
@@ -83,10 +80,12 @@ public class ServerSoundsMessage implements IMessage
 
 			bytes.writeDouble(SoundHelper.getSoundLength(sound.getSoundLocation()));
 			bytes.writeLong(sound.getSoundLocation().length());
+
+			i++;
 		}
-		if(soundsList.size() > CAP)
+		if(soundsList.size() > i)
 		{
-			ChannelHandler.network.sendTo(new ServerSoundsMessage(player, new ArrayList<Sound>(soundsList.subList(CAP, soundsList.size()))), player);
+			ChannelHandler.network.sendTo(new ServerSoundsMessage(player, new ArrayList<Sound>(soundsList.subList(i, soundsList.size()))), player);
 		}
 	}
 

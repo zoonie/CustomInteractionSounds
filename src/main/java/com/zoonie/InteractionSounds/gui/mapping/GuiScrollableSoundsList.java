@@ -1,6 +1,5 @@
 package com.zoonie.InteractionSounds.gui.mapping;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 
 import com.zoonie.InteractionSounds.gui.GuiScrollableList;
@@ -11,9 +10,9 @@ public class GuiScrollableSoundsList extends GuiScrollableList
 {
 	private IListGui parent;
 
-	public GuiScrollableSoundsList(IListGui parent, Minecraft client, int width, int height, int top, int bottom, int left, int entryHeight)
+	public GuiScrollableSoundsList(IListGui parent, int width, int height, int top, int bottom, int left, int entryHeight)
 	{
-		super(client, width, height, top, bottom, left, entryHeight);
+		super(parent.getMinecraftInstance(), width, height, top, bottom, left, entryHeight);
 		this.parent = parent;
 	}
 

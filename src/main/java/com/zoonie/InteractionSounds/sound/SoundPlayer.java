@@ -3,8 +3,8 @@ package com.zoonie.InteractionSounds.sound;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -28,12 +28,13 @@ public class SoundPlayer
 
 	private SoundSystem soundSystem;
 	private final int SIZE = 100;
-	private HashMap<String, Double> playing = new HashMap<String, Double>();
+	private ArrayList<String> playing = new ArrayList<String>();
 	private HashMap<String, Entry<Double, Double>> loops = new HashMap<String, Entry<Double, Double>>();
 	private int index = 0;
 
-	public void init()
+	private void init()
 	{
+		Minecraft.getMinecraft().getSoundHandler();
 		SoundManager soundManager = ObfuscationReflectionHelper.getPrivateValue(net.minecraft.client.audio.SoundHandler.class, Minecraft.getMinecraft().getSoundHandler(), "sndManager",
 				"field_147694_f", "V");
 		soundSystem = ObfuscationReflectionHelper.getPrivateValue(SoundManager.class, soundManager, "sndSystem", "field_148620_e", "e");
@@ -43,6 +44,10 @@ public class SoundPlayer
 	{
 		try
 		{
+			if(soundSystem == null || soundSystem.randomNumberGenerator == null)
+			{
+				init();
+			}
 			String identifier;
 			if(id == null)
 				identifier = UUID.randomUUID().toString();
@@ -61,7 +66,7 @@ public class SoundPlayer
 			soundSystem.play(identifier);
 
 			double timeToEnd = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis((long) soundLength);
-			playing.put(identifier, timeToEnd);
+			playing.add(identifier);
 
 			return identifier;
 		}
@@ -74,7 +79,7 @@ public class SoundPlayer
 
 	public void playSound(String identifier, float x, float y, float z)
 	{
-		if(playing.containsKey(identifier))
+		if(playing.contains(identifier))
 		{
 			soundSystem.setPosition(identifier, x, y, z);
 			soundSystem.play(identifier);
@@ -84,11 +89,13 @@ public class SoundPlayer
 	public void stopSound(String identifier)
 	{
 		soundSystem.stop(identifier);
+		removeSound(identifier);
 	}
 
-	public void removeSound(String identifier)
+	private void removeSound(String identifier)
 	{
 		playing.remove(identifier);
+		soundSystem.removeSource(identifier);
 	}
 
 	public void addLoop(String identifier, double soundLength)
@@ -97,7 +104,7 @@ public class SoundPlayer
 		loops.put(identifier, new SimpleEntry<Double, Double>(soundLength, timeToEnd));
 	}
 
-	public void checkLooping()
+	public void updateLooping()
 	{
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		HashMap<String, Entry<Double, Double>> newLoops = new HashMap<String, Entry<Double, Double>>();
@@ -113,6 +120,20 @@ public class SoundPlayer
 			}
 		}
 		loops.putAll(newLoops);
+	}
+
+	public void cleanUp()
+	{
+		ArrayList<String> temp = new ArrayList<String>(playing);
+		for(String s : playing)
+		{
+			if(!soundSystem.playing(s) && !loops.containsKey(s))
+			{
+				soundSystem.removeSource(s);
+				temp.remove(s);
+			}
+		}
+		playing = temp;
 	}
 
 	public void stopLooping(String identifier)
@@ -134,16 +155,12 @@ public class SoundPlayer
 	{
 		if(soundSystem != null)
 		{
-			Iterator<Entry<String, Double>> playingList = playing.entrySet().iterator();
-			while(playingList.hasNext())
+			for(String s : playing)
 			{
-				Entry<String, Double> e = playingList.next();
-				if(e.getValue() > System.currentTimeMillis())
-					stopSound(e.getKey());
+				soundSystem.stop(s);
 			}
 		}
-		playing = new HashMap<String, Double>();
-		soundSystem = null;
+		playing = new ArrayList<String>();
 	}
 
 	public static SoundPlayer getInstance()

@@ -200,7 +200,6 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 						timeSoundFinishedPlaying = 0;
 						playButton.displayString = translate("gui.sound.play");
 						SoundPlayer.getInstance().stopSound(currentlyPlayingSoundId);
-						SoundPlayer.getInstance().removeSound(currentlyPlayingSoundId);
 					}
 				}
 				break;

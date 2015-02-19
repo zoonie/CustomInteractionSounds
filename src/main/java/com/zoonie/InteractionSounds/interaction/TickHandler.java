@@ -9,11 +9,12 @@ import com.zoonie.InteractionSounds.sound.SoundPlayer;
 public class TickHandler
 {
 	@SubscribeEvent
-	public void onPlayerTick(ClientTickEvent event)
+	public void onClientTick(ClientTickEvent event)
 	{
 		if(Minecraft.getMinecraft().gameSettings.keyBindAttack.isKeyDown())
 		{
-			SoundPlayer.getInstance().checkLooping();
+			SoundPlayer.getInstance().updateLooping();
+			SoundPlayer.getInstance().cleanUp();
 			InteractionHandler.getInstance().detectNewTarget();
 		}
 	}

@@ -27,14 +27,11 @@ public class SoundPlayer
 	private static SoundPlayer instance = new SoundPlayer();
 
 	private SoundSystem soundSystem;
-	private final int SIZE = 100;
 	private ArrayList<String> playing = new ArrayList<String>();
 	private HashMap<String, Entry<Double, Double>> loops = new HashMap<String, Entry<Double, Double>>();
-	private int index = 0;
 
 	private void init()
 	{
-		Minecraft.getMinecraft().getSoundHandler();
 		SoundManager soundManager = ObfuscationReflectionHelper.getPrivateValue(net.minecraft.client.audio.SoundHandler.class, Minecraft.getMinecraft().getSoundHandler(), "sndManager",
 				"field_147694_f", "V");
 		soundSystem = ObfuscationReflectionHelper.getPrivateValue(SoundManager.class, soundManager, "sndSystem", "field_148620_e", "e");

@@ -1,7 +1,5 @@
 package com.zoonie.InteractionSounds.proxy;
 
-import java.io.File;
-
 import javax.swing.UIManager;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -9,7 +7,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import com.zoonie.InteractionSounds.configuration.ClientSettingsConfig;
+import com.zoonie.InteractionSounds.configuration.ClientConfigHandler;
 import com.zoonie.InteractionSounds.interaction.InteractionHandler;
 import com.zoonie.InteractionSounds.interaction.KeyBindings;
 import com.zoonie.InteractionSounds.interaction.KeyInputHandler;
@@ -26,7 +24,7 @@ public class ClientProxy extends CommonProxy
 		handlerSetup();
 		UISetup();
 		soundSetup();
-		configSetup(event.getSuggestedConfigurationFile());
+		FMLCommonHandler.instance().bus().register(new ClientConfigHandler(new Configuration(event.getSuggestedConfigurationFile())));
 		super.mappingsConfigSetup();
 	}
 
@@ -57,13 +55,5 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(new SoundEventHandler());
 
 		SoundHandler.getSounds();
-	}
-
-	@Override
-	public void configSetup(File file)
-	{
-		Configuration config = new Configuration(file);
-		new ClientSettingsConfig(config);
-		config.save();
 	}
 }

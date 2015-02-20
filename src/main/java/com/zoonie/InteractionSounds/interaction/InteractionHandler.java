@@ -22,7 +22,7 @@ import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
-import com.zoonie.InteractionSounds.configuration.ClientSettingsConfig;
+import com.zoonie.InteractionSounds.configuration.ClientConfigHandler;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
 import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
@@ -320,7 +320,7 @@ public class InteractionHandler
 	@SubscribeEvent
 	public void stopSound(PlaySoundEvent event)
 	{
-		if(ClientSettingsConfig.soundOverride && stopSound)
+		if(ClientConfigHandler.soundOverride && stopSound)
 		{
 			ISound sound = event.sound;
 			String soundID = sound.getSoundLocation().toString();

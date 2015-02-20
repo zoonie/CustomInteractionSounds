@@ -15,7 +15,7 @@ import com.zoonie.InteractionSounds.gui.GuiHandler;
 import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.proxy.CommonProxy;
 
-@Mod(modid = InteractionSounds.MODID, name = InteractionSounds.MOD_NAME, version = InteractionSounds.VERSION, acceptableRemoteVersions = "*")
+@Mod(modid = InteractionSounds.MODID, name = InteractionSounds.MOD_NAME, version = InteractionSounds.VERSION, acceptableRemoteVersions = "*", guiFactory = "com.zoonie.InteractionSounds.gui.GuiFactory")
 public class InteractionSounds
 {
 	public static final String MOD_NAME = "Interaction Sounds";

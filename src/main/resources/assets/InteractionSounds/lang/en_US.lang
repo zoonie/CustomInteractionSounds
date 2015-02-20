@@ -33,3 +33,5 @@ entity.monsters=Monsters
 entity.players=Players
 entity.bosses=Bosses
 
+config.mute.dig=Mute default block dig sounds
+config.mute.others=Mute other players' sounds

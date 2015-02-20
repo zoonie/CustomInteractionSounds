@@ -1,16 +1,20 @@
 package com.zoonie.InteractionSounds.sound;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import de.cuina.fireandfuel.CodecJLayerMP3;
+import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.client.event.sound.SoundSetupEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;
 import paulscode.sound.codecs.CodecWav;
 
+import com.zoonie.InteractionSounds.configuration.ClientConfigHandler;
+
+import de.cuina.fireandfuel.CodecJLayerMP3;
+
 public class SoundEventHandler
 {
 	@SubscribeEvent
-	public void onSoundLoad(SoundSetupEvent event)
+	public void onSoundSetup(SoundSetupEvent event)
 	{
 		try
 		{
@@ -20,5 +24,11 @@ public class SoundEventHandler
 		{
 			e.printStackTrace();
 		}
+	}
+
+	@SubscribeEvent
+	public void onSoundLoad(SoundLoadEvent event)
+	{
+		ClientConfigHandler.load();
 	}
 }

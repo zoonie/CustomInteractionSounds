@@ -1,5 +1,6 @@
 package com.zoonie.InteractionSounds.configuration;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -10,8 +11,6 @@ import com.zoonie.InteractionSounds.InteractionSounds;
 
 public class ClientConfigHandler
 {
-	public static final String category = "Client Settings";
-
 	public static boolean soundOverride;
 	public static boolean muteOthers;
 	public static Configuration config;
@@ -23,10 +22,10 @@ public class ClientConfigHandler
 		load();
 	}
 
-	private void load()
+	public static void load()
 	{
-		soundOverride = config.get(category, "Mute default block dig sounds", true).getBoolean();
-		muteOthers = config.get(category, "Mute other players' sounds", false).getBoolean();
+		soundOverride = config.get(Configuration.CATEGORY_GENERAL, "Mute default block dig sounds", true, I18n.format("config.mute.dig")).getBoolean();
+		muteOthers = config.get(Configuration.CATEGORY_GENERAL, "Mute other players' sounds", false, I18n.format("config.mute.others")).getBoolean();
 
 		config.save();
 	}

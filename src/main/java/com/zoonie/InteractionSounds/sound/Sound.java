@@ -120,11 +120,6 @@ public class Sound implements Serializable
 		return this.state == SoundState.SYNCED || this.state == SoundState.LOCAL_ONLY || this.state == SoundState.UPLOADING;
 	}
 
-	public boolean saved()
-	{
-		return SoundHandler.getSounds().containsKey(soundName + category);
-	}
-
 	public void setState(SoundState state)
 	{
 		this.state = state;

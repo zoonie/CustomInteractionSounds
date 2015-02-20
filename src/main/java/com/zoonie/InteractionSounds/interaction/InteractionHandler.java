@@ -15,8 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -25,7 +23,6 @@ import com.zoonie.InteractionSounds.InteractionSounds;
 import com.zoonie.InteractionSounds.configuration.ClientConfigHandler;
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
-import com.zoonie.InteractionSounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.InteractionSounds.network.ChannelHandler;
 import com.zoonie.InteractionSounds.network.message.PlaySoundMessage;
 import com.zoonie.InteractionSounds.network.message.RequestSoundMessage;
@@ -54,7 +51,6 @@ public class InteractionHandler
 	private static InteractionHandler instance = new InteractionHandler();
 	public Interaction currentInteraction;
 	private BlockPos lastPos;
-	private boolean reopenGui = false;
 	private boolean stopSound = false;
 
 	/**
@@ -70,7 +66,6 @@ public class InteractionHandler
 	@SubscribeEvent
 	public void onClick(MouseEvent event)
 	{
-		reopenGui = false;
 		// Left or right click and mouse click down.
 		if((event.button == 0 || event.button == 1) && event.buttonstate)
 		{
@@ -79,7 +74,6 @@ public class InteractionHandler
 
 			if(KeyBindings.recordInteraction.isKeyDown())
 			{
-				reopenGui = true;
 				currentInteraction = interaction;
 
 				World world = Minecraft.getMinecraft().theWorld;
@@ -205,39 +199,6 @@ public class InteractionHandler
 		}
 		else if(interaction.isEntity() || interaction.getTarget().equals("tile.air"))
 			SoundPlayer.getInstance().stopAllLooping();
-	}
-
-	/**
-	 * Reopens sounds GUI if the GuiScreenEvent is from a different GUI while
-	 * trying to open the sounds GUI.
-	 * 
-	 * @param event
-	 */
-	@SubscribeEvent
-	public void guiScreen(GuiScreenEvent event)
-	{
-		if(event.gui != null && reopenGui && !event.gui.getClass().equals(GuiInteractionSoundMapping.class))
-		{
-			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-			World world = Minecraft.getMinecraft().theWorld;
-			player.openGui(InteractionSounds.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-		}
-	}
-
-	/**
-	 * Clears unwanted GUIs from screen.
-	 * 
-	 * @param event
-	 */
-	@SubscribeEvent
-	public void guiOpen(GuiOpenEvent event)
-	{
-		if(event.gui != null && reopenGui && !event.gui.getClass().equals(GuiInteractionSoundMapping.class))
-		{
-			reopenGui = false;
-			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-			player.closeScreen();
-		}
 	}
 
 	/**

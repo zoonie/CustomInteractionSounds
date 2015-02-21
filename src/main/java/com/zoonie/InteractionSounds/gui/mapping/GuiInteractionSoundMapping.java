@@ -104,6 +104,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		else
 			this.buttonList.add(listButton = new GuiButton(8, 10, 10, getWidth() / 3, 20, listButton.displayString));
 
+		SoundHandler.reloadSounds();
 		sounds = SoundHandler.getPlayerSounds();
 	}
 

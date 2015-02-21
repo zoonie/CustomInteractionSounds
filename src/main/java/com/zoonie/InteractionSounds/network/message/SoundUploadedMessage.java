@@ -90,6 +90,12 @@ public class SoundUploadedMessage implements IMessage
 				}
 
 				SoundHandler.addSound(soundInfo, soundFile);
+				ArrayList<Sound> sound = new ArrayList<Sound>();
+				sound.add(SoundHandler.getSound(soundInfo));
+				for(EntityPlayerMP player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList)
+				{
+					ChannelHandler.network.sendTo(new ServerSoundsMessage(player, sound), player);
+				}
 			}
 			else
 			{
@@ -102,10 +108,6 @@ public class SoundUploadedMessage implements IMessage
 						folder.delete();
 					}
 				}
-			}
-			for(EntityPlayerMP player : (List<EntityPlayerMP>) FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager().playerEntityList)
-			{
-				ChannelHandler.network.sendTo(new ServerSoundsMessage(player, new ArrayList<Sound>(SoundHandler.getSounds().values())), player);
 			}
 			return null;
 		}

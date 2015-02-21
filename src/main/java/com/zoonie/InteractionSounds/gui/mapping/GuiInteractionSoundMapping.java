@@ -27,6 +27,7 @@ import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
 import com.zoonie.InteractionSounds.gui.IListGui;
 import com.zoonie.InteractionSounds.interaction.Interaction;
 import com.zoonie.InteractionSounds.network.ChannelHandler;
+import com.zoonie.InteractionSounds.network.message.GetSoundsListMessage;
 import com.zoonie.InteractionSounds.network.message.RequestSoundMessage;
 import com.zoonie.InteractionSounds.sound.Sound;
 import com.zoonie.InteractionSounds.sound.SoundHandler;
@@ -75,6 +76,8 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 			}
 		};
 		fileChooser.setFileFilter(new FileNameExtensionFilter(translate("gui.sound.files") + " (.ogg, .wav, .mp3)", "ogg", "wav", "mp3"));
+
+		ChannelHandler.network.sendToServer(new GetSoundsListMessage());
 	}
 
 	@Override

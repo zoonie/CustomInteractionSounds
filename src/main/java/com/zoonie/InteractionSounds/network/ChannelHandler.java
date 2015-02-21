@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 import com.zoonie.InteractionSounds.InteractionSounds;
+import com.zoonie.InteractionSounds.network.message.GetSoundsListMessage;
 import com.zoonie.InteractionSounds.network.message.PlaySoundMessage;
 import com.zoonie.InteractionSounds.network.message.RepeatSoundMessage;
 import com.zoonie.InteractionSounds.network.message.RequestSoundMessage;
@@ -37,5 +38,7 @@ public class ChannelHandler
 		network.registerMessage(ServerSettingsMessage.Handler.class, ServerSettingsMessage.class, 5, Side.CLIENT);
 
 		network.registerMessage(ServerSoundsMessage.Handler.class, ServerSoundsMessage.class, 6, Side.CLIENT);
+
+		network.registerMessage(GetSoundsListMessage.Handler.class, GetSoundsListMessage.class, 7, Side.SERVER);
 	}
 }

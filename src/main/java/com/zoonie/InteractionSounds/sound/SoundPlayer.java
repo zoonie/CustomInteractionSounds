@@ -145,7 +145,10 @@ public class SoundPlayer
 
 	public void adjustVolume(String identifier, float volume)
 	{
-		soundSystem.setVolume(identifier, volume);
+		if(soundSystem.playing(identifier))
+		{
+			soundSystem.setVolume(identifier, volume);
+		}
 	}
 
 	public void stopSounds()

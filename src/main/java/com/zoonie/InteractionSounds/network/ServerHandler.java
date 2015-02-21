@@ -22,7 +22,10 @@ public class ServerHandler
 			EntityPlayerMP player = (EntityPlayerMP) event.entity;
 			ChannelHandler.network.sendTo(new ServerSettingsMessage(), player);
 			if(!ServerSettingsConfig.UseServerMappings)
+			{
+				SoundHandler.reloadSounds();
 				ChannelHandler.network.sendTo(new ServerSoundsMessage(player, new ArrayList<Sound>(SoundHandler.getSounds().values())), player);
+			}
 		}
 	}
 }

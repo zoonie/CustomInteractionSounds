@@ -41,23 +41,29 @@ public class NetworkHelper
 	public static void serverSoundUpload(Sound sound, EntityPlayerMP player)
 	{
 		byte[] soundBytes = convertFileToByteArr(sound.getSoundLocation());
-		for(int i = 0; i < soundBytes.length; i += PARTITION_SIZE)
+		if(soundBytes != null)
 		{
-			byte[] bytes = ArrayUtils.subarray(soundBytes, i, i + Math.min(PARTITION_SIZE, soundBytes.length - i));
-			ChannelHandler.network.sendTo(new SoundChunkMessage(sound.getSoundName(), sound.getCategory(), bytes), player);
+			for(int i = 0; i < soundBytes.length; i += PARTITION_SIZE)
+			{
+				byte[] bytes = ArrayUtils.subarray(soundBytes, i, i + Math.min(PARTITION_SIZE, soundBytes.length - i));
+				ChannelHandler.network.sendTo(new SoundChunkMessage(sound.getSoundName(), sound.getCategory(), bytes), player);
+			}
+			ChannelHandler.network.sendTo(new SoundUploadedMessage(sound.getSoundName(), sound.getCategory()), player);
 		}
-		ChannelHandler.network.sendTo(new SoundUploadedMessage(sound.getSoundName(), sound.getCategory()), player);
 	}
 
 	private static void uploadSound(Sound sound, String category)
 	{
 		byte[] soundBytes = convertFileToByteArr(sound.getSoundLocation());
-		for(int i = 0; i < soundBytes.length; i += PARTITION_SIZE)
+		if(soundBytes != null)
 		{
-			byte[] bytes = ArrayUtils.subarray(soundBytes, i, i + Math.min(PARTITION_SIZE, soundBytes.length - i));
-			ChannelHandler.network.sendToServer(new SoundChunkMessage(sound.getSoundName(), sound.getCategory(), bytes));
+			for(int i = 0; i < soundBytes.length; i += PARTITION_SIZE)
+			{
+				byte[] bytes = ArrayUtils.subarray(soundBytes, i, i + Math.min(PARTITION_SIZE, soundBytes.length - i));
+				ChannelHandler.network.sendToServer(new SoundChunkMessage(sound.getSoundName(), sound.getCategory(), bytes));
+			}
+			ChannelHandler.network.sendToServer(new SoundUploadedMessage(sound.getSoundName(), category));
 		}
-		ChannelHandler.network.sendToServer(new SoundUploadedMessage(sound.getSoundName(), category));
 	}
 
 	public static byte[] convertFileToByteArr(File file)

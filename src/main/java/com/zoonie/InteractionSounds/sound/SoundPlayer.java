@@ -160,6 +160,28 @@ public class SoundPlayer
 		playing = new ArrayList<String>();
 	}
 
+	public void pauseSounds()
+	{
+		if(soundSystem != null)
+		{
+			for(String s : playing)
+			{
+				soundSystem.pause(s);
+			}
+		}
+	}
+
+	public void resumeSounds()
+	{
+		if(soundSystem != null)
+		{
+			for(String s : playing)
+			{
+				soundSystem.play(s);
+			}
+		}
+	}
+
 	public static SoundPlayer getInstance()
 	{
 		return instance;

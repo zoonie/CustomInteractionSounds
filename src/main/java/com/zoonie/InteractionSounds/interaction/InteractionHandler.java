@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -52,6 +53,7 @@ public class InteractionHandler
 	public Interaction currentInteraction;
 	private BlockPos lastPos;
 	private boolean stopSound = false;
+	private boolean paused = false;
 
 	/**
 	 * Called when user clicks with mouse. If the record interaction key has
@@ -313,5 +315,20 @@ public class InteractionHandler
 	public static InteractionHandler getInstance()
 	{
 		return instance;
+	}
+
+	@SubscribeEvent
+	public void pauseSounds(GuiOpenEvent event)
+	{
+		if(event.gui != null && event.gui.getClass().getSimpleName().equals("GuiIngameMenu") && Minecraft.getMinecraft().isSingleplayer())
+		{
+			SoundPlayer.getInstance().pauseSounds();
+			paused = true;
+		}
+		else if(event.gui == null && paused == true)
+		{
+			SoundPlayer.getInstance().resumeSounds();
+			paused = false;
+		}
 	}
 }

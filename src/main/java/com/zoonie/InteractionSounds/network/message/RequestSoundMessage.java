@@ -3,6 +3,7 @@ package com.zoonie.InteractionSounds.network.message;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -38,21 +39,9 @@ public class RequestSoundMessage implements IMessage
 	@Override
 	public void fromBytes(ByteBuf bytes)
 	{
-		int fileLength = bytes.readInt();
-		char[] fileChars = new char[fileLength];
-		for(int i = 0; i < fileLength; i++)
-		{
-			fileChars[i] = bytes.readChar();
-		}
-		soundName = String.valueOf(fileChars);
+		soundName = ByteBufUtils.readUTF8String(bytes);
 
-		int catLength = bytes.readInt();
-		char[] catChars = new char[catLength];
-		for(int i = 0; i < catLength; i++)
-		{
-			catChars[i] = bytes.readChar();
-		}
-		category = String.valueOf(catChars);
+		category = ByteBufUtils.readUTF8String(bytes);
 
 		soundExistsCheck = bytes.readBoolean();
 	}
@@ -60,17 +49,9 @@ public class RequestSoundMessage implements IMessage
 	@Override
 	public void toBytes(ByteBuf bytes)
 	{
-		bytes.writeInt(soundName.length());
-		for(char c : soundName.toCharArray())
-		{
-			bytes.writeChar(c);
-		}
+		ByteBufUtils.writeUTF8String(bytes, soundName);
 
-		bytes.writeInt(category.length());
-		for(char c : category.toCharArray())
-		{
-			bytes.writeChar(c);
-		}
+		ByteBufUtils.writeUTF8String(bytes, category);
 
 		bytes.writeBoolean(soundExistsCheck);
 	}

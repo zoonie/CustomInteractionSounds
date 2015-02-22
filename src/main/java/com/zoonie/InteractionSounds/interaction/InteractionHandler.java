@@ -217,9 +217,9 @@ public class InteractionHandler
 	private void detectNewLeftTarget()
 	{
 		Interaction interaction = createInteraction(0);
+		SoundPlayer.getInstance().stopLeftClickLoop();
 		if(!interaction.isEntity() && !interaction.getTarget().equals("tile.air"))
 		{
-			SoundPlayer.getInstance().stopLeftClickLoop();
 			processClick(interaction, Minecraft.getMinecraft().thePlayer);
 		}
 	}

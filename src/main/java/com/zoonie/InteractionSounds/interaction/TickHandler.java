@@ -9,6 +9,8 @@ import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 public class TickHandler
 {
+	private int tick = 0;
+
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event)
 	{
@@ -29,6 +31,10 @@ public class TickHandler
 			SoundPlayer.getInstance().updateRightClickLoop();
 			InteractionHandler.getInstance().detectNewTarget("right");
 		}
-		SoundPlayer.getInstance().cleanUp();
+
+		if(tick == 0)
+			SoundPlayer.getInstance().cleanUp();
+
+		tick = ++tick % 100;
 	}
 }

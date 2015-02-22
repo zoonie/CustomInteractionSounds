@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -130,17 +131,17 @@ public class SoundHandler
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void playSound(SoundInfo soundInfo, String identifier, int x, int y, int z, float volume)
+	public static void playSound(SoundInfo soundInfo, String identifier, BlockPos pos, float volume)
 	{
 		Sound sound = SoundHandler.getSound(soundInfo);
 		if(sound != null && sound.hasLocal())
 		{
-			SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), identifier, x, y, z, true, volume);
+			SoundPlayer.getInstance().playNewSound(sound.getSoundLocation(), identifier, pos, true, volume);
 		}
 		else
 		{
 			sounds.put(soundInfo, new Sound(soundInfo));
-			DelayedPlayHandler.addDelayedPlay(soundInfo, identifier, x, y, z, volume, false);
+			DelayedPlayHandler.addDelayedPlay(soundInfo, identifier, pos, volume, null);
 			ChannelHandler.network.sendToServer(new RequestSoundMessage(soundInfo.name, soundInfo.category));
 		}
 	}

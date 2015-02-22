@@ -3,13 +3,15 @@ package com.zoonie.InteractionSounds.sound;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.util.BlockPos;
+
 public class DelayedPlayHandler
 {
 	private static Map<SoundInfo, SoundPlayInfo> map = new HashMap<SoundInfo, SoundPlayInfo>();
 
-	public static void addDelayedPlay(SoundInfo soundInfo, String identifier, int x, int y, int z, float volume, boolean loop)
+	public static void addDelayedPlay(SoundInfo soundInfo, String identifier, BlockPos pos, float volume, String loop)
 	{
-		map.put(soundInfo, new SoundPlayInfo(identifier, x, y, z, volume, loop));
+		map.put(soundInfo, new SoundPlayInfo(identifier, pos, volume, loop));
 	}
 
 	public static void onSoundReceived(SoundInfo soundInfo)
@@ -17,9 +19,15 @@ public class DelayedPlayHandler
 		SoundPlayInfo playInfo = map.get(soundInfo);
 		if(playInfo != null)
 		{
-			SoundHandler.playSound(soundInfo, playInfo.identifier, playInfo.x, playInfo.y, playInfo.z, playInfo.volume);
-			if(playInfo.loop)
-				SoundPlayer.getInstance().addLoop(playInfo.identifier, SoundHandler.getSound(soundInfo).getLength());
+			BlockPos pos = playInfo.pos;
+			SoundHandler.playSound(soundInfo, playInfo.identifier, pos, playInfo.volume);
+			if(playInfo.loop != null)
+			{
+				if(playInfo.loop.equals("left"))
+					SoundPlayer.getInstance().setLeftClickLoop(playInfo.identifier, SoundHandler.getSound(soundInfo).getLength(), pos);
+				else if(playInfo.loop.equals("right"))
+					SoundPlayer.getInstance().setRightClickLoop(playInfo.identifier, SoundHandler.getSound(soundInfo).getLength(), pos);
+			}
 			map.remove(soundInfo);
 		}
 	}

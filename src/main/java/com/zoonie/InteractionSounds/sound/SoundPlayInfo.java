@@ -1,18 +1,18 @@
 package com.zoonie.InteractionSounds.sound;
 
+import net.minecraft.util.BlockPos;
+
 public class SoundPlayInfo
 {
 	public String identifier;
-	public int x, y, z;
+	public BlockPos pos;
 	public float volume;
-	public boolean loop;
+	public String loop;
 
-	public SoundPlayInfo(String identifier, int x, int y, int z, float volume, boolean loop)
+	public SoundPlayInfo(String identifier, BlockPos pos, float volume, String loop)
 	{
 		this.identifier = identifier;
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.pos = pos;
 		this.volume = volume;
 		this.loop = loop;
 	}

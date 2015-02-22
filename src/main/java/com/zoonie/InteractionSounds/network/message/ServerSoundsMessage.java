@@ -17,8 +17,8 @@ import com.zoonie.InteractionSounds.sound.SoundInfo;
 
 public class ServerSoundsMessage implements IMessage
 {
-	EntityPlayerMP player;
-	ArrayList<Sound> soundsList;
+	private EntityPlayerMP player;
+	private ArrayList<Sound> soundsList;
 
 	public ServerSoundsMessage()
 	{
@@ -51,7 +51,7 @@ public class ServerSoundsMessage implements IMessage
 			}
 			String category = String.valueOf(soundCatChars);
 
-			Double length = bytes.readDouble();
+			long length = bytes.readLong();
 			Long size = bytes.readLong();
 
 			SoundHandler.addRemoteSound(new SoundInfo(soundName, category, length, size));
@@ -78,7 +78,7 @@ public class ServerSoundsMessage implements IMessage
 				bytes.writeChar(c);
 			}
 
-			bytes.writeDouble(SoundHelper.getSoundLength(sound.getSoundLocation()));
+			bytes.writeLong((long) SoundHelper.getSoundLength(sound.getSoundLocation()));
 			bytes.writeLong(sound.getSoundLocation().length());
 
 			i++;

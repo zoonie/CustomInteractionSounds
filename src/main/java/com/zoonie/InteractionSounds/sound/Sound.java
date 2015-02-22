@@ -13,7 +13,7 @@ public class Sound implements Serializable
 	private SoundState state;
 	@Expose
 	private float volume;
-	private double length;
+	private long length;
 	private long size;
 
 	public Sound(Sound sound)
@@ -83,7 +83,7 @@ public class Sound implements Serializable
 		this.volume = volume;
 	}
 
-	public Double getLength()
+	public long getLength()
 	{
 		return length;
 	}

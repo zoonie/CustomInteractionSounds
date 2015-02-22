@@ -2,7 +2,6 @@ package com.zoonie.InteractionSounds.interaction;
 
 import java.io.File;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -83,20 +82,24 @@ public class InteractionHandler
 				event.setCanceled(true);
 			}
 			else
-				processClick(interaction, event.button, player);
+				processClick(interaction, player);
 		}
-		else if(event.button == 0 || event.button == 1)
+		else if(event.button == 0)
 		{
-			SoundPlayer.getInstance().stopAllLooping();
+			SoundPlayer.getInstance().stopLeftClickLoop();
 			stopSound = false;
+		}
+		else if(event.button == 1)
+		{
+			SoundPlayer.getInstance().stopRightClickLoop();
 		}
 	}
 
-	private void processClick(Interaction interaction, int button, EntityPlayerSP player)
+	private void processClick(Interaction interaction, EntityPlayerSP player)
 	{
 		if(MappingsConfigManager.mappings != null)
 		{
-			String click = button == 0 ? "left" : "right";
+			String click = interaction.getMouseButton();
 			Interaction general = new Interaction(click, interaction.getItem(), interaction.getGeneralTargetName());
 			if(MappingsConfigManager.mappings.containsKey(interaction))
 			{
@@ -150,9 +153,6 @@ public class InteractionHandler
 			stopSound = true;
 
 		BlockPos pos = getTargetPos();
-		int x = pos.getX();
-		int y = pos.getY();
-		int z = pos.getZ();
 
 		Sound sound = MappingsConfigManager.mappings.get(interaction);
 		String soundName = sound.getSoundName();
@@ -162,43 +162,77 @@ public class InteractionHandler
 
 		if(!soundLocation.exists())
 		{
-			boolean loop = false;
+			String loop = null;
 			if(interaction.getMouseButton().equals("left") && !interaction.isEntity() && !interaction.getTarget().equals("tile.air"))
-				loop = true;
+				loop = "left";
+			else if(interaction.getMouseButton().equals("right"))
+				loop = "right";
 
 			SoundInfo soundInfo = new SoundInfo(soundName, category);
 			SoundHandler.addRemoteSound(soundInfo);
-			DelayedPlayHandler.addDelayedPlay(soundInfo, UUID.randomUUID().toString(), x, y, z, volume, loop);
+			DelayedPlayHandler.addDelayedPlay(soundInfo, UUID.randomUUID().toString(), pos, volume, loop);
 			ChannelHandler.network.sendToServer(new RequestSoundMessage(soundInfo.name, soundInfo.category));
 		}
 		else
 		{
-			String identifier = SoundPlayer.getInstance().playNewSound(soundLocation, null, (float) x, (float) y, (float) z, true, volume);
-			Double soundLength = (double) TimeUnit.SECONDS.toMillis((long) SoundHelper.getSoundLength(soundLocation));
+			String identifier = SoundPlayer.getInstance().playNewSound(soundLocation, null, pos, true, volume);
+			Double soundLength = SoundHelper.getSoundLength(soundLocation);
 
 			if(interaction.getMouseButton().equals("left") && !interaction.isEntity() && !interaction.getTarget().equals("tile.air"))
-				SoundPlayer.getInstance().addLoop(identifier, soundLength);
+				SoundPlayer.getInstance().setLeftClickLoop(identifier, soundLength, pos);
+			else if(interaction.getMouseButton().equals("right"))
+			{
+				SoundPlayer.getInstance().setRightClickLoop(identifier, soundLength, pos);
+			}
 
 			if(SoundHelper.getSoundLength(soundLocation) <= ServerSettingsConfig.MaxSoundLength)
 			{
 				ChannelHandler.network.sendToServer(new RequestSoundMessage(soundName, category, true));
-				ChannelHandler.network.sendToServer(new PlaySoundMessage(soundName, category, identifier, player.dimension, x, y, z, volume, player.getDisplayNameString()));
+				ChannelHandler.network.sendToServer(new PlaySoundMessage(soundName, category, identifier, player.dimension, pos, volume, player.getDisplayNameString()));
 			}
 		}
 	}
 
-	public void detectNewTarget()
+	public void detectNewTarget(String click)
 	{
-		BlockPos lastPos = this.lastPos;
-		Interaction interaction = createInteraction(0);
-
-		if(!interaction.isEntity() && !getTargetPos().equals(lastPos) && !interaction.getTarget().equals("tile.air"))
+		if(this.lastPos != null && !getTargetPos().equals(this.lastPos))
 		{
-			SoundPlayer.getInstance().stopAllLooping();
-			processClick(interaction, 0, Minecraft.getMinecraft().thePlayer);
+			if(click.equals("left"))
+			{
+				detectNewLeftTarget();
+			}
+			else if(click.equals("right"))
+			{
+				detectNewRightTarget();
+			}
+			else if(click.equals("both"))
+			{
+				detectNewLeftTarget();
+				detectNewRightTarget();
+			}
 		}
-		else if(interaction.isEntity() || interaction.getTarget().equals("tile.air"))
-			SoundPlayer.getInstance().stopAllLooping();
+		lastPos = getTargetPos();
+	}
+
+	private void detectNewLeftTarget()
+	{
+		Interaction interaction = createInteraction(0);
+		if(!interaction.isEntity() && !interaction.getTarget().equals("tile.air"))
+		{
+			SoundPlayer.getInstance().stopLeftClickLoop();
+			processClick(interaction, Minecraft.getMinecraft().thePlayer);
+		}
+	}
+
+	private void detectNewRightTarget()
+	{
+		Interaction interaction = createInteraction(1);
+
+		if(!Minecraft.getMinecraft().theWorld.isAirBlock(lastPos))
+		{
+			SoundPlayer.getInstance().stopRightClickLoop();
+			processClick(interaction, Minecraft.getMinecraft().thePlayer);
+		}
 	}
 
 	/**
@@ -217,18 +251,20 @@ public class InteractionHandler
 		if(player.getCurrentEquippedItem() != null)
 			item = player.getCurrentEquippedItem().getUnlocalizedName();
 
+		String click = button == 0 ? "left" : "right";
+
 		MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
-		lastPos = mop.getBlockPos();
+		BlockPos pos = mop.getBlockPos();
 		Entity entity = mop.entityHit;
 
-		if(lastPos != null)
+		if(pos != null)
 		{
-			IBlockState bs = mc.theWorld.getBlockState(lastPos);
+			IBlockState bs = mc.theWorld.getBlockState(pos);
 			Block b = bs.getBlock();
 			String name = getUnlocalizedName(b, bs);
 			String generalName = getUnlocalizedParentName(name);
 
-			return new Interaction(button == 0 ? "left" : "right", item, name, generalName);
+			return new Interaction(click, item, name, generalName);
 		}
 		else if(entity != null)
 		{
@@ -247,13 +283,13 @@ public class InteractionHandler
 
 			if(EntityList.getEntityString(entity) == null || entity.hasCustomName())
 			{
-				Interaction in = new Interaction(button == 0 ? "left" : "right", item, entity.getName(), generalCategory);
+				Interaction in = new Interaction(click, item, entity.getName(), generalCategory);
 				in.setIsEntity(true);
 				return in;
 			}
 			else
 			{
-				Interaction in = new Interaction(button == 0 ? "left" : "right", item, "entity." + EntityList.getEntityString(entity), generalCategory);
+				Interaction in = new Interaction(click, item, "entity." + EntityList.getEntityString(entity), generalCategory);
 				in.setIsEntity(true);
 				return in;
 			}

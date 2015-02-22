@@ -2,6 +2,7 @@ package com.zoonie.InteractionSounds.network.message;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -16,22 +17,20 @@ public class PlaySoundMessage implements IMessage
 {
 	String soundName, category, caller, identifier;
 	int dimensionId;
-	int x, y, z;
+	BlockPos pos;
 	float volume;
 
 	public PlaySoundMessage()
 	{
 	}
 
-	public PlaySoundMessage(String name, String category, String identifier, int dimensionId, int x, int y, int z, float volume, String caller)
+	public PlaySoundMessage(String name, String category, String identifier, int dimensionId, BlockPos pos, float volume, String caller)
 	{
 		this.soundName = name;
 		this.category = category;
 		this.identifier = identifier;
 		this.dimensionId = dimensionId;
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.pos = pos;
 		this.volume = volume;
 		this.caller = caller;
 	}
@@ -56,9 +55,7 @@ public class PlaySoundMessage implements IMessage
 		category = String.valueOf(catChars);
 
 		dimensionId = bytes.readInt();
-		x = bytes.readInt();
-		y = bytes.readInt();
-		z = bytes.readInt();
+		pos = new BlockPos(bytes.readInt(), bytes.readInt(), bytes.readInt());
 		volume = bytes.readFloat();
 
 		int callerLength = bytes.readInt();
@@ -94,9 +91,9 @@ public class PlaySoundMessage implements IMessage
 		}
 
 		bytes.writeInt(dimensionId);
-		bytes.writeInt(x);
-		bytes.writeInt(y);
-		bytes.writeInt(z);
+		bytes.writeInt(pos.getX());
+		bytes.writeInt(pos.getY());
+		bytes.writeInt(pos.getZ());
 		bytes.writeFloat(volume);
 
 		bytes.writeInt(caller.length());
@@ -118,7 +115,7 @@ public class PlaySoundMessage implements IMessage
 		public IMessage onMessage(PlaySoundMessage message, MessageContext ctx)
 		{
 			if(!Minecraft.getMinecraft().thePlayer.getDisplayNameString().equals(message.caller) && !ClientConfigHandler.muteOthers)
-				SoundHandler.playSound(new SoundInfo(message.soundName, message.category), message.identifier, message.x, message.y, message.z, message.volume);
+				SoundHandler.playSound(new SoundInfo(message.soundName, message.category), message.identifier, message.pos, message.volume);
 			return null;
 		}
 	}
@@ -128,8 +125,9 @@ public class PlaySoundMessage implements IMessage
 		@Override
 		public IMessage onMessage(PlaySoundMessage message, MessageContext ctx)
 		{
-			TargetPoint tp = new TargetPoint(message.dimensionId, message.x, message.y, message.z, 16);
-			ChannelHandler.network.sendToAllAround(new PlaySoundMessage(message.soundName, message.category, message.identifier, message.dimensionId, message.x, message.y, message.z, message.volume,
+			BlockPos pos = message.pos;
+			TargetPoint tp = new TargetPoint(message.dimensionId, pos.getX(), pos.getY(), pos.getZ(), 16);
+			ChannelHandler.network.sendToAllAround(new PlaySoundMessage(message.soundName, message.category, message.identifier, message.dimensionId, message.pos, message.volume,
 					message.caller), tp);
 			return null;
 		}

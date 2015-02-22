@@ -22,5 +22,6 @@ public class ClientConnectionHandler
 			KeyBindings.assign();
 			ServerSettingsConfig.UseServerMappings = false;
 		}
+		ServerSettingsConfig.MaxSoundLength = Double.POSITIVE_INFINITY;
 	}
 }

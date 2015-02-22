@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -35,6 +36,9 @@ public class GetSoundsListMessage implements IMessage
 		@Override
 		public IMessage onMessage(GetSoundsListMessage message, MessageContext ctx)
 		{
+			if(!MinecraftServer.getServer().isDedicatedServer())
+				return null;
+
 			SoundHandler.reloadSounds();
 
 			EntityPlayerMP player = ((NetHandlerPlayServer) ctx.netHandler).playerEntity;

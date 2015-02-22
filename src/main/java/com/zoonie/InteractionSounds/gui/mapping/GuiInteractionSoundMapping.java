@@ -24,6 +24,7 @@ import net.minecraftforge.fml.client.config.GuiSlider;
 import org.apache.commons.io.FileUtils;
 
 import com.zoonie.InteractionSounds.configuration.MappingsConfigManager;
+import com.zoonie.InteractionSounds.configuration.ServerSettingsConfig;
 import com.zoonie.InteractionSounds.gui.IListGui;
 import com.zoonie.InteractionSounds.interaction.Interaction;
 import com.zoonie.InteractionSounds.network.ChannelHandler;
@@ -59,6 +60,7 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 	private String soundLength;
 	private String soundSize;
 	private double soundLengthSeconds;
+	private String maxSndUploadLen;
 
 	public GuiInteractionSoundMapping(EntityPlayer player, Interaction interaction)
 	{
@@ -78,6 +80,18 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 		fileChooser.setFileFilter(new FileNameExtensionFilter(translate("gui.sound.files") + " (.ogg, .wav, .mp3)", "ogg", "wav", "mp3"));
 
 		ChannelHandler.network.sendToServer(new GetSoundsListMessage());
+
+		double maxSoundLength = ServerSettingsConfig.MaxSoundLength;
+		if(maxSoundLength == Double.POSITIVE_INFINITY)
+		{
+			maxSndUploadLen = "";
+		}
+		else
+		{
+			long minutes = TimeUnit.SECONDS.toMinutes((long) maxSoundLength) - (TimeUnit.SECONDS.toHours((long) maxSoundLength) * 60);
+			long seconds = TimeUnit.SECONDS.toSeconds((long) maxSoundLength) - (TimeUnit.SECONDS.toMinutes((long) maxSoundLength) * 60);
+			maxSndUploadLen = String.format("(%02d:%02d.%02d)", minutes, seconds, 0);
+		}
 	}
 
 	@Override
@@ -293,6 +307,8 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 
 		this.drawString(this.getFontRenderer(), translate("sound.length") + ":", labelAlign, getHeight() - 120, LABEL_COLOUR);
 		this.drawString(this.getFontRenderer(), soundLength, infoAlign, getHeight() - 120, SOUND_INFO_COLOUR);
+
+		this.drawString(this.getFontRenderer(), maxSndUploadLen, infoAlign + 50, getHeight() - 120, 0xFF0000);
 
 		this.drawString(this.getFontRenderer(), translate("sound.size") + ":", labelAlign, getHeight() - 100, LABEL_COLOUR);
 		this.drawString(this.getFontRenderer(), soundSize, infoAlign, getHeight() - 100, SOUND_INFO_COLOUR);

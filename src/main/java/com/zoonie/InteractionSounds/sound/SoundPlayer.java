@@ -138,7 +138,8 @@ public class SoundPlayer
 		ArrayList<String> temp = new ArrayList<String>(playing);
 		for(String s : playing)
 		{
-			if(!soundSystem.playing(s) && ((leftClickLoop != null && !leftClickLoop.identifier.equals(s)) || (rightClickLoop != null && !rightClickLoop.identifier.equals(s))))
+			boolean notLeftLoop = (leftClickLoop == null || !leftClickLoop.identifier.equals(s)) ? true : false;
+			if(!soundSystem.playing(s) && (leftClickLoop == null || !leftClickLoop.identifier.equals(s)) && (rightClickLoop == null || !rightClickLoop.identifier.equals(s)))
 			{
 				soundSystem.removeSource(s);
 				temp.remove(s);

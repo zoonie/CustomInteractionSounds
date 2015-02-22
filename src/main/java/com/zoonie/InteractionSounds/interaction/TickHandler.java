@@ -9,11 +9,13 @@ import com.zoonie.InteractionSounds.sound.SoundPlayer;
 
 public class TickHandler
 {
-	private KeyBinding keyBindAttack = Minecraft.getMinecraft().gameSettings.keyBindAttack;
-	private KeyBinding keyBindUseItem = Minecraft.getMinecraft().gameSettings.keyBindUseItem;
+	private Minecraft minecraft = Minecraft.getMinecraft();
+	private KeyBinding keyBindAttack = minecraft.gameSettings.keyBindAttack;
+	private KeyBinding keyBindUseItem = minecraft.gameSettings.keyBindUseItem;
 	private SoundPlayer soundPlayer = SoundPlayer.getInstance();
 	private InteractionHandler interactionHandler = InteractionHandler.getInstance();
 	private int tick = 0;
+	private boolean paused;
 
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event)
@@ -35,8 +37,21 @@ public class TickHandler
 			interactionHandler.detectNewTarget("right");
 		}
 
+		if(paused == false && minecraft.isGamePaused())
+		{
+			SoundPlayer.getInstance().pauseSounds();
+			paused = true;
+		}
+		else if(paused == true && !minecraft.isGamePaused())
+		{
+			SoundPlayer.getInstance().resumeSounds();
+			paused = false;
+		}
+
 		if(tick == 0)
+		{
 			SoundPlayer.getInstance().cleanUp();
+		}
 
 		tick = ++tick % 100;
 	}

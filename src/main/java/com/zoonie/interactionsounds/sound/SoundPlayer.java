@@ -30,19 +30,20 @@ public class SoundPlayer
 
 	private void init()
 	{
-		SoundManager soundManager = ObfuscationReflectionHelper.getPrivateValue(net.minecraft.client.audio.SoundHandler.class, Minecraft.getMinecraft().getSoundHandler(), "sndManager",
-				"field_147694_f", "V");
-		soundSystem = ObfuscationReflectionHelper.getPrivateValue(SoundManager.class, soundManager, "sndSystem", "field_148620_e", "e");
+		if(soundSystem == null || soundSystem.randomNumberGenerator == null)
+		{
+			SoundManager soundManager = ObfuscationReflectionHelper.getPrivateValue(net.minecraft.client.audio.SoundHandler.class, Minecraft.getMinecraft().getSoundHandler(), "sndManager",
+					"field_147694_f", "V");
+			soundSystem = ObfuscationReflectionHelper.getPrivateValue(SoundManager.class, soundManager, "sndSystem", "field_148620_e", "e");
+		}
 	}
 
 	public String playNewSound(File sound, String id, BlockPos pos, boolean fading, float volume)
 	{
 		try
 		{
-			if(soundSystem == null || soundSystem.randomNumberGenerator == null)
-			{
-				init();
-			}
+			init();
+
 			String identifier;
 			if(id == null)
 				identifier = UUID.randomUUID().toString();
@@ -160,6 +161,7 @@ public class SoundPlayer
 
 	public void adjustVolume(String identifier, float volume)
 	{
+		init();
 		if(soundSystem.playing(identifier))
 		{
 			soundSystem.setVolume(identifier, volume);

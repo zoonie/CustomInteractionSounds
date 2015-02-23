@@ -173,7 +173,11 @@ public class InteractionHandler
 		}
 		else
 		{
-			String identifier = SoundPlayer.getInstance().playNewSound(soundLocation, null, pos, true, volume);
+			String identifier = player.getName() + soundName + category;
+			if(SoundPlayer.getInstance().isPlaying(identifier))
+				return;
+
+			SoundPlayer.getInstance().playNewSound(soundLocation, identifier, pos, true, volume);
 			Double soundLength = SoundHelper.getSoundLength(soundLocation);
 
 			if(interaction.getMouseButton().equals("left") && !interaction.isEntity() && !interaction.getTarget().equals("tile.air"))

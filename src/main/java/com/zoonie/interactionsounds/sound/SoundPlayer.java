@@ -202,6 +202,12 @@ public class SoundPlayer
 		}
 	}
 
+	public boolean isPlaying(String identifier)
+	{
+		init();
+		return soundSystem.playing(identifier) ? true : false;
+	}
+
 	private double getTimeToEnd(double length)
 	{
 		return System.currentTimeMillis() + length;

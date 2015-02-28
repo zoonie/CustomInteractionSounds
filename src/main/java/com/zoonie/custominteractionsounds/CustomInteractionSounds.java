@@ -20,7 +20,7 @@ public class CustomInteractionSounds
 {
 	public static final String MOD_NAME = "Custom Interaction Sounds";
 	public static final String MODID = "CustomInteractionSounds";
-	public static final String VERSION = "1.0.3";
+	public static final String VERSION = "1.0.4";
 
 	public static final Logger logger = LogManager.getLogger(MOD_NAME);
 

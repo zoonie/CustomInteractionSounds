@@ -4,7 +4,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-import com.zoonie.custominteractionsounds.CustomInteractionSounds;
 import com.zoonie.custominteractionsounds.network.message.GetSoundsListMessage;
 import com.zoonie.custominteractionsounds.network.message.PlaySoundMessage;
 import com.zoonie.custominteractionsounds.network.message.RepeatSoundMessage;
@@ -16,7 +15,7 @@ import com.zoonie.custominteractionsounds.network.message.SoundUploadedMessage;
 
 public class ChannelHandler
 {
-	public static SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(CustomInteractionSounds.MODID);
+	public static SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel("InteractionSounds");
 
 	public static void init()
 	{

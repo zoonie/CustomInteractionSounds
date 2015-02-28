@@ -104,8 +104,6 @@ public class Sound implements Serializable
 		String path = soundLocation.getAbsolutePath();
 		path = path.substring(0, path.lastIndexOf(File.separator));
 		path = path.substring(path.lastIndexOf(File.separator) + 1);
-		if(path.equals("sounds"))
-			path = "";
 		this.category = path;
 		this.state = SoundState.SYNCED;
 	}

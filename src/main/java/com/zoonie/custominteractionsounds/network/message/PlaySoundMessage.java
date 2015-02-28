@@ -12,6 +12,7 @@ import com.zoonie.custominteractionsounds.configuration.ClientConfigHandler;
 import com.zoonie.custominteractionsounds.network.ChannelHandler;
 import com.zoonie.custominteractionsounds.sound.SoundHandler;
 import com.zoonie.custominteractionsounds.sound.SoundInfo;
+import com.zoonie.custominteractionsounds.sound.SoundPlayer;
 
 public class PlaySoundMessage implements IMessage
 {
@@ -114,7 +115,7 @@ public class PlaySoundMessage implements IMessage
 		@Override
 		public IMessage onMessage(PlaySoundMessage message, MessageContext ctx)
 		{
-			if(!Minecraft.getMinecraft().thePlayer.getDisplayNameString().equals(message.caller) && !ClientConfigHandler.muteOthers)
+			if(!Minecraft.getMinecraft().thePlayer.getDisplayNameString().equals(message.caller) && !ClientConfigHandler.muteOthers && !SoundPlayer.getInstance().isPlaying(message.identifier))
 				SoundHandler.playSound(new SoundInfo(message.soundName, message.category), message.identifier, message.pos, message.volume);
 			return null;
 		}

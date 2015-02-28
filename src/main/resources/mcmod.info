@@ -1,8 +1,8 @@
 [
 {
-    "modid": "InteractionSounds",
-    "name": "Interaction Sounds",
-    "url": "https://github.com/zoonie/InteractionSounds",
+    "modid": "CustomInteractionSounds",
+    "name": "Custom Interaction Sounds",
+    "url": "https://github.com/zoonie/CustomInteractionSounds",
     "description": "Add your own sounds to interactions with blocks, items and players with this intuitive mod.",
     "version": "${version}",
     "mcversion": "${mcversion}",

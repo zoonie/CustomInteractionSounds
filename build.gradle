@@ -18,8 +18,8 @@ buildscript {
 apply plugin: 'forge'
 
 version = "1.0.3"
-group= "com.zoonie.interactionsounds" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "InteractionSounds-1.8"
+group= "com.zoonie.custominteractionsounds" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "CustomInteractionSounds-1.8"
 
 minecraft {
     version = "1.8-11.14.0.1299"

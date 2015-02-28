@@ -1,4 +1,4 @@
-# InteractionSounds
+# CustomInteractionSounds
 Minecraft Forge mod to add custom sounds to player interactions with blocks, items and entities.
 
 Translations

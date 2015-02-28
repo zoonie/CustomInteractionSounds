@@ -189,6 +189,16 @@ public class SoundPlayer
 				soundSystem.pause(s);
 			}
 		}
+		if(leftClickLoop != null && !soundSystem.playing(leftClickLoop.identifier))
+		{
+			soundSystem.stop(leftClickLoop.identifier);
+			playing.remove(leftClickLoop.identifier);
+		}
+		if(rightClickLoop != null && !soundSystem.playing(rightClickLoop.identifier))
+		{
+			soundSystem.stop(rightClickLoop.identifier);
+			playing.remove(rightClickLoop.identifier);
+		}
 	}
 
 	public void resumeSounds()

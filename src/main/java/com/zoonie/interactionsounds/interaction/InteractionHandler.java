@@ -65,6 +65,16 @@ public class InteractionHandler
 	@SubscribeEvent
 	public void onClick(MouseEvent event)
 	{
+		if(event.button == 0)
+		{
+			SoundPlayer.getInstance().stopLeftClickLoop();
+			stopSound = false;
+		}
+		if(event.button == 1)
+		{
+			SoundPlayer.getInstance().stopRightClickLoop();
+		}
+		
 		// Left or right click and mouse click down.
 		if((event.button == 0 || event.button == 1) && event.buttonstate)
 		{
@@ -81,15 +91,6 @@ public class InteractionHandler
 			}
 			else
 				processClick(interaction, player);
-		}
-		else if(event.button == 0)
-		{
-			SoundPlayer.getInstance().stopLeftClickLoop();
-			stopSound = false;
-		}
-		else if(event.button == 1)
-		{
-			SoundPlayer.getInstance().stopRightClickLoop();
 		}
 	}
 

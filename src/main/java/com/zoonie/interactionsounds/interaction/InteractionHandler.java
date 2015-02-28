@@ -92,6 +92,10 @@ public class InteractionHandler
 			else
 				processClick(interaction, player);
 		}
+		else
+		{
+			lastPos = null;
+		}
 	}
 
 	private void processClick(Interaction interaction, EntityPlayerSP player)
@@ -148,8 +152,6 @@ public class InteractionHandler
 
 	private void playSound(Interaction interaction, EntityPlayerSP player)
 	{
-		lastPos = getTargetPos();
-
 		if(!interaction.isEntity())
 			stopSound = true;
 
@@ -214,6 +216,7 @@ public class InteractionHandler
 				detectNewRightTarget();
 			}
 		}
+		lastPos = getTargetPos();
 	}
 
 	private void detectNewLeftTarget()
@@ -319,7 +322,7 @@ public class InteractionHandler
 	@SubscribeEvent
 	public void stopSound(PlaySoundEvent event)
 	{
-		if(ClientConfigHandler.soundOverride && stopSound)
+		if(ClientConfigHandler.soundOverride && stopSound && lastPos != null)
 		{
 			ISound sound = event.sound;
 			String soundID = sound.getSoundLocation().toString();

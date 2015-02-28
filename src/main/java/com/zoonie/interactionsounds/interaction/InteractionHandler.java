@@ -147,6 +147,8 @@ public class InteractionHandler
 
 	private void playSound(Interaction interaction, EntityPlayerSP player)
 	{
+		lastPos = getTargetPos();
+
 		if(!interaction.isEntity())
 			stopSound = true;
 
@@ -211,7 +213,6 @@ public class InteractionHandler
 				detectNewRightTarget();
 			}
 		}
-		lastPos = getTargetPos();
 	}
 
 	private void detectNewLeftTarget()
@@ -325,7 +326,7 @@ public class InteractionHandler
 			double soundY = Math.floor(sound.getYPosF());
 			double soundZ = Math.floor(sound.getZPosF());
 
-			BlockPos pos = getTargetPos();
+			BlockPos pos = lastPos;
 			int x = pos.getX();
 			int y = pos.getY();
 			int z = pos.getZ();

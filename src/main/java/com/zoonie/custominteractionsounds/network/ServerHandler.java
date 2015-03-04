@@ -4,13 +4,14 @@ import java.util.ArrayList;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.custominteractionsounds.configuration.ServerSettingsConfig;
 import com.zoonie.custominteractionsounds.network.message.ServerSettingsMessage;
 import com.zoonie.custominteractionsounds.network.message.ServerSoundsMessage;
 import com.zoonie.custominteractionsounds.sound.Sound;
 import com.zoonie.custominteractionsounds.sound.SoundHandler;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ServerHandler
 {

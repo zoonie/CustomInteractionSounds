@@ -2,13 +2,14 @@ package com.zoonie.custominteractionsounds.network.message;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.zoonie.custominteractionsounds.network.ChannelHandler;
 import com.zoonie.custominteractionsounds.sound.SoundPlayer;
+
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class RepeatSoundMessage implements IMessage
 {
@@ -81,7 +82,7 @@ public class RepeatSoundMessage implements IMessage
 		@Override
 		public IMessage onMessage(RepeatSoundMessage message, MessageContext ctx)
 		{
-			if(!Minecraft.getMinecraft().thePlayer.getDisplayNameString().equals(message.caller))
+			if(!Minecraft.getMinecraft().thePlayer.getDisplayName().equals(message.caller))
 				SoundPlayer.getInstance().playSound(message.identifier, message.x, message.y, message.z);
 			return null;
 		}

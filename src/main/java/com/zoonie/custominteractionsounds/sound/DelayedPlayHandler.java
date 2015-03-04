@@ -3,7 +3,7 @@ package com.zoonie.custominteractionsounds.sound;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.util.BlockPos;
+import com.zoonie.custominteractionsounds.compat.BlockPos;
 
 public class DelayedPlayHandler
 {

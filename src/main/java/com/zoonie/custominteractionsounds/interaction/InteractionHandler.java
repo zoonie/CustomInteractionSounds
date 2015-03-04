@@ -4,21 +4,19 @@ import java.io.File;
 import java.util.UUID;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.zoonie.custominteractionsounds.CustomInteractionSounds;
+import com.zoonie.custominteractionsounds.compat.BlockPos;
 import com.zoonie.custominteractionsounds.configuration.ClientConfigHandler;
 import com.zoonie.custominteractionsounds.configuration.MappingsConfigManager;
 import com.zoonie.custominteractionsounds.configuration.ServerSettingsConfig;
@@ -31,6 +29,8 @@ import com.zoonie.custominteractionsounds.sound.SoundHandler;
 import com.zoonie.custominteractionsounds.sound.SoundHelper;
 import com.zoonie.custominteractionsounds.sound.SoundInfo;
 import com.zoonie.custominteractionsounds.sound.SoundPlayer;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * The InteractionHandler class deals with specific Forge events, mainly
@@ -51,6 +51,7 @@ public class InteractionHandler
 	public Interaction currentInteraction;
 	private BlockPos lastPos;
 	private boolean stopSound = false;
+	private Minecraft mc = Minecraft.getMinecraft();
 
 	/**
 	 * Called when user clicks with mouse. If the record interaction key has
@@ -81,7 +82,7 @@ public class InteractionHandler
 			Interaction interaction = createInteraction(event.button);
 			EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 
-			if(KeyBindings.recordInteraction.isKeyDown())
+			if(KeyBindings.recordInteraction.getIsKeyPressed())
 			{
 				currentInteraction = interaction;
 
@@ -178,7 +179,7 @@ public class InteractionHandler
 		}
 		else
 		{
-			String identifier = player.getName() + soundName + category;
+			String identifier = player.getDisplayName() + soundName + category;
 			if(!SoundPlayer.getInstance().isPlaying(identifier))
 				SoundPlayer.getInstance().playNewSound(soundLocation, identifier, pos, true, volume);
 			Double soundLength = SoundHelper.getSoundLength(soundLocation);
@@ -193,7 +194,7 @@ public class InteractionHandler
 			if(SoundHelper.getSoundLength(soundLocation) <= ServerSettingsConfig.MaxSoundLength)
 			{
 				ChannelHandler.network.sendToServer(new RequestSoundMessage(soundName, category, true));
-				ChannelHandler.network.sendToServer(new PlaySoundMessage(soundName, category, identifier, player.dimension, pos, volume, player.getDisplayNameString()));
+				ChannelHandler.network.sendToServer(new PlaySoundMessage(soundName, category, identifier, player.dimension, pos, volume, player.getDisplayName()));
 			}
 		}
 	}
@@ -233,7 +234,7 @@ public class InteractionHandler
 	{
 		Interaction interaction = createInteraction(1);
 
-		if(!Minecraft.getMinecraft().theWorld.isAirBlock(lastPos))
+		if(!Minecraft.getMinecraft().theWorld.isAirBlock(lastPos.getX(), lastPos.getY(), lastPos.getZ()))
 		{
 			SoundPlayer.getInstance().stopRightClickLoop();
 			processClick(interaction, Minecraft.getMinecraft().thePlayer);
@@ -249,7 +250,6 @@ public class InteractionHandler
 	 */
 	private Interaction createInteraction(int button)
 	{
-		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayerSP player = mc.thePlayer;
 
 		String item = "item.hand";
@@ -258,21 +258,11 @@ public class InteractionHandler
 
 		String click = button == 0 ? "left" : "right";
 
-		MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
-		BlockPos pos = mop.getBlockPos();
-		Entity entity = mop.entityHit;
+		MovingObjectPosition mop = mc.objectMouseOver;
 
-		if(pos != null)
+		if(mop.typeOfHit == MovingObjectType.ENTITY)
 		{
-			IBlockState bs = mc.theWorld.getBlockState(pos);
-			Block b = bs.getBlock();
-			String name = getUnlocalizedName(b, bs);
-			String generalName = getUnlocalizedParentName(name);
-
-			return new Interaction(click, item, name, generalName);
-		}
-		else if(entity != null)
-		{
+			Entity entity = mop.entityHit;
 			String generalCategory;
 			String className = entity.getClass().getName();
 			if(className.contains("passive"))
@@ -284,11 +274,11 @@ public class InteractionHandler
 			else if(className.contains("player"))
 				generalCategory = "entity.players";
 			else
-				generalCategory = entity.getName();
+				generalCategory = entity.getCommandSenderName();
 
-			if(EntityList.getEntityString(entity) == null || entity.hasCustomName())
+			if(EntityList.getEntityString(entity) == null)
 			{
-				Interaction in = new Interaction(click, item, entity.getName(), generalCategory);
+				Interaction in = new Interaction(click, item, entity.getCommandSenderName(), generalCategory);
 				in.setIsEntity(true);
 				return in;
 			}
@@ -300,12 +290,18 @@ public class InteractionHandler
 			}
 		}
 		else
-			return null;
+		{
+			Block b = mc.theWorld.getBlock(mop.blockX, mop.blockY, mop.blockZ);
+			String name = getUnlocalizedName(b);
+			String generalName = getUnlocalizedParentName(name);
+
+			return new Interaction(click, item, name, generalName);
+		}
 	}
 
-	private String getUnlocalizedName(Block b, IBlockState bs)
+	private String getUnlocalizedName(Block b)
 	{
-		ItemStack is = new ItemStack(b, 1, b.getMetaFromState(bs));
+		ItemStack is = new ItemStack(b, 1);
 		if(is.getItem() != null)
 			return is.getUnlocalizedName();
 		return b.getUnlocalizedName();
@@ -324,18 +320,16 @@ public class InteractionHandler
 	{
 		if(ClientConfigHandler.soundOverride && stopSound && lastPos != null)
 		{
-			ISound sound = event.sound;
-			String soundID = sound.getSoundLocation().toString();
-			double soundX = Math.floor(sound.getXPosF());
-			double soundY = Math.floor(sound.getYPosF());
-			double soundZ = Math.floor(sound.getZPosF());
+			double soundX = Math.floor(event.x);
+			double soundY = Math.floor(event.y);
+			double soundZ = Math.floor(event.z);
 
 			BlockPos pos = lastPos;
 			int x = pos.getX();
 			int y = pos.getY();
 			int z = pos.getZ();
 
-			if(soundX == x && soundY == y && soundZ == z && !soundID.contains(":dig."))
+			if(soundX == x && soundY == y && soundZ == z && !event.name.contains(":dig."))
 			{
 				event.result = null;
 			}
@@ -345,10 +339,13 @@ public class InteractionHandler
 	private BlockPos getTargetPos()
 	{
 		MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
-		if(mop.getBlockPos() != null)
-			return mop.getBlockPos();
+		if(mop.typeOfHit == MovingObjectType.ENTITY)
+		{
+			Entity entity = mop.entityHit;
+			return new BlockPos((int) entity.posX, (int) entity.posY, (int) entity.posZ);
+		}
 		else
-			return mop.entityHit.getPosition();
+			return new BlockPos(mop.blockX, mop.blockY, mop.blockZ);
 	}
 
 	public static InteractionHandler getInstance()

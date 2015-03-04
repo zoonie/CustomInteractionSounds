@@ -4,8 +4,6 @@ import javax.swing.UIManager;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.zoonie.custominteractionsounds.configuration.ClientConfigHandler;
 import com.zoonie.custominteractionsounds.interaction.InteractionHandler;
@@ -15,6 +13,9 @@ import com.zoonie.custominteractionsounds.interaction.TickHandler;
 import com.zoonie.custominteractionsounds.network.ClientConnectionHandler;
 import com.zoonie.custominteractionsounds.sound.SoundEventHandler;
 import com.zoonie.custominteractionsounds.sound.SoundHandler;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy
 {

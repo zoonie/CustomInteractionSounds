@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -18,6 +15,10 @@ import com.zoonie.custominteractionsounds.network.message.SoundUploadedMessage;
 import com.zoonie.custominteractionsounds.sound.Sound;
 import com.zoonie.custominteractionsounds.sound.SoundHandler;
 import com.zoonie.custominteractionsounds.sound.SoundHelper;
+
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class NetworkHelper
 {

@@ -1,9 +1,5 @@
 package com.zoonie.custominteractionsounds.network;
 
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
-
 import com.zoonie.custominteractionsounds.network.message.GetSoundsListMessage;
 import com.zoonie.custominteractionsounds.network.message.PlaySoundMessage;
 import com.zoonie.custominteractionsounds.network.message.RepeatSoundMessage;
@@ -12,6 +8,10 @@ import com.zoonie.custominteractionsounds.network.message.ServerSettingsMessage;
 import com.zoonie.custominteractionsounds.network.message.ServerSoundsMessage;
 import com.zoonie.custominteractionsounds.network.message.SoundChunkMessage;
 import com.zoonie.custominteractionsounds.network.message.SoundUploadedMessage;
+
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.relauncher.Side;
 
 public class ChannelHandler
 {

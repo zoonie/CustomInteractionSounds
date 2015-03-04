@@ -1,6 +1,6 @@
 package com.zoonie.custominteractionsounds.sound;
 
-import net.minecraft.util.BlockPos;
+import com.zoonie.custominteractionsounds.compat.BlockPos;
 
 public class Loop
 {

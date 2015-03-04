@@ -2,10 +2,11 @@ package com.zoonie.custominteractionsounds.interaction;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 import com.zoonie.custominteractionsounds.sound.SoundPlayer;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class TickHandler
 {
@@ -20,18 +21,18 @@ public class TickHandler
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event)
 	{
-		if(keyBindAttack.isKeyDown() && keyBindUseItem.isKeyDown())
+		if(keyBindAttack.getIsKeyPressed() && keyBindUseItem.getIsKeyPressed())
 		{
 			soundPlayer.updateLeftClickLoop();
 			soundPlayer.updateRightClickLoop();
 			interactionHandler.detectNewTarget("both");
 		}
-		else if(keyBindAttack.isKeyDown())
+		else if(keyBindAttack.getIsKeyPressed())
 		{
 			soundPlayer.updateLeftClickLoop();
 			interactionHandler.detectNewTarget("left");
 		}
-		else if(keyBindUseItem.isKeyDown())
+		else if(keyBindUseItem.getIsKeyPressed())
 		{
 			soundPlayer.updateRightClickLoop();
 			interactionHandler.detectNewTarget("right");

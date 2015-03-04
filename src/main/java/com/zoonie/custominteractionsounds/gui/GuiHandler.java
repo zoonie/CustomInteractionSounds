@@ -2,11 +2,12 @@ package com.zoonie.custominteractionsounds.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import com.zoonie.custominteractionsounds.gui.mapping.GuiInteractionSoundMapping;
 import com.zoonie.custominteractionsounds.gui.viewing.GuiListContainer;
 import com.zoonie.custominteractionsounds.interaction.InteractionHandler;
+
+import cpw.mods.fml.common.network.IGuiHandler;
 
 public class GuiHandler implements IGuiHandler
 {

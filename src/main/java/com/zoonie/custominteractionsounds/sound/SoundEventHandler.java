@@ -2,13 +2,13 @@ package com.zoonie.custominteractionsounds.sound;
 
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.client.event.sound.SoundSetupEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.SoundSystemException;
 import paulscode.sound.codecs.CodecWav;
 
 import com.zoonie.custominteractionsounds.configuration.ClientConfigHandler;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.cuina.fireandfuel.CodecJLayerMP3;
 
 public class SoundEventHandler

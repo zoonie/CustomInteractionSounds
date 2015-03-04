@@ -9,14 +9,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import paulscode.sound.SoundSystem;
 
+import com.zoonie.custominteractionsounds.compat.BlockPos;
 import com.zoonie.custominteractionsounds.network.ChannelHandler;
 import com.zoonie.custominteractionsounds.network.message.RepeatSoundMessage;
+
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class SoundPlayer
@@ -43,7 +44,7 @@ public class SoundPlayer
 		try
 		{
 			init();
-
+			System.out.println(pos.getX() + " " + pos.getY() + " " + pos.getZ());
 			String identifier;
 			if(id == null)
 				identifier = UUID.randomUUID().toString();
@@ -127,8 +128,7 @@ public class SoundPlayer
 		{
 			playSound(loop.identifier, (float) player.posX, (float) player.posY, (float) player.posZ);
 
-			ChannelHandler.network.sendToServer(new RepeatSoundMessage(loop.identifier, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ, player
-					.getDisplayNameString()));
+			ChannelHandler.network.sendToServer(new RepeatSoundMessage(loop.identifier, player.dimension, (int) player.posX, (int) player.posY, (int) player.posZ, player.getDisplayName()));
 			double timeToEnd = getTimeToEnd(loop.length);
 			loop.timeToEnd = timeToEnd;
 		}

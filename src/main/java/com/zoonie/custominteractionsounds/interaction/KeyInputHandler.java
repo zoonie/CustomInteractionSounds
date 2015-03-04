@@ -3,10 +3,11 @@ package com.zoonie.custominteractionsounds.interaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 import com.zoonie.custominteractionsounds.CustomInteractionSounds;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 public class KeyInputHandler
 {

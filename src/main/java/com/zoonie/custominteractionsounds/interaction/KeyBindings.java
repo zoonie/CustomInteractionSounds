@@ -1,11 +1,12 @@
 package com.zoonie.custominteractionsounds.interaction;
 
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 import org.lwjgl.input.Keyboard;
 
 import com.zoonie.custominteractionsounds.CustomInteractionSounds;
+
+import cpw.mods.fml.client.registry.ClientRegistry;
 
 public class KeyBindings
 {

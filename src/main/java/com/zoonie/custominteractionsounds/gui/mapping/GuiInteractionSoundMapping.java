@@ -18,11 +18,10 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
-import net.minecraftforge.fml.client.config.GuiSlider;
 
 import org.apache.commons.io.FileUtils;
 
+import com.zoonie.custominteractionsounds.compat.BlockPos;
 import com.zoonie.custominteractionsounds.configuration.MappingsConfigManager;
 import com.zoonie.custominteractionsounds.configuration.ServerSettingsConfig;
 import com.zoonie.custominteractionsounds.gui.IListGui;
@@ -35,6 +34,9 @@ import com.zoonie.custominteractionsounds.sound.SoundHandler;
 import com.zoonie.custominteractionsounds.sound.SoundHelper;
 import com.zoonie.custominteractionsounds.sound.SoundInfo;
 import com.zoonie.custominteractionsounds.sound.SoundPlayer;
+
+import cpw.mods.fml.client.config.GuiCheckBox;
+import cpw.mods.fml.client.config.GuiSlider;
 
 public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 {
@@ -212,7 +214,8 @@ public class GuiInteractionSoundMapping extends GuiScreen implements IListGui
 					{
 						timeSoundFinishedPlaying = (long) (soundLengthSeconds * 1000) + System.currentTimeMillis();
 						currentlyPlayingSoundId = UUID.randomUUID().toString();
-						SoundHandler.playSound(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory()), currentlyPlayingSoundId, player.getPosition(), (float) slider.getValue() / 100);
+						SoundHandler.playSound(new SoundInfo(selectedSound.getSoundName(), selectedSound.getCategory()), currentlyPlayingSoundId, new BlockPos((int) player.posX, (int) player.posY,
+								(int) player.posZ), (float) slider.getValue() / 100);
 						playButton.displayString = translate("gui.sound.stop");
 					}
 					else

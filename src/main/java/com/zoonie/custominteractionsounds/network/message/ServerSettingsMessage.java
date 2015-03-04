@@ -9,15 +9,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.TreeMap;
 
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
 import com.zoonie.custominteractionsounds.configuration.MappingsConfigManager;
 import com.zoonie.custominteractionsounds.configuration.ServerSettingsConfig;
 import com.zoonie.custominteractionsounds.interaction.Interaction;
 import com.zoonie.custominteractionsounds.interaction.KeyBindings;
 import com.zoonie.custominteractionsounds.sound.Sound;
+
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class ServerSettingsMessage implements IMessage
 {

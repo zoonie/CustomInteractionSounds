@@ -2,12 +2,13 @@ package com.zoonie.custominteractionsounds.configuration;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.zoonie.custominteractionsounds.CustomInteractionSounds;
+
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ClientConfigHandler
 {

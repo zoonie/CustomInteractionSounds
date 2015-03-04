@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.zoonie.custominteractionsounds.network.ChannelHandler;
 import com.zoonie.custominteractionsounds.sound.Sound;
 import com.zoonie.custominteractionsounds.sound.SoundHandler;
+
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class GetSoundsListMessage implements IMessage
 {

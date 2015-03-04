@@ -6,14 +6,15 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.io.Files;
 import com.zoonie.custominteractionsounds.CustomInteractionSounds;
+import com.zoonie.custominteractionsounds.compat.BlockPos;
 import com.zoonie.custominteractionsounds.network.ChannelHandler;
 import com.zoonie.custominteractionsounds.network.message.RequestSoundMessage;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class SoundHandler
 {
@@ -56,7 +57,7 @@ public class SoundHandler
 		if(sounds == null)
 			findSounds();
 
-		String player = Minecraft.getMinecraft().thePlayer.getDisplayNameString();
+		String player = Minecraft.getMinecraft().thePlayer.getDisplayName();
 		ArrayList<Sound> soundsList = new ArrayList<Sound>();
 
 		for(SoundInfo soundInfo : sounds.keySet())
@@ -149,7 +150,7 @@ public class SoundHandler
 	@SideOnly(Side.CLIENT)
 	public static Sound setupSound(File file)
 	{
-		File category = new File("sounds" + File.separator + CustomInteractionSounds.MOD_NAME + File.separator + Minecraft.getMinecraft().thePlayer.getDisplayNameString());
+		File category = new File("sounds" + File.separator + CustomInteractionSounds.MOD_NAME + File.separator + Minecraft.getMinecraft().thePlayer.getDisplayName());
 		if(!category.exists())
 		{
 			category.mkdirs();

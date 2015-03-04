@@ -1,13 +1,13 @@
 package com.zoonie.custominteractionsounds.network;
 
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
-
 import com.zoonie.custominteractionsounds.configuration.MappingsConfigManager;
 import com.zoonie.custominteractionsounds.configuration.ServerSettingsConfig;
 import com.zoonie.custominteractionsounds.interaction.KeyBindings;
 import com.zoonie.custominteractionsounds.sound.SoundHandler;
 import com.zoonie.custominteractionsounds.sound.SoundPlayer;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 
 public class ClientConnectionHandler
 {

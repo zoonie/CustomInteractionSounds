@@ -7,10 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import com.zoonie.custominteractionsounds.configuration.ServerSettingsConfig;
 import com.zoonie.custominteractionsounds.network.ChannelHandler;
@@ -21,6 +17,11 @@ import com.zoonie.custominteractionsounds.sound.Sound;
 import com.zoonie.custominteractionsounds.sound.SoundHandler;
 import com.zoonie.custominteractionsounds.sound.SoundHelper;
 import com.zoonie.custominteractionsounds.sound.SoundInfo;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class SoundUploadedMessage implements IMessage
 {

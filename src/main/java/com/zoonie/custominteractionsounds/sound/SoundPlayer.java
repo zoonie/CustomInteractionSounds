@@ -49,6 +49,9 @@ public class SoundPlayer
 				identifier = UUID.randomUUID().toString();
 			else
 				identifier = id;
+			
+			if(!sound.exists())
+				return identifier;
 
 			double soundLength = SoundHelper.getSoundLength(sound);
 			volume *= Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.PLAYERS);
@@ -75,7 +78,7 @@ public class SoundPlayer
 
 	public void playSound(String identifier, float x, float y, float z)
 	{
-		if(playing.contains(identifier))
+		if(playing.contains(identifier) && soundSystem.playing(identifier))
 		{
 			soundSystem.setPosition(identifier, x, y, z);
 			soundSystem.play(identifier);
